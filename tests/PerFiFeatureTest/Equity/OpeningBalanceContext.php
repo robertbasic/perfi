@@ -13,6 +13,7 @@ use PerFi\Domain\CommandHandler;
 use PerFi\Domain\Equity\CommandHandler\StartOpeningBalance as StartOpeningBalanceCommandHandler;
 use PerFi\Domain\Equity\Command\StartOpeningBalance as StartOpeningBalanceCommand;
 use PerFi\Domain\Equity\OpeningBalanceRepository;
+use PerFi\Domain\MoneyFactory;
 use PerFi\Domain\Repository;
 use Webmozart\Assert\Assert;
 
@@ -69,10 +70,7 @@ class OpeningBalanceContext implements Context
      */
     public function iShouldHaveAnOpeningBalanceOf($amount, $currency)
     {
-        $currencies = new ISOCurrencies();
-        $moneyParser = new DecimalMoneyParser($currencies);
-
-        $expected = $moneyParser->parse($amount, $currency);
+        $expected = MoneyFactory::amountInCurrency($amount, $currency);
 
         $totals = $this->openingBalanceRepository->getTotals();
 

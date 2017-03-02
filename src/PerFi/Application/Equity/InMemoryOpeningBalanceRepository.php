@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace PerFi\Application\Equity;
 
-use Money\Money;
 use PerFi\Domain\Equity\OpeningBalance;
 use PerFi\Domain\Equity\OpeningBalanceRepository;
+use PerFi\Domain\MoneyFactory;
 
 class InMemoryOpeningBalanceRepository implements OpeningBalanceRepository
 {
@@ -31,7 +31,7 @@ class InMemoryOpeningBalanceRepository implements OpeningBalanceRepository
         $totals = [];
 
         foreach ($this->getAll() as $currency => $balances) {
-            $total = Money::{$currency}(0);
+            $total = MoneyFactory::amountInCurrency('0', $currency);
 
             foreach ($balances as $openingBalance) {
                 if ($currency === $openingBalance->currency()) {

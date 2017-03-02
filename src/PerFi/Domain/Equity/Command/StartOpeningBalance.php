@@ -7,6 +7,7 @@ use Money\Currencies\ISOCurrencies;
 use Money\Money;
 use Money\Parser\DecimalMoneyParser;
 use PerFi\Domain\Command;
+use PerFi\Domain\MoneyFactory;
 
 class StartOpeningBalance implements Command
 {
@@ -17,10 +18,7 @@ class StartOpeningBalance implements Command
 
     public function __construct(string $amount, string $currency)
     {
-        $currencies = new ISOCurrencies();
-        $moneyParser = new DecimalMoneyParser($currencies);
-
-        $this->money = $moneyParser->parse($amount, $currency);
+        $this->money = MoneyFactory::amountInCurrency($amount, $currency);
     }
 
     public function money() : Money
