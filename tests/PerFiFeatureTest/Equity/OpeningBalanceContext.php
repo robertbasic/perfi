@@ -4,9 +4,6 @@ declare(strict_types=1);
 namespace PerFiFeatureTest\Equity;
 
 use Behat\Behat\Context\Context;
-use Behat\Behat\Tester\Exception\PendingException;
-use Money\Currencies\ISOCurrencies;
-use Money\Parser\DecimalMoneyParser;
 use PerFi\Application\Equity\InMemoryOpeningBalanceRepository;
 use PerFi\Domain\Command;
 use PerFi\Domain\CommandHandler;
@@ -14,7 +11,6 @@ use PerFi\Domain\Equity\CommandHandler\StartOpeningBalance as StartOpeningBalanc
 use PerFi\Domain\Equity\Command\StartOpeningBalance as StartOpeningBalanceCommand;
 use PerFi\Domain\Equity\OpeningBalanceRepository;
 use PerFi\Domain\MoneyFactory;
-use PerFi\Domain\Repository;
 use Webmozart\Assert\Assert;
 
 class OpeningBalanceContext implements Context
