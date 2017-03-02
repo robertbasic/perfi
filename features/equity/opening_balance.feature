@@ -16,10 +16,10 @@ Feature: Opening balances as equity
         When I start a new opening balance for RSD
         Then I should have an opening balance of 1300500 RSD
 
-#     Scenario: Starting new opening balances for single equities in different currencies
-#         Given I have equity of 1300500 currency RSD
-#         And I have equity of 99988 currency EUR
-#         When I start a new opening balance for currency RSD
-#         And I start a new opening balance for currency EUR
-#         Then I should have an opening balance of 1300500 currency RSD
-#         And I should have an opening balance of 99988 currency EUR
+    Scenario: Starting new opening balances for single equities in different currencies
+        Given I have equity of 1300500 RSD
+        And I have equity of 99988 EUR
+        When I start a new opening balance for RSD
+        And I start a new opening balance for EUR
+        Then I should have an opening balance of 1300500 RSD
+        And I should have an opening balance of 99988 EUR

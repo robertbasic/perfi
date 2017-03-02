@@ -40,4 +40,9 @@ class OpeningBalance
     {
         return $this->amount;
     }
+
+    public function currency()
+    {
+        return (string) $this->amount()->getCurrency();
+    }
 }

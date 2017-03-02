@@ -36,6 +36,8 @@ class OpeningBalanceContext implements Context
     /** @BeforeScenario */
     public function setup()
     {
+        $this->startOpeningBalanceCommands = [];
+
         $this->openingBalanceRepository = new InMemoryOpeningBalanceRepository();
         $this->startOpeningBalanceHandler = new StartOpeningBalanceCommandHandler(
             $this->openingBalanceRepository
@@ -58,6 +60,8 @@ class OpeningBalanceContext implements Context
         foreach ($this->startOpeningBalanceCommands as $command) {
             $this->startOpeningBalanceHandler->__invoke($command);
         }
+
+        $this->startOpeningBalanceCommands = [];
     }
 
     /**
@@ -70,9 +74,13 @@ class OpeningBalanceContext implements Context
 
         $expected = $moneyParser->parse($amount, $currency);
 
-        $result = $this->openingBalanceRepository->getTotal();
+        $totals = $this->openingBalanceRepository->getTotals();
 
-        Assert::same($expected->getAmount(), $result->getAmount());
-        Assert::same((string) $expected->getCurrency(), (string) $result->getCurrency());
+        foreach ($totals as $result) {
+            if ((string) $result->getCurrency() === $currency) {
+                Assert::same($result->getAmount(), $expected->getAmount());
+                Assert::same((string) $result->getCurrency(), (string) $expected->getCurrency());
+            }
+        }
     }
 }

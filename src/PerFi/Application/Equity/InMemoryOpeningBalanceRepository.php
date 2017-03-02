@@ -16,8 +16,9 @@ class InMemoryOpeningBalanceRepository implements OpeningBalanceRepository
 
     public function add(OpeningBalance $openingBalance)
     {
-        // @todo needs to track per currency
-        $this->openingBalances[(string) $openingBalance->id()] = $openingBalance;
+        $currency = $openingBalance->currency();
+
+        $this->openingBalances[$currency][(string) $openingBalance->id()] = $openingBalance;
     }
 
     public function getAll() : array
@@ -25,15 +26,23 @@ class InMemoryOpeningBalanceRepository implements OpeningBalanceRepository
         return $this->openingBalances;
     }
 
-    public function getTotal() : Money
+    public function getTotals() : array
     {
-        // @todo needs to add totals per currency
-        $total = Money::RSD(0);
+        $totals = [];
 
-        foreach ($this->getAll() as $openingBalance) {
-            $total = $total->add($openingBalance->amount());
+        foreach ($this->getAll() as $currency => $balances) {
+            $total = Money::{$currency}(0);
+
+            foreach ($balances as $openingBalance) {
+                if ($currency === $openingBalance->currency()) {
+                    $total = $total->add($openingBalance->amount());
+                }
+            }
+
+            $totals[] = $total;
         }
 
-        return $total;
+
+        return $totals;
     }
 }
