@@ -1,0 +1,11 @@
+default:
+    autoload:
+        - %paths.base%/features
+        - %paths.base%/tests
+
+    suites:
+        equity:
+            paths:
+                - %paths.base%/features/equity
+            contexts:
+                - PerFiFeatureTest\Equity\OpeningBalanceContext
