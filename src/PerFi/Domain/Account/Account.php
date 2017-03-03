@@ -45,6 +45,11 @@ class Account
         );
     }
 
+    public function id() : AccountId
+    {
+        return $this->id;
+    }
+
     public function title()
     {
         return $this->title;

@@ -5,6 +5,7 @@ namespace PerFiUnitTest\Domain\Account;
 
 use PHPUnit\Framework\TestCase;
 use PerFi\Domain\Account\Account;
+use PerFi\Domain\Account\AccountId;
 use PerFi\Domain\Account\AccountType;
 
 class AccountTest extends TestCase
@@ -20,6 +21,7 @@ class AccountTest extends TestCase
         $account = Account::byType($type, $title);
 
         self::assertSame('Cash, asset', (string) $account);
+        self::assertInstanceOf(AccountId::class, $account->id());
     }
 
     /**
