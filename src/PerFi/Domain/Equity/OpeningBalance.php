@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace PerFi\Domain\Equity;
 
 use Money\Money;
+use PerFi\Domain\Equity\OpeningBalanceId;
 use Ramsey\Uuid\Uuid;
 
 class OpeningBalance
@@ -31,17 +32,22 @@ class OpeningBalance
         return new self($id, $startAmount);
     }
 
-    public function id()
+    public function id() : OpeningBalanceId
     {
         return $this->id;
     }
 
-    public function amount()
+    public function value() : string
+    {
+        return (string) intval($this->amount->getAmount() / 100);
+    }
+
+    public function amount() : Money
     {
         return $this->amount;
     }
 
-    public function currency()
+    public function currency() : string
     {
         return (string) $this->amount()->getCurrency();
     }
