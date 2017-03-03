@@ -39,7 +39,7 @@ class InMemoryOpeningBalanceRepository implements OpeningBalanceRepository
                 }
             }
 
-            $totals[] = $total;
+            $totals[$currency] = $total;
         }
 
 
