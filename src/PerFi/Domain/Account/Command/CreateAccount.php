@@ -10,7 +10,7 @@ use PerFi\Domain\Command;
 class CreateAccount implements Command
 {
     /**
-     * @var Accout
+     * @var Account
      */
     private $account;
 
