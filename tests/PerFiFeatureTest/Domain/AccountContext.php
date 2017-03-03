@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace PerFiFeatureTest\Domain;
 
 use Behat\Behat\Context\Context;
-use Behat\Behat\Tester\Exception\PendingException;
 use PerFi\Application\Account\InMemoryAccountRepository;
 use PerFi\Domain\Account\Account;
 use PerFi\Domain\Account\CommandHandler\CreateAccount as CreateAccountCommandHandler;
