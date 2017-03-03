@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace PerFiFeatureTest\Equity;
+namespace PerFiFeatureTest\Domain\Equity;
 
 use Behat\Behat\Context\Context;
 use PerFi\Application\Equity\InMemoryOpeningBalanceRepository;

@@ -8,4 +8,4 @@ default:
             paths:
                 - %paths.base%/features/equity
             contexts:
-                - PerFiFeatureTest\Equity\OpeningBalanceContext
+                - PerFiFeatureTest\Domain\Equity\OpeningBalanceContext
