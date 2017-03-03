@@ -24,7 +24,7 @@ class InMemoryOpeningBalanceRepositoryTest extends TestCase
 
         $repository->add($openingBalance);
 
-        $balances = $repository->getALl();
+        $balances = $repository->getAll();
 
         foreach ($balances as $balanceCurrency => $balancesInCurrency) {
             self::assertSame($currency, $balanceCurrency);
