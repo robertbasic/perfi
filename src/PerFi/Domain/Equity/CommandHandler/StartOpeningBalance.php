@@ -22,9 +22,7 @@ class StartOpeningBalance implements CommandHandler
 
     public function __invoke(Command $startOpeningBalanceCommand)
     {
-        $money = $startOpeningBalanceCommand->money();
-
-        $openingBalance = OpeningBalance::forStarting($money);
+        $openingBalance = $startOpeningBalanceCommand->payload();
 
         $this->openingBalances->add($openingBalance);
     }

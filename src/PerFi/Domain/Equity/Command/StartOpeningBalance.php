@@ -3,26 +3,26 @@ declare(strict_types=1);
 
 namespace PerFi\Domain\Equity\Command;
 
-use Money\Currencies\ISOCurrencies;
-use Money\Money;
-use Money\Parser\DecimalMoneyParser;
 use PerFi\Domain\Command;
+use PerFi\Domain\Equity\OpeningBalance;
 use PerFi\Domain\MoneyFactory;
 
 class StartOpeningBalance implements Command
 {
     /**
-     * @var Money
+     * @var OpeningBalance
      */
-    private $money;
+    private $openingBalance;
 
     public function __construct(string $amount, string $currency)
     {
-        $this->money = MoneyFactory::amountInCurrency($amount, $currency);
+        $money = MoneyFactory::amountInCurrency($amount, $currency);
+
+        $this->openingBalance = OpeningBalance::forStarting($money);
     }
 
-    public function money() : Money
+    public function payload() : OpeningBalance
     {
-        return $this->money;
+        return $this->openingBalance;
     }
 }
