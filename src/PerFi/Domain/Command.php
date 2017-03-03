@@ -5,4 +5,5 @@ namespace PerFi\Domain;
 
 interface Command
 {
+    public function payload();
 }
