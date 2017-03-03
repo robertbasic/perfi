@@ -12,7 +12,7 @@ class StartOpeningBalanceTest extends TestCase
     /**
      * @test
      */
-    public function it_can_be_created()
+    public function opening_balance_is_payload()
     {
         $amount = '500';
         $currency = 'RSD';
