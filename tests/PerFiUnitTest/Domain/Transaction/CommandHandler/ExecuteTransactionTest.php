@@ -5,11 +5,13 @@ namespace PerFiUnitTest\Domain\Transaction\CommandHandler;
 
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
+use Money\Money;
 use PHPUnit\Framework\TestCase;
 use PerFi\Application\Transaction\InMemoryTransactionRepository;
 use PerFi\Domain\Account\Account;
 use PerFi\Domain\Command;
 use PerFi\Domain\CommandHandler;
+use PerFi\Domain\MoneyFactory;
 use PerFi\Domain\Transaction\CommandHandler\ExecuteTransaction as ExecuteTransactionHandler;
 use PerFi\Domain\Transaction\Command\ExecuteTransaction as ExecuteTransactionCommand;
 use PerFi\Domain\Transaction\TransactionRepository;
@@ -34,6 +36,11 @@ class ExecuteTransactionTest extends TestCase
     private $destinationAccount;
 
     /**
+     * @var Money
+     */
+    private $amount;
+
+    /**
      * @var Command
      */
     private $command;
@@ -55,11 +62,12 @@ class ExecuteTransactionTest extends TestCase
         $this->destinationAccount->shouldReceive('debit')
             ->byDefault();
 
+        $this->amount = MoneyFactory::amountInCurrency('500', 'RSD');
+
         $this->command = new ExecuteTransactionCommand(
             $this->sourceAccount,
             $this->destinationAccount,
-            '500',
-            'RSD',
+            $this->amount,
             'supermarket'
         );
 
