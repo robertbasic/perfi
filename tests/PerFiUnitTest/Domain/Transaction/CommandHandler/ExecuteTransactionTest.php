@@ -5,7 +5,7 @@ namespace PerFiUnitTest\Domain\Transaction\CommandHandler;
 
 use PHPUnit\Framework\TestCase;
 
-class ExecuteTest extends TestCase
+class ExecuteTransactionTest extends TestCase
 {
     /**
      * @test

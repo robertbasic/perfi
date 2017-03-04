@@ -8,7 +8,7 @@ use PerFi\Domain\CommandHandler;
 use PerFi\Domain\Transaction\Transaction;
 use PerFi\Domain\Transaction\TransactionRepository;
 
-class Execute implements CommandHandler
+class ExecuteTransaction implements CommandHandler
 {
 
     /**

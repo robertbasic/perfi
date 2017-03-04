@@ -5,10 +5,10 @@ namespace PerFiUnitTest\Domain\Transaction\Command;
 
 use PHPUnit\Framework\TestCase;
 use PerFi\Domain\Account\Account;
-use PerFi\Domain\Transaction\Command\Execute;
+use PerFi\Domain\Transaction\Command\ExecuteTransaction;
 use PerFi\Domain\Transaction\Transaction;
 
-class ExecuteTest extends TestCase
+class ExecuteTransactionTest extends TestCase
 {
     /**
      * @test
@@ -21,7 +21,7 @@ class ExecuteTest extends TestCase
         $currency = 'RSD';
         $description = 'supermarket';
 
-        $command = new Execute(
+        $command = new ExecuteTransaction(
             $sourceAccount,
             $destinationAccount,
             $amount,

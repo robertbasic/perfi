@@ -8,7 +8,7 @@ use PerFi\Domain\Command;
 use PerFi\Domain\MoneyFactory;
 use PerFi\Domain\Transaction\Transaction;
 
-class Execute implements Command
+class ExecuteTransaction implements Command
 {
     /**
      * @var Transaction
