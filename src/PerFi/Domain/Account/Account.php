@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace PerFi\Domain\Account;
 
+use Money\Money;
 use PerFi\Domain\Account\AccountId;
 use PerFi\Domain\Account\AccountType;
 use Ramsey\Uuid\Uuid;
@@ -44,6 +45,14 @@ class Account
             $type,
             $title
         );
+    }
+
+    public function debit(Money $amount)
+    {
+    }
+
+    public function credit(Money $amount)
+    {
     }
 
     public function id() : AccountId

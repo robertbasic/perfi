@@ -48,11 +48,11 @@ class ExecuteTransactionTest extends TestCase
         $this->repository = new InMemoryTransactionRepository();
 
         $this->sourceAccount = m::mock(Account::class);
-        $this->sourceAccount->shouldReceive('recordTransaction')
+        $this->sourceAccount->shouldReceive('credit')
             ->byDefault();
 
         $this->destinationAccount = m::mock(Account::class);
-        $this->destinationAccount->shouldReceive('recordTransaction')
+        $this->destinationAccount->shouldReceive('debit')
             ->byDefault();
 
         $this->command = new ExecuteTransactionCommand(
@@ -85,11 +85,11 @@ class ExecuteTransactionTest extends TestCase
     /**
      * @test
      */
-    public function when_invoked_records_transaction_on_source_account()
+    public function when_invoked_credits_transaction_amount_on_source_account()
     {
-        $this->sourceAccount->shouldReceive('recordTransaction')
+        $this->sourceAccount->shouldReceive('credit')
             ->once()
-            ->with($this->command->payload());
+            ->with($this->command->payload()->amount());
 
         $this->commandHandler->__invoke($this->command);
     }
@@ -97,11 +97,11 @@ class ExecuteTransactionTest extends TestCase
     /**
      * @test
      */
-    public function when_invoked_records_transaction_on_destination_account()
+    public function when_invoked_debits_transaction_amount_on_destination_account()
     {
-        $this->destinationAccount->shouldReceive('recordTransaction')
+        $this->destinationAccount->shouldReceive('debit')
             ->once()
-            ->with($this->command->payload());
+            ->with($this->command->payload()->amount());
 
         $this->commandHandler->__invoke($this->command);
     }
