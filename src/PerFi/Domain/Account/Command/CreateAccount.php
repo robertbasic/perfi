@@ -4,7 +4,6 @@ declare(strict_types=1);
 namespace PerFi\Domain\Account\Command;
 
 use PerFi\Domain\Account\Account;
-use PerFi\Domain\Account\AccountType;
 use PerFi\Domain\Command;
 
 class CreateAccount implements Command
@@ -16,9 +15,7 @@ class CreateAccount implements Command
 
     public function __construct(string $type, string $title)
     {
-        $accountType = AccountType::fromString($type);
-
-        $this->account = Account::byType($accountType, $title);
+        $this->account = Account::byStringType($type, $title);
     }
 
     public function payload() : Account
