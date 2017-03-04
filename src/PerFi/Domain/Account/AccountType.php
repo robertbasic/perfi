@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace PerFi\Domain\Account;
 
 use PerFi\Domain\Account\Exception\UnknownAccountTypeException;
+use Webmozart\Assert\Assert;
 
 class AccountType
 {
@@ -31,6 +32,8 @@ class AccountType
 
     public static function fromString(string $type) : self
     {
+        Assert::stringNotEmpty($type);
+
         if (!in_array($type, self::ACCOUNT_TYPES)) {
             throw new UnknownAccountTypeException();
         }

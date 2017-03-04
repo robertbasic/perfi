@@ -32,11 +32,12 @@ class Account
         $this->title = $title;
     }
 
-    public static function byType(AccountType $type, string $title) : self
+    public static function byStringType(string $type, string $title) : self
     {
-        Assert::stringNotEmpty($title);
-
         $id = AccountId::fromUuid(Uuid::uuid4());
+        $type = AccountType::fromString($type);
+
+        Assert::stringNotEmpty($title);
 
         return new self(
             $id,

@@ -22,6 +22,17 @@ class AccountTypeTest extends TestCase
 
     /**
      * @test
+     * @expectedException InvalidArgumentException
+     */
+    public function account_type_cannot_be_created_for_empty_type()
+    {
+        $type = '';
+
+        $accountType = AccountType::fromString($type);
+    }
+
+    /**
+     * @test
      * @expectedException PerFi\Domain\Account\Exception\UnknownAccountTypeException
      */
     public function account_type_cannot_be_created_for_unknown_type()
