@@ -6,7 +6,6 @@ namespace PerFiUnitTest\Domain\Transaction;
 use Money\Money;
 use PHPUnit\Framework\TestCase;
 use PerFi\Domain\Account\Account;
-use PerFi\Domain\Account\AccountType;
 use PerFi\Domain\MoneyFactory;
 use PerFi\Domain\Transaction\Transaction;
 use PerFi\Domain\Transaction\TransactionDate;
@@ -19,10 +18,10 @@ class TransactionTest extends TestCase
      */
     public function transaction_between_two_accounts_can_be_created()
     {
-        $asset = AccountType::fromString('asset');
-        $expense = AccountType::fromString('expense');
-        $source = Account::byType($asset, 'Cash');
-        $destination = Account::byType($expense, 'Groceries');
+        $asset = 'asset';
+        $expense = 'expense';
+        $source = Account::byStringType($asset, 'Cash');
+        $destination = Account::byStringType($expense, 'Groceries');
         $amount = MoneyFactory::amountInCurrency('500', 'RSD');
         $description = 'groceries for dinner';
 
