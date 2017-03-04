@@ -26,6 +26,11 @@ class Account
      */
     private $title;
 
+    /**
+     * @var array
+     */
+    private $amounts;
+
     private function __construct(AccountId $id, AccountType $type, string $title)
     {
         $this->id = $id;
@@ -47,12 +52,21 @@ class Account
         );
     }
 
+    public function amounts() : array
+    {
+        return $this->amounts;
+    }
+
     public function debit(Money $amount)
     {
+        $amount = $amount->absolute();
+        $this->amounts[] = $amount;
     }
 
     public function credit(Money $amount)
     {
+        $amount = $amount->multiply(-1);
+        $this->amounts[] = $amount;
     }
 
     public function id() : AccountId

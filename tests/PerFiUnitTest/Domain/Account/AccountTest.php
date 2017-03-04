@@ -34,4 +34,20 @@ class AccountTest extends TestCase
 
         $account = Account::byStringType($type, $title);
     }
+
+    /**
+     * @test
+     */
+    public function crediting_an_account_adds_negative_amount()
+    {
+        self::markTestIncomplete();
+    }
+
+    /**
+     * @test
+     */
+    public function debiting_an_account_adds_positive_amount()
+    {
+        self::markTestIncomplete();
+    }
 }
