@@ -18,10 +18,8 @@ class TransactionTest extends TestCase
      */
     public function transaction_between_two_accounts_can_be_created()
     {
-        $asset = 'asset';
-        $expense = 'expense';
-        $source = Account::byStringType($asset, 'Cash');
-        $destination = Account::byStringType($expense, 'Groceries');
+        $source = Account::byStringType('asset', 'Cash');
+        $destination = Account::byStringType('expense', 'Groceries');
         $amount = MoneyFactory::amountInCurrency('500', 'RSD');
         $description = 'groceries for dinner';
 

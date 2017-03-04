@@ -15,10 +15,8 @@ class ExecuteTest extends TestCase
      */
     public function transaction_is_payload()
     {
-        $asset = 'asset';
-        $expense = 'expense';
-        $sourceAccount = Account::byStringType($asset, 'Cash');
-        $destinationAccount = Account::byStringType($expense, 'Groceries');
+        $sourceAccount = Account::byStringType('asset', 'Cash');
+        $destinationAccount = Account::byStringType('expense', 'Groceries');
         $amount = '500';
         $currency = 'RSD';
         $description = 'supermarket';
