@@ -97,7 +97,7 @@ class ExecuteTransactionTest extends TestCase
     {
         $this->sourceAccount->shouldReceive('credit')
             ->once()
-            ->with($this->command->payload()->amount());
+            ->with($this->amount);
 
         $this->commandHandler->__invoke($this->command);
     }
@@ -109,7 +109,7 @@ class ExecuteTransactionTest extends TestCase
     {
         $this->destinationAccount->shouldReceive('debit')
             ->once()
-            ->with($this->command->payload()->amount());
+            ->with($this->amount);
 
         $this->commandHandler->__invoke($this->command);
     }
