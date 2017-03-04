@@ -16,7 +16,7 @@ class InMemoryTransactionRepository implements TransactionRepository
 
     public function add(Transaction $transaction)
     {
-        $this->transactions[] = $transaction;
+        $this->transactions[(string) $transaction->id()] = $transaction;
     }
 
     public function getAll() : array
