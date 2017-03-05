@@ -4,16 +4,34 @@ declare(strict_types=1);
 namespace PerFiFeatureTest\Domain;
 
 use Behat\Behat\Context\Context;
-use Behat\Behat\Tester\Exception\PendingException;
+use PerFi\Application\Transaction\InMemoryTransactionRepository;
+use PerFi\Domain\Account\Account;
+use PerFi\Domain\MoneyFactory;
+use PerFi\Domain\Transaction\CommandHandler\ExecuteTransaction as ExecuteTransactionHandler;
+use PerFi\Domain\Transaction\Command\ExecuteTransaction as ExecuteTransactionCommand;
+use Webmozart\Assert\Assert;
 
 class TransactionContext implements Context
 {
+
+    /**
+     * @var array
+     */
+    private $accounts;
+
+    /** @BeforeScenario */
+    public function setup()
+    {
+        $this->accounts = [];
+    }
+
     /**
      * @Given I have an :type account called :title
      */
     public function iHaveAnAccountOfCertianTypeCalled($type, $title)
     {
-        throw new PendingException();
+        $hash = $this->hashAccountTitle($title);
+        $this->accounts[$hash] = Account::byStringType($type, $title);
     }
 
     /**
@@ -21,7 +39,18 @@ class TransactionContext implements Context
      */
     public function anAmountInCurrencyIsPayedForSomething($amount, $currency, $description, $source, $destination)
     {
-        throw new PendingException();
+        $repository = new InMemoryTransactionRepository();
+        $sourceAccount = $this->getAccountByTitle($source);
+        $destinationAccount = $this->getAccountByTitle($destination);
+        $amount = MoneyFactory::amountInCurrency($amount, $currency);
+        $this->command = new ExecuteTransactionCommand(
+            $sourceAccount,
+            $destinationAccount,
+            $amount,
+            $description
+        );
+        $commandHandler = new ExecuteTransactionHandler($repository);
+        $commandHandler->__invoke($this->command);
     }
 
     /**
@@ -29,7 +58,18 @@ class TransactionContext implements Context
      */
     public function anAmountInCurrencyIsChargedForSomething($amount, $currency, $description, $source, $destination)
     {
-        throw new PendingException();
+        $repository = new InMemoryTransactionRepository();
+        $sourceAccount = $this->getAccountByTitle($source);
+        $destinationAccount = $this->getAccountByTitle($destination);
+        $amount = MoneyFactory::amountInCurrency($amount, $currency);
+        $this->command = new ExecuteTransactionCommand(
+            $sourceAccount,
+            $destinationAccount,
+            $amount,
+            $description
+        );
+        $commandHandler = new ExecuteTransactionHandler($repository);
+        $commandHandler->__invoke($this->command);
     }
 
     /**
@@ -37,7 +77,19 @@ class TransactionContext implements Context
      */
     public function iShouldHaveLessFundsInSourceAccount($amount, $currency, $title, $type)
     {
-        throw new PendingException();
+        $expected = MoneyFactory::amountInCurrency('-' . $amount, $currency);
+
+        $transaction = $this->command->payload();
+        $sourceAccount = $transaction->sourceAccount();
+
+        $balances = $sourceAccount->balances();
+
+        foreach ($balances as $result) {
+            if ((string) $result->getCurrency() === $currency) {
+                Assert::same($result->getAmount(), $expected->getAmount());
+                Assert::same((string) $result->getCurrency(), (string) $expected->getCurrency());
+            }
+        }
     }
 
     /**
@@ -45,6 +97,29 @@ class TransactionContext implements Context
      */
     public function iShouldHaveMoreFundsInDestinationAccount($amount, $currency, $title, $type)
     {
-        throw new PendingException();
+        $expected = MoneyFactory::amountInCurrency($amount, $currency);
+
+        $transaction = $this->command->payload();
+        $destinationAccount = $transaction->destinationAccount();
+
+        $balances = $destinationAccount->balances();
+
+        foreach ($balances as $result) {
+            if ((string) $result->getCurrency() === $currency) {
+                Assert::same($result->getAmount(), $expected->getAmount());
+                Assert::same((string) $result->getCurrency(), (string) $expected->getCurrency());
+            }
+        }
+    }
+
+    private function getAccountByTitle($title)
+    {
+        $hash = $this->hashAccountTitle($title);
+        return $this->accounts[$hash];
+    }
+
+    private function hashAccountTitle($title)
+    {
+        return trim(strtolower($title));
     }
 }
