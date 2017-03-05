@@ -6,6 +6,7 @@ namespace PerFi\Domain\Account;
 use Money\Money;
 use PerFi\Domain\Account\AccountId;
 use PerFi\Domain\Account\AccountType;
+use PerFi\Domain\MoneyFactory;
 use Ramsey\Uuid\Uuid;
 use Webmozart\Assert\Assert;
 
@@ -52,21 +53,35 @@ class Account
         );
     }
 
-    public function amounts() : array
+    public function balances() : array
     {
-        return $this->amounts;
+        $balances = [];
+
+        foreach ($this->amounts as $currency => $amounts) {
+            $balance = MoneyFactory::amountInCurrency('0', $currency);
+
+            foreach ($amounts as $amount) {
+                if ($currency === (string) $amount->getCurrency()) {
+                    $balance = $balance->add($amount);
+                }
+            }
+
+            $balances[$currency] = $balance;
+        }
+
+        return $balances;
     }
 
     public function debit(Money $amount)
     {
         $amount = $amount->absolute();
-        $this->amounts[] = $amount;
+        $this->amounts[(string) $amount->getCurrency()][] = $amount;
     }
 
     public function credit(Money $amount)
     {
         $amount = $amount->multiply(-1);
-        $this->amounts[] = $amount;
+        $this->amounts[(string) $amount->getCurrency()][] = $amount;
     }
 
     public function id() : AccountId

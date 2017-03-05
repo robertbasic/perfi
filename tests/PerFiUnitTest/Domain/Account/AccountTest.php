@@ -6,6 +6,7 @@ namespace PerFiUnitTest\Domain\Account;
 use PHPUnit\Framework\TestCase;
 use PerFi\Domain\Account\Account;
 use PerFi\Domain\Account\AccountId;
+use PerFi\Domain\MoneyFactory;
 
 class AccountTest extends TestCase
 {
@@ -40,7 +41,25 @@ class AccountTest extends TestCase
      */
     public function crediting_an_account_adds_negative_amount()
     {
-        self::markTestIncomplete();
+        $amountOne = MoneyFactory::amountInCurrency('500', 'RSD');
+        $amountTwo = MoneyFactory::amountInCurrency('600', 'RSD');
+
+        $account = Account::byStringType('asset', 'Cash');
+
+        $account->credit($amountOne);
+        $account->credit($amountTwo);
+
+        $results = $account->balances();
+
+        $expected = [
+            'RSD' => '-1100',
+        ];
+
+        foreach ($results as $currency => $result) {
+            $expectedBalance = MoneyFactory::amountInCurrency($expected[$currency], $currency);
+
+            self::assertTrue($expectedBalance->equals($result));
+        }
     }
 
     /**
@@ -48,6 +67,24 @@ class AccountTest extends TestCase
      */
     public function debiting_an_account_adds_positive_amount()
     {
-        self::markTestIncomplete();
+        $amountOne = MoneyFactory::amountInCurrency('500', 'RSD');
+        $amountTwo = MoneyFactory::amountInCurrency('600', 'RSD');
+
+        $account = Account::byStringType('asset', 'Cash');
+
+        $account->debit($amountOne);
+        $account->debit($amountTwo);
+
+        $results = $account->balances();
+
+        $expected = [
+            'RSD' => '1100',
+        ];
+
+        foreach ($results as $currency => $result) {
+            $expectedBalance = MoneyFactory::amountInCurrency($expected[$currency], $currency);
+
+            self::assertTrue($expectedBalance->equals($result));
+        }
     }
 }
