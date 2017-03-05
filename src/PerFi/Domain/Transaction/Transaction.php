@@ -82,6 +82,16 @@ class Transaction
         );
     }
 
+    public function creditSourceAccount()
+    {
+        $this->sourceAccount->credit($this->amount);
+    }
+
+    public function debitDestinationAccount()
+    {
+        $this->destinationAccount->debit($this->amount);
+    }
+
     public function id() : TransactionId
     {
         return $this->id;

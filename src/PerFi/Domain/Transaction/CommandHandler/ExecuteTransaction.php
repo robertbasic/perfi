@@ -27,13 +27,8 @@ class ExecuteTransaction implements CommandHandler
 
         $this->transactions->add($transaction);
 
-        $amount = $transaction->amount();
-
         // @todo These should be event triggers -> event listeners
-        $sourceAccount = $transaction->sourceAccount();
-        $sourceAccount->credit($amount);
-
-        $destinationAccount = $transaction->destinationAccount();
-        $destinationAccount->debit($amount);
+        $transaction->creditSourceAccount();
+        $transaction->debitDestinationAccount();
     }
 }
