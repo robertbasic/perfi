@@ -9,8 +9,15 @@ default:
                 - %paths.base%/features/equity
             contexts:
                 - PerFiFeatureTest\Domain\Equity\OpeningBalanceContext
+
         account:
             paths:
                 - %paths.base%/features/account.feature
             contexts:
                 - PerFiFeatureTest\Domain\AccountContext
+
+        transaction:
+            paths:
+                - %paths.base%/features/transaction.feature
+            contexts:
+                - PerFiFeatureTest\Domain\TransactionContext
