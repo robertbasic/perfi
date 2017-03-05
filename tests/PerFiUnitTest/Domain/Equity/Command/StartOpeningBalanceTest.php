@@ -6,6 +6,7 @@ namespace PerFiUnitTest\Domain\Equity\Command;
 use PHPUnit\Framework\TestCase;
 use PerFi\Domain\Equity\Command\StartOpeningBalance;
 use PerFi\Domain\Equity\OpeningBalance;
+use PerFi\Domain\MoneyFactory;
 
 class StartOpeningBalanceTest extends TestCase
 {
@@ -14,10 +15,9 @@ class StartOpeningBalanceTest extends TestCase
      */
     public function opening_balance_is_payload()
     {
-        $amount = '500';
-        $currency = 'RSD';
+        $amount = MoneyFactory::amountInCurrency('500', 'RSD');
 
-        $command = new StartOpeningBalance($amount, $currency);
+        $command = new StartOpeningBalance($amount);
 
         $payload = $command->payload();
 

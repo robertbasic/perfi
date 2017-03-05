@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace PerFi\Domain\Equity\Command;
 
+use Money\Money;
 use PerFi\Domain\Command;
 use PerFi\Domain\Equity\OpeningBalance;
-use PerFi\Domain\MoneyFactory;
 
 class StartOpeningBalance implements Command
 {
@@ -14,11 +14,9 @@ class StartOpeningBalance implements Command
      */
     private $openingBalance;
 
-    public function __construct(string $amount, string $currency)
+    public function __construct(Money $amount)
     {
-        $money = MoneyFactory::amountInCurrency($amount, $currency);
-
-        $this->openingBalance = OpeningBalance::forStarting($money);
+        $this->openingBalance = OpeningBalance::forStarting($amount);
     }
 
     public function payload() : OpeningBalance
