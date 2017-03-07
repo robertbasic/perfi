@@ -15,6 +15,7 @@ use PerFi\Domain\Transaction\Command\ExecuteTransaction as ExecuteTransactionCom
 use PerFi\Domain\Transaction\EventSubscriber\CreditSourceAccountWhenTransactionExecuted;
 use PerFi\Domain\Transaction\EventSubscriber\DebitDestinationAccountWhenTransactionExecuted;
 use PerFi\Domain\Transaction\Event\TransactionExecuted;
+use PerFi\Domain\Transaction\TransactionRepository;
 use Webmozart\Assert\Assert;
 
 class TransactionContext implements Context
@@ -30,10 +31,32 @@ class TransactionContext implements Context
      */
     private $command;
 
+    /**
+     * @var CommandHandler
+     */
+    private $commandHandler;
+
+    /**
+     * @var TransactionRepository
+     */
+    private $repository;
+
+    /**
+     * @var MessageBus
+     */
+    private $eventBus;
+
     /** @BeforeScenario */
     public function setup()
     {
         $this->accounts = [];
+        $this->repository = new InMemoryTransactionRepository();
+        $this->eventBus = EventBusFactory::getEventBus();
+        $this->commandHandler = new ExecuteTransactionHandler(
+            $this->repository,
+            $this->eventBus
+        );
+
     }
 
     /**
@@ -43,6 +66,26 @@ class TransactionContext implements Context
     {
         $hash = $this->hashAccountTitle($title);
         $this->accounts[$hash] = Account::byStringType($type, $title);
+    }
+
+    /**
+     * @Given I have executed a transaction between :source and :destination for :amount :currency
+     */
+    public function iHaveExecutedATransactionBetweenTwoAccountsForAmountInCurrency($source, $destination, $amount, $currency)
+    {
+        $sourceAccount = $this->getAccountByTitle($source);
+        $destinationAccount = $this->getAccountByTitle($destination);
+        $amount = MoneyFactory::amountInCurrency($amount, $currency);
+        $description = "supermarket";
+
+        $this->command = new ExecuteTransactionCommand(
+            $sourceAccount,
+            $destinationAccount,
+            $amount,
+            $description
+        );
+
+        $this->commandHandler->__invoke($this->command);
     }
 
     /**
@@ -94,6 +137,26 @@ class TransactionContext implements Context
     }
 
     /**
+     * @When I refund :amount :currency for the :source to :destination
+     */
+    public function iRefundAmountInCurrency($amount, $currency, $source, $destination)
+    {
+        $sourceAccount = $this->getAccountByTitle($source);
+        $destinationAccount = $this->getAccountByTitle($destination);
+        $amount = MoneyFactory::amountInCurrency($amount, $currency);
+        $description = "supermarket";
+
+        $command = new ExecuteTransactionCommand(
+            $sourceAccount,
+            $destinationAccount,
+            $amount,
+            $description
+        );
+
+        $this->commandHandler->__invoke($command);
+    }
+
+    /**
      * @Then I should have :amount :currency funds less in :title :type account
      */
     public function iShouldHaveLessFundsInSourceAccount($amount, $currency, $title, $type)
@@ -131,30 +194,6 @@ class TransactionContext implements Context
                 Assert::same((string) $result->getCurrency(), (string) $expected->getCurrency());
             }
         }
-    }
-
-    /**
-     * @Given I have executed a transaction between a :sourceTitle :sourceType and a :destinationTitle :destinationType for :amount :currency
-     */
-    public function iHaveExecutedATransactionBetweenTwoAccountsForAmountInCurrency($sourceTtitle, $sourceType, $destinationTitle, $destinationType, $amount, $currency)
-    {
-        throw new PendingException();
-    }
-
-    /**
-     * @When I refund :amount :currency for the :sourceTitle to :destinationTitle
-     */
-    public function iRefundAmountInCurrency($amount, $currency, $sourceTitle, $destinationTitle)
-    {
-        throw new PendingException();
-    }
-
-    /**
-     * @Then I should have :amount :currency total in :title :type account
-     */
-    public function iShouldHaveAmountInCurrencyTotalInAccount($amount, $currency, $title, $type)
-    {
-        throw new PendingException();
     }
 
     private function getAccountByTitle($title)
