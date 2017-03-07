@@ -14,11 +14,23 @@ class StartOpeningBalance implements Command
      */
     private $openingBalance;
 
+    /**
+     * Start opening balance command
+     *
+     * Creates an opening balance with the given Money amount.
+     *
+     * @param Money $amount
+     */
     public function __construct(Money $amount)
     {
         $this->openingBalance = OpeningBalance::forStarting($amount);
     }
 
+    /**
+     * The payload of the command
+     *
+     * @return OpeningBalance
+     */
     public function payload() : OpeningBalance
     {
         return $this->openingBalance;

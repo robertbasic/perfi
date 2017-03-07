@@ -16,7 +16,16 @@ use SimpleBus\Message\Subscriber\Resolver\NameBasedMessageSubscriberResolver;
 
 class EventBusFactory
 {
-    public static function getEventBus()
+    /**
+     * Configure and get an event bus that is ready to handle events
+     *
+     * For now the event subscribers and the service locator are
+     * hard-coded in here, but they should come from a container-interop
+     * a la Zend ServiceManager.
+     *
+     * @return MessageBusSupportingMiddleware
+     */
+    public static function getEventBus() : MessageBusSupportingMiddleware
     {
         $eventSubscribersByEventName = [
             TransactionExecuted::class => [

@@ -7,7 +7,17 @@ use PerFi\Domain\Transaction\Transaction;
 
 interface TransactionRepository
 {
+    /**
+     * Add a transaction to the repository
+     *
+     * @param Transaction $transaction
+     */
     public function add(Transaction $transaction);
 
+    /**
+     * Get all transactions from the repository
+     *
+     * @return array
+     */
     public function getAll() : array;
 }

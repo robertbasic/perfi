@@ -15,6 +15,18 @@ class ExecuteTransaction implements Command
      */
     private $transaction;
 
+    /**
+     * Execute transaction command
+     *
+     * Creates a transaction which is to be executed between two accounts.
+     * Every transaction needs an amount that is transferred between accounts,
+     * and a description of the transaction.
+     *
+     * @param Account $sourceAccount
+     * @param Account $destinationAccount
+     * @param Money $amount
+     * @param string $description
+     */
     public function __construct(
         Account $sourceAccount,
         Account $destinationAccount,
@@ -30,6 +42,11 @@ class ExecuteTransaction implements Command
         );
     }
 
+    /**
+     * The payload of the command
+     *
+     * @return Transaction
+     */
     public function payload() : Transaction
     {
         return $this->transaction;

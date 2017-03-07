@@ -6,6 +6,7 @@ namespace PerFiFeatureTest\Domain;
 use Behat\Behat\Context\Context;
 use PerFi\Application\Transaction\InMemoryTransactionRepository;
 use PerFi\Domain\Account\Account;
+use PerFi\Domain\Command;
 use PerFi\Domain\EventBusFactory;
 use PerFi\Domain\MoneyFactory;
 use PerFi\Domain\Transaction\CommandHandler\ExecuteTransaction as ExecuteTransactionHandler;
@@ -22,6 +23,11 @@ class TransactionContext implements Context
      * @var array
      */
     private $accounts;
+
+    /**
+     * @var Command
+     */
+    private $command;
 
     /** @BeforeScenario */
     public function setup()

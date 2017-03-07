@@ -18,12 +18,31 @@ class ExecuteTransaction implements CommandHandler
      */
     private $transactions;
 
+    /**
+     * @var MessageBus
+     */
+    private $eventBus;
+
+    /**
+     * A handler that handles the execution of a transaction
+     *
+     * @param TransactionRepository $transactions
+     * @param MessageBus $eventBus
+     */
     public function __construct(TransactionRepository $transactions, MessageBus $eventBus)
     {
         $this->transactions = $transactions;
         $this->eventBus = $eventBus;
     }
 
+    /**
+     * Handle the execute transaction command
+     *
+     * Add the executed transaction to the repository.
+     * Tell the event bus to handle the transaction executed event.
+     *
+     * @param Command $executeTransaction
+     */
     public function __invoke(Command $executeTransaction)
     {
         $transaction = $executeTransaction->payload();

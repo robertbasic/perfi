@@ -14,6 +14,9 @@ class InMemoryOpeningBalanceRepository implements OpeningBalanceRepository
      */
     private $openingBalances;
 
+    /**
+     * {@inheritdoc}
+     */
     public function add(OpeningBalance $openingBalance)
     {
         $currency = $openingBalance->currency();
@@ -21,11 +24,19 @@ class InMemoryOpeningBalanceRepository implements OpeningBalanceRepository
         $this->openingBalances[$currency][(string) $openingBalance->id()] = $openingBalance;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getAll() : array
     {
         return $this->openingBalances;
     }
 
+    /**
+     * Get the totals for all the balances in the repository
+     *
+     * @return array
+     */
     public function getTotals() : array
     {
         $totals = [];

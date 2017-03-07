@@ -42,6 +42,16 @@ class Transaction
      */
     private $description;
 
+    /**
+     * Create a transaction
+     *
+     * @param TransactionId $id
+     * @param Account $sourceAccount
+     * @param Account $destinationAccount
+     * @param Money $amount
+     * @param TransactionDate $date
+     * @param string $description
+     */
     private function __construct(
         TransactionId $id,
         Account $sourceAccount,
@@ -59,6 +69,15 @@ class Transaction
         $this->description = $description;
     }
 
+    /**
+     * Create a transaction between a source and a destination account
+     *
+     * @param Account $sourceAccount
+     * @param Account $destinationAccount
+     * @param Money $amount
+     * @param string $description
+     * @return Transaction
+     */
     public static function betweenAccounts(
         Account $sourceAccount,
         Account $destinationAccount,
@@ -82,41 +101,77 @@ class Transaction
         );
     }
 
+    /**
+     * Credit the source account for the transaction amount
+     */
     public function creditSourceAccount()
     {
         $this->sourceAccount->credit($this->amount);
     }
 
+    /**
+     * Debit the destination account for the transaction amount
+     */
     public function debitDestinationAccount()
     {
         $this->destinationAccount->debit($this->amount);
     }
 
+    /**
+     * Get the ID of the transaction
+     *
+     * @return TransactionId
+     */
     public function id() : TransactionId
     {
         return $this->id;
     }
 
+    /**
+     * Get the source account of the transaction
+     *
+     * @return Account
+     */
     public function sourceAccount() : Account
     {
         return $this->sourceAccount;
     }
 
+    /**
+     * Get the destination account of the transaction
+     *
+     * @return Account
+     */
     public function destinationAccount() : Account
     {
         return $this->destinationAccount;
     }
 
+    /**
+     * Get the transaction amount
+     *
+     * @return Money
+     */
     public function amount() : Money
     {
         return $this->amount;
     }
 
+    /**
+     * Get the transaction date
+     *
+     * @return TransactionDate
+     */
     public function date() : TransactionDate
     {
         return $this->date;
     }
 
+    /**
+     * Get the transaction description
+     *
+     * @return string
+     */
     public function description() : string
     {
         return $this->description;

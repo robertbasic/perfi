@@ -5,7 +5,14 @@ namespace PerFi\Domain\Transaction;
 
 class TransactionDate extends \DateTimeImmutable
 {
-    public static function now()
+    /**
+     * Create a new immutable transaction date and time
+     *
+     * The timezone is UTC.
+     *
+     * @return TransactionDate
+     */
+    public static function now() : self
     {
         $timezone = new \DateTimeZone('UTC');
 

@@ -15,11 +15,23 @@ class StartOpeningBalance implements CommandHandler
      */
     private $openingBalances;
 
+    /**
+     * A handler that handles starting an opening balance
+     *
+     * @param OpeningBalanceRepository $openingBalances
+     */
     public function __construct(OpeningBalanceRepository $openingBalances)
     {
         $this->openingBalances = $openingBalances;
     }
 
+    /**
+     * Handle the start opening balance command
+     *
+     * Add the opening balance that is started to the repository.
+     *
+     * @param Command $startOpeningBalanceCommand
+     */
     public function __invoke(Command $startOpeningBalanceCommand)
     {
         $openingBalance = $startOpeningBalanceCommand->payload();

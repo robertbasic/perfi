@@ -13,11 +13,24 @@ class CreateAccount implements Command
      */
     private $account;
 
+    /**
+     * Create account command
+     *
+     * Creates an account by it's type and with a title.
+     *
+     * @param string $type
+     * @param string $title
+     */
     public function __construct(string $type, string $title)
     {
         $this->account = Account::byStringType($type, $title);
     }
 
+    /**
+     * The payload of the command
+     *
+     * @return Account
+     */
     public function payload() : Account
     {
         return $this->account;

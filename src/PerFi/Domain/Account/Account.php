@@ -32,6 +32,13 @@ class Account
      */
     private $amounts;
 
+    /**
+     * Create an account
+     *
+     * @param AccountId $id
+     * @param AccountType $type
+     * @param string $title
+     */
     private function __construct(AccountId $id, AccountType $type, string $title)
     {
         $this->id = $id;
@@ -41,6 +48,13 @@ class Account
         $this->amounts = [];
     }
 
+    /**
+     * Create an account of a certain type with a title
+     *
+     * @param string $type
+     * @param string $title
+     * @return Account
+     */
     public static function byStringType(string $type, string $title) : self
     {
         $id = AccountId::fromUuid(Uuid::uuid4());
@@ -55,6 +69,13 @@ class Account
         );
     }
 
+    /**
+     * Calculate the balances for the account
+     *
+     * Calculates the balances for every currency separately.
+     *
+     * @return array
+     */
     public function balances() : array
     {
         $balances = [];
@@ -74,34 +95,64 @@ class Account
         return $balances;
     }
 
+    /**
+     * Debit the account for the amount provided
+     *
+     * @param Money $amount
+     */
     public function debit(Money $amount)
     {
         $amount = $amount->absolute();
         $this->amounts[(string) $amount->getCurrency()][] = $amount;
     }
 
+    /**
+     * Credit the account for the amount provided
+     *
+     * @param Money $amount
+     */
     public function credit(Money $amount)
     {
         $amount = $amount->multiply(-1);
         $this->amounts[(string) $amount->getCurrency()][] = $amount;
     }
 
+    /**
+     * Get the ID of the account
+     *
+     * @return AccountId
+     */
     public function id() : AccountId
     {
         return $this->id;
     }
 
-    public function title()
+    /**
+     * Get the title of the account
+     *
+     * @return string
+     */
+    public function title() : string
     {
         return $this->title;
     }
 
-    public function type()
+    /**
+     * Get the type of the account
+     *
+     * @return AccountType
+     */
+    public function type() : AccountType
     {
         return $this->type;
     }
 
-    public function __toString()
+    /**
+     * String representation of the account
+     *
+     * @return string
+     */
+    public function __toString() : string
     {
         return sprintf("%s, %s", $this->title(), $this->type());
     }
