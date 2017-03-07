@@ -33,3 +33,9 @@ Feature: Transactions
         When 1200 RSD is charged for "supermarket groceries" from "Groceries" to "Cash"
         Then I should have 1200 RSD funds less in "Cash" asset account
         And I should have 1200 RSD funds more in "Groceries" expense account
+
+    Scenario: A refund for an expense to an asset
+        Given I have executed a transaction between a "Cash" asset and a "Groceries" expense for 1200 RSD
+        When I refund 200 RSD for the "Groceries" to "Cash"
+        Then I should have 200 RSD total in "Cash" asset account
+        And I should have 1000 RSD total in "Groceries" expense account

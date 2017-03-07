@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace PerFiFeatureTest\Domain;
 
 use Behat\Behat\Context\Context;
+use Behat\Behat\Tester\Exception\PendingException;
 use PerFi\Application\Transaction\InMemoryTransactionRepository;
 use PerFi\Domain\Account\Account;
 use PerFi\Domain\Command;
@@ -130,6 +131,30 @@ class TransactionContext implements Context
                 Assert::same((string) $result->getCurrency(), (string) $expected->getCurrency());
             }
         }
+    }
+
+    /**
+     * @Given I have executed a transaction between a :sourceTitle :sourceType and a :destinationTitle :destinationType for :amount :currency
+     */
+    public function iHaveExecutedATransactionBetweenTwoAccountsForAmountInCurrency($sourceTtitle, $sourceType, $destinationTitle, $destinationType, $amount, $currency)
+    {
+        throw new PendingException();
+    }
+
+    /**
+     * @When I refund :amount :currency for the :sourceTitle to :destinationTitle
+     */
+    public function iRefundAmountInCurrency($amount, $currency, $sourceTitle, $destinationTitle)
+    {
+        throw new PendingException();
+    }
+
+    /**
+     * @Then I should have :amount :currency total in :title :type account
+     */
+    public function iShouldHaveAmountInCurrencyTotalInAccount($amount, $currency, $title, $type)
+    {
+        throw new PendingException();
     }
 
     private function getAccountByTitle($title)
