@@ -56,7 +56,6 @@ class TransactionContext implements Context
             $this->repository,
             $this->eventBus
         );
-
     }
 
     /**
@@ -93,7 +92,6 @@ class TransactionContext implements Context
      */
     public function anAmountInCurrencyIsPayedForSomething($amount, $currency, $description, $source, $destination)
     {
-        $repository = new InMemoryTransactionRepository();
         $sourceAccount = $this->getAccountByTitle($source);
         $destinationAccount = $this->getAccountByTitle($destination);
         $amount = MoneyFactory::amountInCurrency($amount, $currency);
@@ -105,11 +103,7 @@ class TransactionContext implements Context
             $description
         );
 
-        $eventBus = EventBusFactory::getEventBus();
-
-        $commandHandler = new ExecuteTransactionHandler($repository, $eventBus);
-
-        $commandHandler->__invoke($this->command);
+        $this->commandHandler->__invoke($this->command);
     }
 
     /**
@@ -117,7 +111,6 @@ class TransactionContext implements Context
      */
     public function anAmountInCurrencyIsChargedForSomething($amount, $currency, $description, $source, $destination)
     {
-        $repository = new InMemoryTransactionRepository();
         $sourceAccount = $this->getAccountByTitle($source);
         $destinationAccount = $this->getAccountByTitle($destination);
         $amount = MoneyFactory::amountInCurrency($amount, $currency);
@@ -129,11 +122,7 @@ class TransactionContext implements Context
             $description
         );
 
-        $eventBus = EventBusFactory::getEventBus();
-
-        $commandHandler = new ExecuteTransactionHandler($repository, $eventBus);
-
-        $commandHandler->__invoke($this->command);
+        $this->commandHandler->__invoke($this->command);
     }
 
     /**
