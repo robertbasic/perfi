@@ -39,6 +39,21 @@ class AccountTest extends TestCase
     /**
      * @test
      */
+    public function empty_balances_when_nothing_was_credited_or_debited()
+    {
+        $type = 'asset';
+        $title = 'Cash';
+
+        $account = Account::byStringType($type, $title);
+
+        $balances = $account->balances();
+
+        self::assertEmpty($balances);
+    }
+
+    /**
+     * @test
+     */
     public function crediting_an_account_adds_negative_amount()
     {
         $amountOne = MoneyFactory::amountInCurrency('500', 'RSD');
