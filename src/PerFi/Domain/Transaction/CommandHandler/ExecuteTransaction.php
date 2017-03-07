@@ -19,6 +19,11 @@ class ExecuteTransaction implements CommandHandler
     private $transactions;
 
     /**
+     * @var MessageBus
+     */
+    private $eventBus;
+
+    /**
      * A handler that handles the execution of a transaction
      *
      * @param TransactionRepository $transactions
