@@ -41,3 +41,11 @@ Feature: Transactions
         When I refund 200 RSD for the "Groceries" to "Cash"
         Then I should have 1000 RSD funds less in "Cash" asset account
         And I should have 1000 RSD funds more in "Groceries" expense account
+
+    Scenario: A payback to an asset for an expense
+        Given I have an asset account called "Cash"
+        And I have an expense account called "Groceries"
+        And I have executed a transaction between "Cash" and "Groceries" for 1200 RSD
+        When I pay back 200 RSD from the "Groceries" to "Cash"
+        Then I should have 1000 RSD funds less in "Cash" asset account
+        And I should have 1000 RSD funds more in "Groceries" expense account
