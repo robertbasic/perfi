@@ -44,4 +44,52 @@ class TransactionTest extends TestCase
         self::assertSame($amount->getAmount(), $transaction->amount()->getAmount());
         self::assertSame($amount->getCurrency(), $transaction->amount()->getCurrency());
     }
+
+    /**
+     * @test
+     */
+    public function credits_source_account()
+    {
+        $source = Account::byStringType('asset', 'Cash');
+        $destination = Account::byStringType('expense', 'Groceries');
+        $amount = MoneyFactory::amountInCurrency('500', 'RSD');
+        $description = 'groceries for dinner';
+
+        $transaction = Transaction::betweenAccounts(
+            $source,
+            $destination,
+            $amount,
+            $description
+        );
+
+        $transaction->creditSourceAccount();
+
+        $balances = $source->balances();
+
+        self::assertNotEmpty($balances);
+    }
+
+    /**
+     * @test
+     */
+    public function debits_destination_account()
+    {
+        $source = Account::byStringType('asset', 'Cash');
+        $destination = Account::byStringType('expense', 'Groceries');
+        $amount = MoneyFactory::amountInCurrency('500', 'RSD');
+        $description = 'groceries for dinner';
+
+        $transaction = Transaction::betweenAccounts(
+            $source,
+            $destination,
+            $amount,
+            $description
+        );
+
+        $transaction->debitDestinationAccount();
+
+        $balances = $destination->balances();
+
+        self::assertNotEmpty($balances);
+    }
 }
