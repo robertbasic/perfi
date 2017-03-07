@@ -37,6 +37,8 @@ class Account
         $this->id = $id;
         $this->type = $type;
         $this->title = $title;
+
+        $this->amounts = [];
     }
 
     public static function byStringType(string $type, string $title) : self
