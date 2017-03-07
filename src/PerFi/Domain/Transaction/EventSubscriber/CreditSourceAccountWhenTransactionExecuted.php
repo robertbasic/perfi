@@ -8,7 +8,7 @@ use PerFi\Domain\EventSubscriber;
 
 class CreditSourceAccountWhenTransactionExecuted implements EventSubscriber
 {
-    public function notify(Event $transactionExecuted)
+    public function __invoke(Event $transactionExecuted)
     {
         $transaction = $transactionExecuted->payload();
 

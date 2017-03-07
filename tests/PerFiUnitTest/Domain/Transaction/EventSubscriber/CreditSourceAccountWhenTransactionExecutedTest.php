@@ -32,7 +32,7 @@ class CreditSourceAccountWhenTransactionExecutedTest extends TestCase
         $event = new TransactionExecuted($transaction);
 
         $eventSubscriber = new CreditSourceAccountWhenTransactionExecuted();
-        $eventSubscriber->notify($event);
+        $eventSubscriber->__invoke($event);
 
         $balances = $source->balances();
 

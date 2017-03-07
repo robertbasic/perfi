@@ -32,7 +32,7 @@ class DebitDestinationAccountWhenTransactionExecutedTest extends TestCase
         $event = new TransactionExecuted($transaction);
 
         $eventSubscriber = new DebitDestinationAccountWhenTransactionExecuted();
-        $eventSubscriber->notify($event);
+        $eventSubscriber->__invoke($event);
 
         $balances = $destination->balances();
 
