@@ -6,9 +6,13 @@ namespace PerFiFeatureTest\Domain;
 use Behat\Behat\Context\Context;
 use PerFi\Application\Transaction\InMemoryTransactionRepository;
 use PerFi\Domain\Account\Account;
+use PerFi\Domain\EventBusFactory;
 use PerFi\Domain\MoneyFactory;
 use PerFi\Domain\Transaction\CommandHandler\ExecuteTransaction as ExecuteTransactionHandler;
 use PerFi\Domain\Transaction\Command\ExecuteTransaction as ExecuteTransactionCommand;
+use PerFi\Domain\Transaction\EventSubscriber\CreditSourceAccountWhenTransactionExecuted;
+use PerFi\Domain\Transaction\EventSubscriber\DebitDestinationAccountWhenTransactionExecuted;
+use PerFi\Domain\Transaction\Event\TransactionExecuted;
 use Webmozart\Assert\Assert;
 
 class TransactionContext implements Context
@@ -43,13 +47,18 @@ class TransactionContext implements Context
         $sourceAccount = $this->getAccountByTitle($source);
         $destinationAccount = $this->getAccountByTitle($destination);
         $amount = MoneyFactory::amountInCurrency($amount, $currency);
+
         $this->command = new ExecuteTransactionCommand(
             $sourceAccount,
             $destinationAccount,
             $amount,
             $description
         );
-        $commandHandler = new ExecuteTransactionHandler($repository);
+
+        $eventBus = EventBusFactory::getEventBus();
+
+        $commandHandler = new ExecuteTransactionHandler($repository, $eventBus);
+
         $commandHandler->__invoke($this->command);
     }
 
@@ -62,13 +71,18 @@ class TransactionContext implements Context
         $sourceAccount = $this->getAccountByTitle($source);
         $destinationAccount = $this->getAccountByTitle($destination);
         $amount = MoneyFactory::amountInCurrency($amount, $currency);
+
         $this->command = new ExecuteTransactionCommand(
             $sourceAccount,
             $destinationAccount,
             $amount,
             $description
         );
-        $commandHandler = new ExecuteTransactionHandler($repository);
+
+        $eventBus = EventBusFactory::getEventBus();
+
+        $commandHandler = new ExecuteTransactionHandler($repository, $eventBus);
+
         $commandHandler->__invoke($this->command);
     }
 

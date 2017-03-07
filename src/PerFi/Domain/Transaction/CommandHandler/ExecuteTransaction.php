@@ -5,8 +5,10 @@ namespace PerFi\Domain\Transaction\CommandHandler;
 
 use PerFi\Domain\Command;
 use PerFi\Domain\CommandHandler;
+use PerFi\Domain\Transaction\Event\TransactionExecuted;
 use PerFi\Domain\Transaction\Transaction;
 use PerFi\Domain\Transaction\TransactionRepository;
+use SimpleBus\Message\Bus\MessageBus;
 
 class ExecuteTransaction implements CommandHandler
 {
@@ -16,9 +18,10 @@ class ExecuteTransaction implements CommandHandler
      */
     private $transactions;
 
-    public function __construct(TransactionRepository $transactions)
+    public function __construct(TransactionRepository $transactions, MessageBus $eventBus)
     {
         $this->transactions = $transactions;
+        $this->eventBus = $eventBus;
     }
 
     public function __invoke(Command $executeTransaction)
@@ -27,8 +30,8 @@ class ExecuteTransaction implements CommandHandler
 
         $this->transactions->add($transaction);
 
-        // @todo These should be event triggers -> event listeners
-        $transaction->creditSourceAccount();
-        $transaction->debitDestinationAccount();
+        $event = new TransactionExecuted($transaction);
+
+        $this->eventBus->handle($event);
     }
 }
