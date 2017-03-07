@@ -11,10 +11,12 @@ use PerFi\Application\Transaction\InMemoryTransactionRepository;
 use PerFi\Domain\Account\Account;
 use PerFi\Domain\Command;
 use PerFi\Domain\CommandHandler;
+use PerFi\Domain\Event;
 use PerFi\Domain\MoneyFactory;
 use PerFi\Domain\Transaction\CommandHandler\ExecuteTransaction as ExecuteTransactionHandler;
 use PerFi\Domain\Transaction\Command\ExecuteTransaction as ExecuteTransactionCommand;
 use PerFi\Domain\Transaction\TransactionRepository;
+use SimpleBus\Message\Bus\Middleware\MessageBusSupportingMiddleware;
 
 class ExecuteTransactionTest extends TestCase
 {
@@ -24,6 +26,11 @@ class ExecuteTransactionTest extends TestCase
      * @var TransactionRepository
      */
     private $repository;
+
+    /**
+     * @var MessageBusSupportingMiddleware
+     */
+    private $eventBus;
 
     /**
      * @var Account
@@ -54,13 +61,13 @@ class ExecuteTransactionTest extends TestCase
     {
         $this->repository = new InMemoryTransactionRepository();
 
-        $this->sourceAccount = m::mock(Account::class);
-        $this->sourceAccount->shouldReceive('credit')
+        $this->eventBus = m::mock(MessageBusSupportingMiddleware::class);
+        $this->eventBus->shouldReceive('handle')
             ->byDefault();
 
+        $this->sourceAccount = m::mock(Account::class);
+
         $this->destinationAccount = m::mock(Account::class);
-        $this->destinationAccount->shouldReceive('debit')
-            ->byDefault();
 
         $this->amount = MoneyFactory::amountInCurrency('500', 'RSD');
 
@@ -72,7 +79,8 @@ class ExecuteTransactionTest extends TestCase
         );
 
         $this->commandHandler = new ExecuteTransactionHandler(
-            $this->repository
+            $this->repository,
+            $this->eventBus
         );
     }
 
@@ -93,23 +101,11 @@ class ExecuteTransactionTest extends TestCase
     /**
      * @test
      */
-    public function when_invoked_credits_transaction_amount_on_source_account()
+    public function when_invoked_lets_the_event_bus_handle_the_event()
     {
-        $this->sourceAccount->shouldReceive('credit')
+        $this->eventBus->shouldReceive('handle')
             ->once()
-            ->with($this->amount);
-
-        $this->commandHandler->__invoke($this->command);
-    }
-
-    /**
-     * @test
-     */
-    public function when_invoked_debits_transaction_amount_on_destination_account()
-    {
-        $this->destinationAccount->shouldReceive('debit')
-            ->once()
-            ->with($this->amount);
+            ->with(m::type(Event::class));
 
         $this->commandHandler->__invoke($this->command);
     }
