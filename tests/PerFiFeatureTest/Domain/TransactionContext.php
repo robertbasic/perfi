@@ -146,6 +146,26 @@ class TransactionContext implements Context
     }
 
     /**
+     * @When I pay back :amount :currency from the :source to :destination
+     */
+    public function iPayBackAmountInCurrency($amount, $currency, $source, $destination)
+    {
+        $sourceAccount = $this->getAccountByTitle($source);
+        $destinationAccount = $this->getAccountByTitle($destination);
+        $amount = MoneyFactory::amountInCurrency($amount, $currency);
+        $description = "supermarket";
+
+        $command = new ExecuteTransactionCommand(
+            $sourceAccount,
+            $destinationAccount,
+            $amount,
+            $description
+        );
+
+        $this->commandHandler->__invoke($command);
+    }
+
+    /**
      * @Then I should have :amount :currency funds less in :title :type account
      */
     public function iShouldHaveLessFundsInSourceAccount($amount, $currency, $title, $type)
