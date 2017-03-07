@@ -25,11 +25,22 @@ class AccountType
      */
     private $type;
 
+    /**
+     * Create an account type
+     *
+     * @param string $type
+     */
     private function __construct(string $type)
     {
         $this->type = $type;
     }
 
+    /**
+     * Create an account type from a string
+     *
+     * @param string $type
+     * @return AccountType
+     */
     public static function fromString(string $type) : self
     {
         Assert::stringNotEmpty($type);
@@ -43,6 +54,11 @@ class AccountType
         );
     }
 
+    /**
+     * String representation of the account type
+     *
+     * @return string
+     */
     public function __toString() : string
     {
         return $this->type;

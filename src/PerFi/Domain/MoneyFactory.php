@@ -9,6 +9,13 @@ use Money\Parser\DecimalMoneyParser;
 
 class MoneyFactory
 {
+    /**
+     * Create a Money value object with the provided amount and currency
+     *
+     * @param string $amount
+     * @param string $currency
+     * @return Money
+     */
     public static function amountInCurrency(string $amount, string $currency) : Money
     {
         $currencies = new ISOCurrencies();

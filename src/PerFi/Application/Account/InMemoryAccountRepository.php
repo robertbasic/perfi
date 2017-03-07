@@ -13,11 +13,17 @@ class InMemoryAccountRepository implements AccountRepository
      */
     private $accounts;
 
+    /**
+     * {@inheritdoc}
+     */
     public function add(Account $account)
     {
         $this->accounts[(string) $account->id()] = $account;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getAll() : array
     {
         return $this->accounts;

@@ -8,6 +8,13 @@ use PerFi\Domain\EventSubscriber;
 
 class DebitDestinationAccountWhenTransactionExecuted implements EventSubscriber
 {
+    /**
+     * Handle the transaction executed event
+     *
+     * Debit the destination account of the transaction.
+     *
+     * @param Event $transactionExecuted
+     */
     public function __invoke(Event $transactionExecuted)
     {
         $transaction = $transactionExecuted->payload();

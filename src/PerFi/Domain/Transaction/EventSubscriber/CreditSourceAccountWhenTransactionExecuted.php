@@ -8,6 +8,13 @@ use PerFi\Domain\EventSubscriber;
 
 class CreditSourceAccountWhenTransactionExecuted implements EventSubscriber
 {
+    /**
+     * Handle the transaction executed event
+     *
+     * Credit the source account of the transaction.
+     *
+     * @param Event $transactionExecuted
+     */
     public function __invoke(Event $transactionExecuted)
     {
         $transaction = $transactionExecuted->payload();

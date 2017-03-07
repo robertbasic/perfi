@@ -14,11 +14,23 @@ class CreateAccount implements CommandHandler
      */
     private $accounts;
 
+    /**
+     * A handler that handles the creation of an account
+     *
+     * @param AccountRepository $accounts
+     */
     public function __construct(AccountRepository $accounts)
     {
         $this->accounts = $accounts;
     }
 
+    /**
+     * Handle the create account command
+     *
+     * Add the account that is created to the repository.
+     *
+     * @param Command $createAccount
+     */
     public function __invoke(Command $createAccount)
     {
         $account = $createAccount->payload();
