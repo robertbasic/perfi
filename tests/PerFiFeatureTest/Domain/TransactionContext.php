@@ -8,7 +8,6 @@ use Behat\Behat\Tester\Exception\PendingException;
 use PerFi\Application\Transaction\InMemoryTransactionRepository;
 use PerFi\Domain\Account\Account;
 use PerFi\Domain\Account\AccountType;
-use PerFi\Domain\Command;
 use PerFi\Domain\EventBusFactory;
 use PerFi\Domain\MoneyFactory;
 use PerFi\Domain\Transaction\CommandHandler\ExecuteTransaction as ExecuteTransactionHandler;
