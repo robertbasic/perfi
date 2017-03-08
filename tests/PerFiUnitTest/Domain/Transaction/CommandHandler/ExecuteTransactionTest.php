@@ -69,12 +69,14 @@ class ExecuteTransactionTest extends TestCase
 
         $this->destinationAccount = m::mock(Account::class);
 
-        $this->amount = MoneyFactory::amountInCurrency('500', 'RSD');
+        $this->amount = '500';
+        $this->currency = 'RSD';
 
         $this->command = new ExecuteTransactionCommand(
             $this->sourceAccount,
             $this->destinationAccount,
             $this->amount,
+            $this->currency,
             'supermarket'
         );
 

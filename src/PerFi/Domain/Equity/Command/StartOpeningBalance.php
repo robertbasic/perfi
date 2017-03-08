@@ -4,35 +4,34 @@ declare(strict_types=1);
 namespace PerFi\Domain\Equity\Command;
 
 use Money\Money;
-use PerFi\Domain\Command;
-use PerFi\Domain\Equity\OpeningBalance;
+use PerFi\Domain\MoneyFactory;
 
-class StartOpeningBalance implements Command
+class StartOpeningBalance
 {
     /**
-     * @var OpeningBalance
+     * @var Money
      */
-    private $openingBalance;
+    private $amount;
 
     /**
      * Start opening balance command
      *
-     * Creates an opening balance with the given Money amount.
+     * Creates the amount for the opening balance.
      *
      * @param Money $amount
      */
-    public function __construct(Money $amount)
+    public function __construct(string $amount, string $currency)
     {
-        $this->openingBalance = OpeningBalance::forStarting($amount);
+        $this->amount = MoneyFactory::amountInCurrency($amount, $currency);
     }
 
     /**
-     * The payload of the command
+     * The amount for the opening balance
      *
-     * @return OpeningBalance
+     * @return Money
      */
-    public function payload() : OpeningBalance
+    public function amount() : Money
     {
-        return $this->openingBalance;
+        return $this->amount;
     }
 }

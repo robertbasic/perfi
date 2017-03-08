@@ -46,8 +46,7 @@ class OpeningBalanceContext implements Context
      */
     public function iHaveEquityOf($amount, $currency)
     {
-        $amount = MoneyFactory::amountInCurrency($amount, $currency);
-        $this->startOpeningBalanceCommands[] = new StartOpeningBalanceCommand($amount);
+        $this->startOpeningBalanceCommands[] = new StartOpeningBalanceCommand($amount, $currency);
     }
 
     /**

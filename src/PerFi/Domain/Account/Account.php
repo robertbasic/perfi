@@ -51,14 +51,13 @@ class Account
     /**
      * Create an account of a certain type with a title
      *
-     * @param string $type
+     * @param AccountType $type
      * @param string $title
      * @return Account
      */
-    public static function byStringType(string $type, string $title) : self
+    public static function byTypeWithTitle(AccountType $type, string $title) : self
     {
         $id = AccountId::fromUuid(Uuid::uuid4());
-        $type = AccountType::fromString($type);
 
         Assert::stringNotEmpty($title);
 

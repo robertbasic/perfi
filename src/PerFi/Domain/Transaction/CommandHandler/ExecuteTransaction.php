@@ -3,14 +3,13 @@ declare(strict_types=1);
 
 namespace PerFi\Domain\Transaction\CommandHandler;
 
-use PerFi\Domain\Command;
-use PerFi\Domain\CommandHandler;
+use PerFi\Domain\Transaction\Command\ExecuteTransaction as ExecuteTransactionCommand;
 use PerFi\Domain\Transaction\Event\TransactionExecuted;
 use PerFi\Domain\Transaction\Transaction;
 use PerFi\Domain\Transaction\TransactionRepository;
 use SimpleBus\Message\Bus\MessageBus;
 
-class ExecuteTransaction implements CommandHandler
+class ExecuteTransaction
 {
 
     /**
@@ -41,11 +40,16 @@ class ExecuteTransaction implements CommandHandler
      * Add the executed transaction to the repository.
      * Tell the event bus to handle the transaction executed event.
      *
-     * @param Command $executeTransaction
+     * @param ExecuteTransactionCommand $executeTransaction
      */
-    public function __invoke(Command $executeTransaction)
+    public function __invoke(ExecuteTransactionCommand $command)
     {
-        $transaction = $executeTransaction->payload();
+        $transaction = Transaction::betweenAccounts(
+            $command->sourceAccount(),
+            $command->destinationAccount(),
+            $command->amount(),
+            $command->description()
+        );
 
         $this->transactions->add($transaction);
 

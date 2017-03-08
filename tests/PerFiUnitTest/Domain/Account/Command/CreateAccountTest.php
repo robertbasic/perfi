@@ -5,6 +5,7 @@ namespace PerFiUnitTest\Domain\Account\Command;
 
 use PHPUnit\Framework\TestCase;
 use PerFi\Domain\Account\Account;
+use PerFi\Domain\Account\AccountType;
 use PerFi\Domain\Account\Command\CreateAccount;
 
 class CreateAccountTest extends TestCase
@@ -19,8 +20,11 @@ class CreateAccountTest extends TestCase
 
         $command = new CreateAccount($type, $title);
 
-        $payload = $command->payload();
+        $accountType = $command->accountType();
+        $title = $command->title();
 
-        self::assertInstanceOf(Account::class, $payload);
+        self::assertInstanceOf(AccountType::class, $accountType);
+        self::assertSame('asset', (string) $accountType);
+        self::assertSame('Cash', $title);
     }
 }

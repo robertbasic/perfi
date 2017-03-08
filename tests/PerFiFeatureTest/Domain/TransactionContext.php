@@ -7,6 +7,7 @@ use Behat\Behat\Context\Context;
 use Behat\Behat\Tester\Exception\PendingException;
 use PerFi\Application\Transaction\InMemoryTransactionRepository;
 use PerFi\Domain\Account\Account;
+use PerFi\Domain\Account\AccountType;
 use PerFi\Domain\Command;
 use PerFi\Domain\EventBusFactory;
 use PerFi\Domain\MoneyFactory;
@@ -64,7 +65,8 @@ class TransactionContext implements Context
     public function iHaveAnAccountOfCertianTypeCalled($type, $title)
     {
         $hash = $this->hashAccountTitle($title);
-        $this->accounts[$hash] = Account::byStringType($type, $title);
+        $type = AccountType::fromString($type);
+        $this->accounts[$hash] = Account::byTypeWithTitle($type, $title);
     }
 
     /**
@@ -74,13 +76,13 @@ class TransactionContext implements Context
     {
         $sourceAccount = $this->getAccountByTitle($source);
         $destinationAccount = $this->getAccountByTitle($destination);
-        $amount = MoneyFactory::amountInCurrency($amount, $currency);
         $description = "supermarket";
 
         $this->command = new ExecuteTransactionCommand(
             $sourceAccount,
             $destinationAccount,
             $amount,
+            $currency,
             $description
         );
 
@@ -94,12 +96,12 @@ class TransactionContext implements Context
     {
         $sourceAccount = $this->getAccountByTitle($source);
         $destinationAccount = $this->getAccountByTitle($destination);
-        $amount = MoneyFactory::amountInCurrency($amount, $currency);
 
         $this->command = new ExecuteTransactionCommand(
             $sourceAccount,
             $destinationAccount,
             $amount,
+            $currency,
             $description
         );
 
@@ -113,12 +115,12 @@ class TransactionContext implements Context
     {
         $sourceAccount = $this->getAccountByTitle($source);
         $destinationAccount = $this->getAccountByTitle($destination);
-        $amount = MoneyFactory::amountInCurrency($amount, $currency);
 
         $this->command = new ExecuteTransactionCommand(
             $sourceAccount,
             $destinationAccount,
             $amount,
+            $currency,
             $description
         );
 
@@ -132,13 +134,13 @@ class TransactionContext implements Context
     {
         $sourceAccount = $this->getAccountByTitle($source);
         $destinationAccount = $this->getAccountByTitle($destination);
-        $amount = MoneyFactory::amountInCurrency($amount, $currency);
         $description = "supermarket";
 
         $command = new ExecuteTransactionCommand(
             $sourceAccount,
             $destinationAccount,
             $amount,
+            $currency,
             $description
         );
 
@@ -152,13 +154,13 @@ class TransactionContext implements Context
     {
         $sourceAccount = $this->getAccountByTitle($source);
         $destinationAccount = $this->getAccountByTitle($destination);
-        $amount = MoneyFactory::amountInCurrency($amount, $currency);
         $description = "supermarket";
 
         $command = new ExecuteTransactionCommand(
             $sourceAccount,
             $destinationAccount,
             $amount,
+            $currency,
             $description
         );
 
@@ -172,8 +174,7 @@ class TransactionContext implements Context
     {
         $expected = MoneyFactory::amountInCurrency('-' . $amount, $currency);
 
-        $transaction = $this->command->payload();
-        $sourceAccount = $transaction->sourceAccount();
+        $sourceAccount = $this->command->sourceAccount();
 
         $balances = $sourceAccount->balances();
 
@@ -192,8 +193,7 @@ class TransactionContext implements Context
     {
         $expected = MoneyFactory::amountInCurrency($amount, $currency);
 
-        $transaction = $this->command->payload();
-        $destinationAccount = $transaction->destinationAccount();
+        $destinationAccount = $this->command->destinationAccount();
 
         $balances = $destinationAccount->balances();
 

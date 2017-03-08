@@ -3,12 +3,11 @@ declare(strict_types=1);
 
 namespace PerFi\Domain\Equity\CommandHandler;
 
-use PerFi\Domain\Command;
-use PerFi\Domain\CommandHandler;
+use Perfi\Domain\Equity\Command\StartOpeningBalance as StartOpeningBalanceCommand;
 use PerFi\Domain\Equity\OpeningBalance;
 use PerFi\Domain\Equity\OpeningBalanceRepository;
 
-class StartOpeningBalance implements CommandHandler
+class StartOpeningBalance
 {
     /**
      * @var OpeningBalanceRepository
@@ -28,13 +27,15 @@ class StartOpeningBalance implements CommandHandler
     /**
      * Handle the start opening balance command
      *
-     * Add the opening balance that is started to the repository.
+     * Start the opening balance and add it to the repository.
      *
-     * @param Command $startOpeningBalanceCommand
+     * @param StartOpeningBalanceCommand $command
      */
-    public function __invoke(Command $startOpeningBalanceCommand)
+    public function __invoke(StartOpeningBalanceCommand $command)
     {
-        $openingBalance = $startOpeningBalanceCommand->payload();
+        $amount = $command->amount();
+
+        $openingBalance = OpeningBalance::forStarting($amount);
 
         $this->openingBalances->add($openingBalance);
     }

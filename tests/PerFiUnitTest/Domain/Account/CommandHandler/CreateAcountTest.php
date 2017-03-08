@@ -18,11 +18,11 @@ class CreateAccountTest extends TestCase
         $type = 'asset';
         $title = 'Cash';
 
+        $command = new CreateAccountCommand($type, $title);
+
         $repository = new InMemoryAccountRepository();
 
         $commandHandler = new CreateAccount($repository);
-
-        $command = new CreateAccountCommand($type, $title);
 
         $commandHandler->__invoke($command);
 
