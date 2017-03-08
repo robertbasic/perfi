@@ -5,7 +5,6 @@ namespace PerFiUnitTest\Domain\Equity\Command;
 
 use PHPUnit\Framework\TestCase;
 use PerFi\Domain\Equity\Command\StartOpeningBalance;
-use PerFi\Domain\Equity\OpeningBalance;
 use PerFi\Domain\MoneyFactory;
 
 class StartOpeningBalanceTest extends TestCase
@@ -13,14 +12,17 @@ class StartOpeningBalanceTest extends TestCase
     /**
      * @test
      */
-    public function opening_balance_is_payload()
+    public function amount_for_opening_balance_is_created()
     {
-        $amount = MoneyFactory::amountInCurrency('500', 'RSD');
+        $amount = '500';
+        $currency = 'RSD';
 
-        $command = new StartOpeningBalance($amount);
+        $command = new StartOpeningBalance($amount, $currency);
 
-        $payload = $command->payload();
+        $result = $command->amount();
 
-        self::assertInstanceOf(OpeningBalance::class, $payload);
+        $expected = MoneyFactory::amountInCurrency('500', 'RSD');
+
+        self::assertTrue($expected->equals($result));
     }
 }
