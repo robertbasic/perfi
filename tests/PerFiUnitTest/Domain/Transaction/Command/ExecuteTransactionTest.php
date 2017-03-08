@@ -5,6 +5,7 @@ namespace PerFiUnitTest\Domain\Transaction\Command;
 
 use PHPUnit\Framework\TestCase;
 use PerFi\Domain\Account\Account;
+use PerFi\Domain\Account\AccountType;
 use PerFi\Domain\MoneyFactory;
 use PerFi\Domain\Transaction\Command\ExecuteTransaction;
 use PerFi\Domain\Transaction\Transaction;
@@ -16,8 +17,10 @@ class ExecuteTransactionTest extends TestCase
      */
     public function transaction_is_payload()
     {
-        $sourceAccount = Account::byStringType('asset', 'Cash');
-        $destinationAccount = Account::byStringType('expense', 'Groceries');
+        $asset = AccountType::fromString('asset');
+        $expense = AccountType::fromString('expense');
+        $sourceAccount = Account::byTypeWithTitle($asset, 'Cash');
+        $destinationAccount = Account::byTypeWithTitle($expense, 'Groceries');
         $amount = MoneyFactory::amountInCurrency('500', 'RSD');
         $description = 'supermarket';
 

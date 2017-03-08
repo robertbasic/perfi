@@ -6,6 +6,7 @@ namespace PerFiUnitTest\Application\Transaction;
 use PHPUnit\Framework\TestCase;
 use PerFi\Application\Transaction\InMemoryTransactionRepository;
 use PerFi\Domain\Account\Account;
+use PerFi\Domain\Account\AccountType;
 use PerFi\Domain\MoneyFactory;
 use PerFi\Domain\Transaction\Transaction;
 
@@ -16,8 +17,10 @@ class InMemoryTransactionRepositoryTest extends TestCase
      */
     public function can_add_transaction_to_repository()
     {
-        $source = Account::byStringType('asset', 'Cash');
-        $destination = Account::byStringType('expense', 'Groceries');
+        $asset = AccountType::fromString('asset');
+        $expense = AccountType::fromString('expense');
+        $source = Account::byTypeWithTitle($asset, 'Cash');
+        $destination = Account::byTypeWithTitle($expense, 'Groceries');
         $amount = MoneyFactory::amountInCurrency('500', 'RSD');
         $description = 'groceries for dinner';
 

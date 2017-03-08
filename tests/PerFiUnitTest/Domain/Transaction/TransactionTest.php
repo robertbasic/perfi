@@ -6,6 +6,7 @@ namespace PerFiUnitTest\Domain\Transaction;
 use Money\Money;
 use PHPUnit\Framework\TestCase;
 use PerFi\Domain\Account\Account;
+use PerFi\Domain\Account\AccountType;
 use PerFi\Domain\MoneyFactory;
 use PerFi\Domain\Transaction\Transaction;
 use PerFi\Domain\Transaction\TransactionDate;
@@ -13,19 +14,37 @@ use PerFi\Domain\Transaction\TransactionId;
 
 class TransactionTest extends TestCase
 {
+
+    /**
+     * @var Account
+     */
+    private $source;
+
+    /**
+     * @var Account
+     */
+    private $destination;
+
+    public function setup()
+    {
+        $asset = AccountType::fromString('asset');
+        $expense = AccountType::fromString('expense');
+
+        $this->source = Account::byTypeWithTitle($asset, 'Cash');
+        $this->destination = Account::byTypeWithTitle($expense, 'Groceries');
+    }
+
     /**
      * @test
      */
     public function transaction_between_two_accounts_can_be_created()
     {
-        $source = Account::byStringType('asset', 'Cash');
-        $destination = Account::byStringType('expense', 'Groceries');
         $amount = MoneyFactory::amountInCurrency('500', 'RSD');
         $description = 'groceries for dinner';
 
         $transaction = Transaction::betweenAccounts(
-            $source,
-            $destination,
+            $this->source,
+            $this->destination,
             $amount,
             $description
         );
@@ -35,10 +54,10 @@ class TransactionTest extends TestCase
         self::assertSame($description, $transaction->description());
 
         self::assertInstanceOf(Account::class, $transaction->sourceAccount());
-        self::assertSame($source->id(), $transaction->sourceAccount()->id());
+        self::assertSame($this->source->id(), $transaction->sourceAccount()->id());
 
         self::assertInstanceOf(Account::class, $transaction->destinationAccount());
-        self::assertSame($destination->id(), $transaction->destinationAccount()->id());
+        self::assertSame($this->destination->id(), $transaction->destinationAccount()->id());
 
         self::assertInstanceOf(Money::class, $transaction->amount());
         self::assertSame($amount->getAmount(), $transaction->amount()->getAmount());
@@ -50,21 +69,19 @@ class TransactionTest extends TestCase
      */
     public function credits_source_account()
     {
-        $source = Account::byStringType('asset', 'Cash');
-        $destination = Account::byStringType('expense', 'Groceries');
         $amount = MoneyFactory::amountInCurrency('500', 'RSD');
         $description = 'groceries for dinner';
 
         $transaction = Transaction::betweenAccounts(
-            $source,
-            $destination,
+            $this->source,
+            $this->destination,
             $amount,
             $description
         );
 
         $transaction->creditSourceAccount();
 
-        $balances = $source->balances();
+        $balances = $this->source->balances();
 
         self::assertNotEmpty($balances);
     }
@@ -74,21 +91,19 @@ class TransactionTest extends TestCase
      */
     public function debits_destination_account()
     {
-        $source = Account::byStringType('asset', 'Cash');
-        $destination = Account::byStringType('expense', 'Groceries');
         $amount = MoneyFactory::amountInCurrency('500', 'RSD');
         $description = 'groceries for dinner';
 
         $transaction = Transaction::betweenAccounts(
-            $source,
-            $destination,
+            $this->source,
+            $this->destination,
             $amount,
             $description
         );
 
         $transaction->debitDestinationAccount();
 
-        $balances = $destination->balances();
+        $balances = $this->destination->balances();
 
         self::assertNotEmpty($balances);
     }
