@@ -76,13 +76,13 @@ class TransactionContext implements Context
     {
         $sourceAccount = $this->getAccountByTitle($source);
         $destinationAccount = $this->getAccountByTitle($destination);
-        $amount = MoneyFactory::amountInCurrency($amount, $currency);
         $description = "supermarket";
 
         $this->command = new ExecuteTransactionCommand(
             $sourceAccount,
             $destinationAccount,
             $amount,
+            $currency,
             $description
         );
 
@@ -96,12 +96,12 @@ class TransactionContext implements Context
     {
         $sourceAccount = $this->getAccountByTitle($source);
         $destinationAccount = $this->getAccountByTitle($destination);
-        $amount = MoneyFactory::amountInCurrency($amount, $currency);
 
         $this->command = new ExecuteTransactionCommand(
             $sourceAccount,
             $destinationAccount,
             $amount,
+            $currency,
             $description
         );
 
@@ -115,12 +115,12 @@ class TransactionContext implements Context
     {
         $sourceAccount = $this->getAccountByTitle($source);
         $destinationAccount = $this->getAccountByTitle($destination);
-        $amount = MoneyFactory::amountInCurrency($amount, $currency);
 
         $this->command = new ExecuteTransactionCommand(
             $sourceAccount,
             $destinationAccount,
             $amount,
+            $currency,
             $description
         );
 
@@ -134,13 +134,13 @@ class TransactionContext implements Context
     {
         $sourceAccount = $this->getAccountByTitle($source);
         $destinationAccount = $this->getAccountByTitle($destination);
-        $amount = MoneyFactory::amountInCurrency($amount, $currency);
         $description = "supermarket";
 
         $command = new ExecuteTransactionCommand(
             $sourceAccount,
             $destinationAccount,
             $amount,
+            $currency,
             $description
         );
 
@@ -154,13 +154,13 @@ class TransactionContext implements Context
     {
         $sourceAccount = $this->getAccountByTitle($source);
         $destinationAccount = $this->getAccountByTitle($destination);
-        $amount = MoneyFactory::amountInCurrency($amount, $currency);
         $description = "supermarket";
 
         $command = new ExecuteTransactionCommand(
             $sourceAccount,
             $destinationAccount,
             $amount,
+            $currency,
             $description
         );
 
@@ -174,8 +174,7 @@ class TransactionContext implements Context
     {
         $expected = MoneyFactory::amountInCurrency('-' . $amount, $currency);
 
-        $transaction = $this->command->payload();
-        $sourceAccount = $transaction->sourceAccount();
+        $sourceAccount = $this->command->sourceAccount();
 
         $balances = $sourceAccount->balances();
 
@@ -194,8 +193,7 @@ class TransactionContext implements Context
     {
         $expected = MoneyFactory::amountInCurrency($amount, $currency);
 
-        $transaction = $this->command->payload();
-        $destinationAccount = $transaction->destinationAccount();
+        $destinationAccount = $this->command->destinationAccount();
 
         $balances = $destinationAccount->balances();
 

@@ -5,22 +5,32 @@ namespace PerFi\Domain\Transaction\Command;
 
 use Money\Money;
 use PerFi\Domain\Account\Account;
-use PerFi\Domain\Command;
-use PerFi\Domain\Transaction\Transaction;
+use PerFi\Domain\MoneyFactory;
 
-class ExecuteTransaction implements Command
+class ExecuteTransaction
 {
     /**
-     * @var Transaction
+     * @var Account
      */
-    private $transaction;
+    private $sourceAccount;
+
+    /**
+     * @var Account
+     */
+    private $destinationAccount;
+
+    /**
+     * @var Money
+     */
+    private $amount;
+
+    /**
+     * @var string
+     */
+    private $description;
 
     /**
      * Execute transaction command
-     *
-     * Creates a transaction which is to be executed between two accounts.
-     * Every transaction needs an amount that is transferred between accounts,
-     * and a description of the transaction.
      *
      * @param Account $sourceAccount
      * @param Account $destinationAccount
@@ -30,25 +40,54 @@ class ExecuteTransaction implements Command
     public function __construct(
         Account $sourceAccount,
         Account $destinationAccount,
-        Money $amount,
+        string $amount,
+        string $currency,
         string $description
     )
     {
-        $this->transaction = Transaction::betweenAccounts(
-            $sourceAccount,
-            $destinationAccount,
-            $amount,
-            $description
-        );
+        $this->sourceAccount = $sourceAccount;
+        $this->destinationAccount = $destinationAccount;
+        $this->amount = MoneyFactory::amountInCurrency($amount, $currency);
+        $this->description = $description;
     }
 
     /**
-     * The payload of the command
+     * Get the source account for the transaction
      *
-     * @return Transaction
+     * @return Account
      */
-    public function payload() : Transaction
+    public function sourceAccount() : Account
     {
-        return $this->transaction;
+        return $this->sourceAccount;
+    }
+
+    /**
+     * Get the destination account for the transaction
+     *
+     * @return Account
+     */
+    public function destinationAccount() : Account
+    {
+        return $this->destinationAccount;
+    }
+
+    /**
+     * Get the amount for the transaction
+     *
+     * @return Money
+     */
+    public function amount() : Money
+    {
+        return $this->amount;
+    }
+
+    /**
+     * Get the description for the transaction
+     *
+     * @return string
+     */
+    public function description() : string
+    {
+        return $this->description;
     }
 }
