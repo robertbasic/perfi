@@ -70,6 +70,26 @@ class Account
     }
 
     /**
+     * Create an account of a certain type with a title
+     *
+     * @param AccountType $type
+     * @param string $title
+     * @return Account
+     */
+    public static function byTypeWithTitle(AccountType $type, string $title) : self
+    {
+        $id = AccountId::fromUuid(Uuid::uuid4());
+
+        Assert::stringNotEmpty($title);
+
+        return new self(
+            $id,
+            $type,
+            $title
+        );
+    }
+
+    /**
      * Calculate the balances for the account
      *
      * Calculates the balances for every currency separately.

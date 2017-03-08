@@ -3,11 +3,11 @@ declare(strict_types=1);
 
 namespace PerFi\Domain\Account\CommandHandler;
 
+use PerFi\Domain\Account\Account;
 use PerFi\Domain\Account\AccountRepository;
-use PerFi\Domain\Command;
-use PerFi\Domain\CommandHandler;
+use PerFi\Domain\Account\Command\CreateAccount as CreateAccountCommand;
 
-class CreateAccount implements CommandHandler
+class CreateAccount
 {
     /**
      * @var AccountRepository
@@ -27,13 +27,16 @@ class CreateAccount implements CommandHandler
     /**
      * Handle the create account command
      *
-     * Add the account that is created to the repository.
+     * Create the account and add it to the repository.
      *
-     * @param Command $createAccount
+     * @param CreateAccountCommand $command
      */
-    public function __invoke(Command $createAccount)
+    public function __invoke(CreateAccountCommand $command)
     {
-        $account = $createAccount->payload();
+        $accountType = $command->accountType();
+        $title = $command->title();
+
+        $account = Account::byTypeWithTitle($accountType, $title);
 
         $this->accounts->add($account);
     }
