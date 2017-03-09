@@ -16,12 +16,12 @@ use Webmozart\Assert\Assert;
 class AccountContext implements Context
 {
     /**
-     * @var Command
+     * @var CreateAccountCommand
      */
     private $createAccountCommand;
 
     /**
-     * @var CommandHandler
+     * @var CreateAccountCommandHandler
      */
     private $createAccountHandler;
 

@@ -3,10 +3,9 @@ declare(strict_types=1);
 
 namespace PerFi\Domain\Transaction\Event;
 
-use PerFi\Domain\Event;
 use PerFi\Domain\Transaction\Transaction;
 
-class TransactionExecuted implements Event
+class TransactionExecuted
 {
     /**
      * @var Transaction
@@ -24,11 +23,11 @@ class TransactionExecuted implements Event
     }
 
     /**
-     * The payload of the transaction executed event
+     * The transaction that was just executed
      *
      * @return Transaction
      */
-    public function payload() : Transaction
+    public function transaction() : Transaction
     {
         return $this->transaction;
     }
