@@ -15,7 +15,7 @@ class TransactionExecutedTest extends TestCase
     /**
      * @test
      */
-    public function transaction_is_payload()
+    public function transaction_is_set_on_event()
     {
         $asset = AccountType::fromString('asset');
         $expense = AccountType::fromString('expense');
@@ -33,7 +33,7 @@ class TransactionExecutedTest extends TestCase
 
         $event = new TransactionExecuted($transaction);
 
-        $result = $event->payload();
+        $result = $event->transaction();
 
         self::assertSame($transaction, $result);
     }

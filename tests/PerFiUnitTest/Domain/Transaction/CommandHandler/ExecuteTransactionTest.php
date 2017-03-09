@@ -11,10 +11,10 @@ use PerFi\Application\Transaction\InMemoryTransactionRepository;
 use PerFi\Domain\Account\Account;
 use PerFi\Domain\Command;
 use PerFi\Domain\CommandHandler;
-use PerFi\Domain\Event;
 use PerFi\Domain\MoneyFactory;
 use PerFi\Domain\Transaction\CommandHandler\ExecuteTransaction as ExecuteTransactionHandler;
 use PerFi\Domain\Transaction\Command\ExecuteTransaction as ExecuteTransactionCommand;
+use PerFi\Domain\Transaction\Event\TransactionExecuted;
 use PerFi\Domain\Transaction\TransactionRepository;
 use SimpleBus\Message\Bus\Middleware\MessageBusSupportingMiddleware;
 
@@ -43,17 +43,22 @@ class ExecuteTransactionTest extends TestCase
     private $destinationAccount;
 
     /**
-     * @var Money
+     * @var string
      */
     private $amount;
 
     /**
-     * @var Command
+     * @var string
+     */
+    private $currency;
+
+    /**
+     * @var ExecuteTransactionCommand
      */
     private $command;
 
     /**
-     * @var CommandHandler
+     * @var ExecuteTransactionHandler
      */
     private $commandHandler;
 
@@ -107,7 +112,7 @@ class ExecuteTransactionTest extends TestCase
     {
         $this->eventBus->shouldReceive('handle')
             ->once()
-            ->with(m::type(Event::class));
+            ->with(m::type(TransactionExecuted::class));
 
         $this->commandHandler->__invoke($this->command);
     }

@@ -16,12 +16,12 @@ use Webmozart\Assert\Assert;
 class OpeningBalanceContext implements Context
 {
     /**
-     * @var Command[]
+     * @var StartOpeningBalanceCommand[]
      */
     private $startOpeningBalanceCommands;
 
     /**
-     * @var CommandHandler
+     * @var StartOpeningBalanceCommandHandler
      */
     private $startOpeningBalanceHandler;
 

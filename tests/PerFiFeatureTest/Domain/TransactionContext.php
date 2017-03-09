@@ -16,6 +16,7 @@ use PerFi\Domain\Transaction\EventSubscriber\CreditSourceAccountWhenTransactionE
 use PerFi\Domain\Transaction\EventSubscriber\DebitDestinationAccountWhenTransactionExecuted;
 use PerFi\Domain\Transaction\Event\TransactionExecuted;
 use PerFi\Domain\Transaction\TransactionRepository;
+use SimpleBus\Message\Bus\MessageBus;
 use Webmozart\Assert\Assert;
 
 class TransactionContext implements Context
@@ -27,12 +28,12 @@ class TransactionContext implements Context
     private $accounts;
 
     /**
-     * @var Command
+     * @var ExecuteTransactionCommand
      */
     private $command;
 
     /**
-     * @var CommandHandler
+     * @var ExecuteTransactionHandler
      */
     private $commandHandler;
 

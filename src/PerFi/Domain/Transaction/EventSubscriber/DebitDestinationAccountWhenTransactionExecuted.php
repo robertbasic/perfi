@@ -3,21 +3,20 @@ declare(strict_types=1);
 
 namespace PerFi\Domain\Transaction\EventSubscriber;
 
-use PerFi\Domain\Event;
-use PerFi\Domain\EventSubscriber;
+use PerFi\Domain\Transaction\Event\TransactionExecuted;
 
-class DebitDestinationAccountWhenTransactionExecuted implements EventSubscriber
+class DebitDestinationAccountWhenTransactionExecuted
 {
     /**
      * Handle the transaction executed event
      *
      * Debit the destination account of the transaction.
      *
-     * @param Event $transactionExecuted
+     * @param TransactionExecuted $transactionExecuted
      */
-    public function __invoke(Event $transactionExecuted)
+    public function __invoke(TransactionExecuted $event)
     {
-        $transaction = $transactionExecuted->payload();
+        $transaction = $event->transaction();
 
         $transaction->debitDestinationAccount();
     }
