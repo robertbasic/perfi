@@ -1,0 +1,3 @@
+perfi:
+    resource: '@PerFiBundle/Controller/'
+    type: annotation
