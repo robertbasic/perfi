@@ -61,6 +61,8 @@ class TransactionTest extends TestCase
         self::assertInstanceOf(TransactionDate::class, $transaction->date());
         self::assertSame($description, $transaction->description());
 
+        self::assertInstanceOf(TransactionType::class, $transaction->type());
+
         self::assertInstanceOf(Account::class, $transaction->sourceAccount());
         self::assertSame($this->source->id(), $transaction->sourceAccount()->id());
 
