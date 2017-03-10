@@ -7,6 +7,7 @@ use Money\Money;
 use PerFi\Domain\Account\Account;
 use PerFi\Domain\Transaction\TransactionDate;
 use PerFi\Domain\Transaction\TransactionId;
+use PerFi\Domain\Transaction\TransactionType;
 use Ramsey\Uuid\Uuid;
 use Webmozart\Assert\Assert;
 
@@ -16,6 +17,11 @@ class Transaction
      * @var TransactionId
      */
     private $id;
+
+    /**
+     * @var TransactionType
+     */
+    private $type;
 
     /**
      * @var Account
@@ -54,6 +60,7 @@ class Transaction
      */
     private function __construct(
         TransactionId $id,
+        TransactionType $type,
         Account $sourceAccount,
         Account $destinationAccount,
         Money $amount,
@@ -62,6 +69,7 @@ class Transaction
     )
     {
         $this->id = $id;
+        $this->type = $type;
         $this->sourceAccount = $sourceAccount;
         $this->destinationAccount = $destinationAccount;
         $this->amount = $amount;
@@ -79,6 +87,7 @@ class Transaction
      * @return Transaction
      */
     public static function betweenAccounts(
+        TransactionType $type,
         Account $sourceAccount,
         Account $destinationAccount,
         Money $amount,
@@ -93,6 +102,7 @@ class Transaction
 
         return new self(
             $id,
+            $type,
             $sourceAccount,
             $destinationAccount,
             $amount,
@@ -125,6 +135,16 @@ class Transaction
     public function id() : TransactionId
     {
         return $this->id;
+    }
+
+    /**
+     * Get the type of the transaction
+     *
+     * @return TransactionType
+     */
+    public function type() : TransactionType
+    {
+        return $this->type;
     }
 
     /**

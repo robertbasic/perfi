@@ -45,6 +45,7 @@ class ExecuteTransaction
     public function __invoke(TransactionCommand $command)
     {
         $transaction = Transaction::betweenAccounts(
+            $command->transactionType(),
             $command->sourceAccount(),
             $command->destinationAccount(),
             $command->amount(),

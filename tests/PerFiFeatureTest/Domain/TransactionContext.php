@@ -12,10 +12,10 @@ use PerFi\Domain\EventBusFactory;
 use PerFi\Domain\MoneyFactory;
 use PerFi\Domain\Transaction\CommandHandler\ExecuteTransaction as ExecuteTransactionHandler;
 use PerFi\Domain\Transaction\Command\Charge;
-use PerFi\Domain\Transaction\Command\ExecuteTransaction as ExecuteTransactionCommand;
 use PerFi\Domain\Transaction\Command\Pay;
 use PerFi\Domain\Transaction\Command\PayBack;
 use PerFi\Domain\Transaction\Command\Refund;
+use PerFi\Domain\Transaction\Command\Transaction;
 use PerFi\Domain\Transaction\EventSubscriber\CreditSourceAccountWhenTransactionExecuted;
 use PerFi\Domain\Transaction\EventSubscriber\DebitDestinationAccountWhenTransactionExecuted;
 use PerFi\Domain\Transaction\Event\TransactionExecuted;
@@ -32,7 +32,7 @@ class TransactionContext implements Context
     private $accounts;
 
     /**
-     * @var ExecuteTransactionCommand
+     * @var Transaction
      */
     private $command;
 
