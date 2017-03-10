@@ -738,12 +738,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/padraic/mockery.git",
-                "reference": "84cf0e007b4bc1d2175b2a43469eabb4f59d7995"
+                "reference": "ad5bbff106b3c6e73673b663a128dd41507dcdd6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/padraic/mockery/zipball/84cf0e007b4bc1d2175b2a43469eabb4f59d7995",
-                "reference": "84cf0e007b4bc1d2175b2a43469eabb4f59d7995",
+                "url": "https://api.github.com/repos/padraic/mockery/zipball/ad5bbff106b3c6e73673b663a128dd41507dcdd6",
+                "reference": "ad5bbff106b3c6e73673b663a128dd41507dcdd6",
                 "shasum": ""
             },
             "require": {
@@ -795,7 +795,7 @@
                 "test double",
                 "testing"
             ],
-            "time": "2017-03-08T10:45:14+00:00"
+            "time": "2017-03-10T12:43:28+00:00"
         },
         {
             "name": "myclabs/deep-copy",
