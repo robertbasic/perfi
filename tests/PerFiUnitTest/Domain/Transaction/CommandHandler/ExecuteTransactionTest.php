@@ -13,7 +13,7 @@ use PerFi\Domain\Command;
 use PerFi\Domain\CommandHandler;
 use PerFi\Domain\MoneyFactory;
 use PerFi\Domain\Transaction\CommandHandler\ExecuteTransaction as ExecuteTransactionHandler;
-use PerFi\Domain\Transaction\Command\ExecuteTransaction as ExecuteTransactionCommand;
+use PerFi\Domain\Transaction\Command\Pay;
 use PerFi\Domain\Transaction\Event\TransactionExecuted;
 use PerFi\Domain\Transaction\TransactionRepository;
 use SimpleBus\Message\Bus\Middleware\MessageBusSupportingMiddleware;
@@ -53,7 +53,7 @@ class ExecuteTransactionTest extends TestCase
     private $currency;
 
     /**
-     * @var ExecuteTransactionCommand
+     * @var Pay
      */
     private $command;
 
@@ -77,7 +77,7 @@ class ExecuteTransactionTest extends TestCase
         $this->amount = '500';
         $this->currency = 'RSD';
 
-        $this->command = new ExecuteTransactionCommand(
+        $this->command = new Pay(
             $this->sourceAccount,
             $this->destinationAccount,
             $this->amount,

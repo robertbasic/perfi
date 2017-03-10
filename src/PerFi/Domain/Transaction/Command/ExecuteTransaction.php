@@ -45,6 +45,7 @@ class ExecuteTransaction
         string $description
     )
     {
+        trigger_error("DEPRECATED", E_USER_NOTICE);
         $this->sourceAccount = $sourceAccount;
         $this->destinationAccount = $destinationAccount;
         $this->amount = MoneyFactory::amountInCurrency($amount, $currency);
