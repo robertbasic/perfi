@@ -7,14 +7,15 @@ use PHPUnit\Framework\TestCase;
 use PerFi\Domain\Account\Account;
 use PerFi\Domain\Account\AccountType;
 use PerFi\Domain\MoneyFactory;
-use PerFi\Domain\Transaction\Command\ExecuteTransaction;
+use PerFi\Domain\Transaction\Command\Refund;
+use PerFi\Domain\Transaction\TransactionType;
 
-class ExecuteTransactionTest extends TestCase
+class RefundTest extends TestCase
 {
     /**
      * @test
      */
-    public function transaction_is_payload()
+    public function refund_transaction_command_is_created()
     {
         $asset = AccountType::fromString('asset');
         $expense = AccountType::fromString('expense');
@@ -24,7 +25,7 @@ class ExecuteTransactionTest extends TestCase
         $currency = 'RSD';
         $description = 'supermarket';
 
-        $command = new ExecuteTransaction(
+        $command = new Refund(
             $sourceAccount,
             $destinationAccount,
             $amount,
@@ -32,6 +33,7 @@ class ExecuteTransactionTest extends TestCase
             $description
         );
 
+        $transactionType = $command->transactionType();
         $sourceAccount = $command->sourceAccount();
         $destinationAccount = $command->destinationAccount();
         $amount = $command->amount();
@@ -39,9 +41,14 @@ class ExecuteTransactionTest extends TestCase
 
         $expectedAmount = MoneyFactory::amountInCurrency('500', 'RSD');
 
+        self::assertInstanceOf(TransactionType::class, $transactionType);
+        self::assertSame('refund', (string) $transactionType);
+
         self::assertInstanceOf(Account::class, $sourceAccount);
         self::assertInstanceOf(Account::class, $destinationAccount);
+
         self::assertTrue($expectedAmount->equals($amount));
+
         self::assertSame('supermarket', $description);
     }
 }

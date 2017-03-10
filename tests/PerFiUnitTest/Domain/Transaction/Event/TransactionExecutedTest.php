@@ -9,6 +9,7 @@ use PerFi\Domain\Account\AccountType;
 use PerFi\Domain\MoneyFactory;
 use PerFi\Domain\Transaction\Event\TransactionExecuted;
 use PerFi\Domain\Transaction\Transaction;
+use PerFi\Domain\Transaction\TransactionType;
 
 class TransactionExecutedTest extends TestCase
 {
@@ -17,6 +18,7 @@ class TransactionExecutedTest extends TestCase
      */
     public function transaction_is_set_on_event()
     {
+        $type = TransactionType::fromString('pay');
         $asset = AccountType::fromString('asset');
         $expense = AccountType::fromString('expense');
         $source = Account::byTypeWithTitle($asset, 'Cash');
@@ -25,6 +27,7 @@ class TransactionExecutedTest extends TestCase
         $description = 'groceries for dinner';
 
         $transaction = Transaction::betweenAccounts(
+            $type,
             $source,
             $destination,
             $amount,

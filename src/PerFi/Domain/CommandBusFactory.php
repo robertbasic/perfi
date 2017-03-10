@@ -8,7 +8,10 @@ use PerFi\Domain\Account\Command\CreateAccount as CreateAccountCommand;
 use PerFi\Domain\Equity\CommandHandler\StartOpeningBalance as StartOpeningBalanceHandler;
 use PerFi\Domain\Equity\Command\StartOpeningBalance as StartOpeningBalanceCommand;
 use PerFi\Domain\Transaction\CommandHandler\ExecuteTransaction as ExecuteTransactionHandler;
-use PerFi\Domain\Transaction\Command\ExecuteTransaction as ExecuteTransactionCommand;
+use PerFi\Domain\Transaction\Command\Charge;
+use PerFi\Domain\Transaction\Command\Pay;
+use PerFi\Domain\Transaction\Command\PayBack;
+use PerFi\Domain\Transaction\Command\Refund;
 use SimpleBus\Message\Bus\Middleware\FinishesHandlingMessageBeforeHandlingNext;
 use SimpleBus\Message\Bus\Middleware\MessageBusSupportingMiddleware;
 use SimpleBus\Message\CallableResolver\CallableMap;
@@ -31,7 +34,10 @@ class CommandBusFactory
     public static function getCommandBus() : MessageBusSupportingMiddleware
     {
         $commandHandlersByCommandName = [
-            ExecuteTransactionCommand::class => ExecuteTransactionHandler::class,
+            Pay::class => ExecuteTransactionHandler::class,
+            Refund::class => ExecuteTransactionHandler::class,
+            Charge::class => ExecuteTransactionHandler::class,
+            PayBack::class => ExecuteTransactionHandler::class,
             CreateAccountCommand::class => CreateAccountHandler::class,
             StartOpeningBalanceCommand::class => StartOpeningBalanceHandler::class,
         ];

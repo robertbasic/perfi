@@ -9,6 +9,7 @@ use PerFi\Domain\Account\Account;
 use PerFi\Domain\Account\AccountType;
 use PerFi\Domain\MoneyFactory;
 use PerFi\Domain\Transaction\Transaction;
+use PerFi\Domain\Transaction\TransactionType;
 
 class InMemoryTransactionRepositoryTest extends TestCase
 {
@@ -17,6 +18,7 @@ class InMemoryTransactionRepositoryTest extends TestCase
      */
     public function can_add_transaction_to_repository()
     {
+        $type = TransactionType::fromString('pay');
         $asset = AccountType::fromString('asset');
         $expense = AccountType::fromString('expense');
         $source = Account::byTypeWithTitle($asset, 'Cash');
@@ -25,6 +27,7 @@ class InMemoryTransactionRepositoryTest extends TestCase
         $description = 'groceries for dinner';
 
         $transaction = Transaction::betweenAccounts(
+            $type,
             $source,
             $destination,
             $amount,

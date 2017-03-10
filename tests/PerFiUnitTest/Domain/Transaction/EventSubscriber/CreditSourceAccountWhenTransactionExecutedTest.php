@@ -10,6 +10,7 @@ use PerFi\Domain\MoneyFactory;
 use PerFi\Domain\Transaction\EventSubscriber\CreditSourceAccountWhenTransactionExecuted;
 use PerFi\Domain\Transaction\Event\TransactionExecuted;
 use PerFi\Domain\Transaction\Transaction;
+use PerFi\Domain\Transaction\TransactionType;
 
 class CreditSourceAccountWhenTransactionExecutedTest extends TestCase
 {
@@ -18,6 +19,7 @@ class CreditSourceAccountWhenTransactionExecutedTest extends TestCase
      */
     public function source_account_is_credited()
     {
+        $type = TransactionType::fromString('pay');
         $asset = AccountType::fromString('asset');
         $expense = AccountType::fromString('expense');
         $source = Account::byTypeWithTitle($asset, 'Cash');
@@ -26,6 +28,7 @@ class CreditSourceAccountWhenTransactionExecutedTest extends TestCase
         $description = 'groceries for dinner';
 
         $transaction = Transaction::betweenAccounts(
+            $type,
             $source,
             $destination,
             $amount,

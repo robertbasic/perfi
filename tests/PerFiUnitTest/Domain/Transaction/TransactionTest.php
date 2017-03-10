@@ -11,9 +11,15 @@ use PerFi\Domain\MoneyFactory;
 use PerFi\Domain\Transaction\Transaction;
 use PerFi\Domain\Transaction\TransactionDate;
 use PerFi\Domain\Transaction\TransactionId;
+use PerFi\Domain\Transaction\TransactionType;
 
 class TransactionTest extends TestCase
 {
+
+    /**
+     * @var TransactionType
+     */
+    private $type;
 
     /**
      * @var Account
@@ -30,6 +36,7 @@ class TransactionTest extends TestCase
         $asset = AccountType::fromString('asset');
         $expense = AccountType::fromString('expense');
 
+        $this->type = TransactionType::fromString('pay');
         $this->source = Account::byTypeWithTitle($asset, 'Cash');
         $this->destination = Account::byTypeWithTitle($expense, 'Groceries');
     }
@@ -43,6 +50,7 @@ class TransactionTest extends TestCase
         $description = 'groceries for dinner';
 
         $transaction = Transaction::betweenAccounts(
+            $this->type,
             $this->source,
             $this->destination,
             $amount,
@@ -52,6 +60,8 @@ class TransactionTest extends TestCase
         self::assertInstanceOf(TransactionId::class, $transaction->id());
         self::assertInstanceOf(TransactionDate::class, $transaction->date());
         self::assertSame($description, $transaction->description());
+
+        self::assertInstanceOf(TransactionType::class, $transaction->type());
 
         self::assertInstanceOf(Account::class, $transaction->sourceAccount());
         self::assertSame($this->source->id(), $transaction->sourceAccount()->id());
@@ -73,6 +83,7 @@ class TransactionTest extends TestCase
         $description = 'groceries for dinner';
 
         $transaction = Transaction::betweenAccounts(
+            $this->type,
             $this->source,
             $this->destination,
             $amount,
@@ -95,6 +106,7 @@ class TransactionTest extends TestCase
         $description = 'groceries for dinner';
 
         $transaction = Transaction::betweenAccounts(
+            $this->type,
             $this->source,
             $this->destination,
             $amount,

@@ -6,9 +6,15 @@ namespace PerFi\Domain\Transaction\Command;
 use Money\Money;
 use PerFi\Domain\Account\Account;
 use PerFi\Domain\MoneyFactory;
+use PerFi\Domain\Transaction\TransactionType;
 
-class ExecuteTransaction
+abstract class Transaction
 {
+    /**
+     * @var TransactionType
+     */
+    private $transactionType;
+
     /**
      * @var Account
      */
@@ -36,19 +42,34 @@ class ExecuteTransaction
      * @param Account $destinationAccount
      * @param Money $amount
      * @param string $description
+     * @param string $transactionType
      */
     public function __construct(
         Account $sourceAccount,
         Account $destinationAccount,
         string $amount,
         string $currency,
-        string $description
+        string $description,
+        string $transactionType
     )
     {
+        $this->transactionType = TransactionType::fromString(
+            $transactionType
+        );
         $this->sourceAccount = $sourceAccount;
         $this->destinationAccount = $destinationAccount;
         $this->amount = MoneyFactory::amountInCurrency($amount, $currency);
         $this->description = $description;
+    }
+
+    /**
+     * Get the type of the transaction
+     *
+     * @return TransactionType
+     */
+    public function transactionType() : TransactionType
+    {
+        return $this->transactionType;
     }
 
     /**

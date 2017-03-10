@@ -11,7 +11,11 @@ use PerFi\Domain\Account\AccountType;
 use PerFi\Domain\EventBusFactory;
 use PerFi\Domain\MoneyFactory;
 use PerFi\Domain\Transaction\CommandHandler\ExecuteTransaction as ExecuteTransactionHandler;
-use PerFi\Domain\Transaction\Command\ExecuteTransaction as ExecuteTransactionCommand;
+use PerFi\Domain\Transaction\Command\Charge;
+use PerFi\Domain\Transaction\Command\Pay;
+use PerFi\Domain\Transaction\Command\PayBack;
+use PerFi\Domain\Transaction\Command\Refund;
+use PerFi\Domain\Transaction\Command\Transaction;
 use PerFi\Domain\Transaction\EventSubscriber\CreditSourceAccountWhenTransactionExecuted;
 use PerFi\Domain\Transaction\EventSubscriber\DebitDestinationAccountWhenTransactionExecuted;
 use PerFi\Domain\Transaction\Event\TransactionExecuted;
@@ -28,7 +32,7 @@ class TransactionContext implements Context
     private $accounts;
 
     /**
-     * @var ExecuteTransactionCommand
+     * @var Transaction
      */
     private $command;
 
@@ -78,7 +82,7 @@ class TransactionContext implements Context
         $destinationAccount = $this->getAccountByTitle($destination);
         $description = "supermarket";
 
-        $this->command = new ExecuteTransactionCommand(
+        $this->command = new Pay(
             $sourceAccount,
             $destinationAccount,
             $amount,
@@ -97,7 +101,7 @@ class TransactionContext implements Context
         $sourceAccount = $this->getAccountByTitle($source);
         $destinationAccount = $this->getAccountByTitle($destination);
 
-        $this->command = new ExecuteTransactionCommand(
+        $this->command = new Pay(
             $sourceAccount,
             $destinationAccount,
             $amount,
@@ -116,7 +120,7 @@ class TransactionContext implements Context
         $sourceAccount = $this->getAccountByTitle($source);
         $destinationAccount = $this->getAccountByTitle($destination);
 
-        $this->command = new ExecuteTransactionCommand(
+        $this->command = new Charge(
             $sourceAccount,
             $destinationAccount,
             $amount,
@@ -136,7 +140,7 @@ class TransactionContext implements Context
         $destinationAccount = $this->getAccountByTitle($destination);
         $description = "supermarket";
 
-        $command = new ExecuteTransactionCommand(
+        $command = new Refund(
             $sourceAccount,
             $destinationAccount,
             $amount,
@@ -156,7 +160,7 @@ class TransactionContext implements Context
         $destinationAccount = $this->getAccountByTitle($destination);
         $description = "supermarket";
 
-        $command = new ExecuteTransactionCommand(
+        $command = new PayBack(
             $sourceAccount,
             $destinationAccount,
             $amount,
