@@ -1,4 +1,5 @@
 imports:
+    - { resource: "@PerFiBundle/Resources/config/config.yml" }
     - { resource: parameters.yml }
     - { resource: security.yml }
     - { resource: services.yml }
