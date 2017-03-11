@@ -8,11 +8,11 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 
-class DefaultController extends Controller
+class CreateAccountController extends Controller
 {
     /**
      * @Template
-     * @Route("/", name="homepage")
+     * @Route("/", name="create_account")
      */
     public function indexAction(Request $request)
     {
