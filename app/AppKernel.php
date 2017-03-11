@@ -17,6 +17,7 @@ class AppKernel extends Kernel
             new Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle(),
             new Symfony\Bundle\AsseticBundle\AsseticBundle(),
             new Avanzu\AdminThemeBundle\AvanzuAdminThemeBundle(),
+            new SimpleBus\SymfonyBridge\SimpleBusCommandBusBundle(),
             new PerFi\PerFiBundle\PerFiBundle(),
         ];
 
