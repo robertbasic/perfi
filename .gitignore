@@ -2,3 +2,4 @@
 tests/code-coverage
 /var/
 /app/config/parameters.yml
+/web/bundles/
