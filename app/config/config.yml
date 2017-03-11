@@ -38,6 +38,8 @@ framework:
 twig:
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
+    globals:
+        admin_skin: skin-green
 
 # Doctrine Configuration
 doctrine:
@@ -68,3 +70,6 @@ swiftmailer:
     username: '%mailer_user%'
     password: '%mailer_password%'
     spool: { type: memory }
+
+assetic:
+    use_controller: false
