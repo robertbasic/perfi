@@ -12,7 +12,7 @@ class CreateAccountController extends Controller
 {
     /**
      * @Template
-     * @Route("/", name="create_account")
+     * @Route("/create-account", name="create_account")
      */
     public function indexAction(Request $request)
     {
