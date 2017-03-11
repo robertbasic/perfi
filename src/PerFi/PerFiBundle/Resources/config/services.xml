@@ -12,7 +12,10 @@ xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/sc
             <tag name="kernel.event_listener" event="theme.sidebar_setup_menu" method="onSetupMenu" />
         </service>
 
-        <service id="perfi.repository.account" class="PerFi\Application\Account\InMemoryAccountRepository"/>
+        <service id="perfi.repository.account" class="PerFi\PerFiBundle\Repository\AccountRepository">
+            <factory service="doctrine.orm.default_entity_manager" method="getRepository"></factory>
+            <argument>PerFi\PerFiBundle\Entity\Account</argument>
+        </service>
 
         <service id="perfi.command_handler.create_account" class="PerFi\Domain\Account\CommandHandler\CreateAccount">
             <argument type="service" id="perfi.repository.account"/>
