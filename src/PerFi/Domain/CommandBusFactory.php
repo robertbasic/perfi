@@ -17,8 +17,8 @@ use SimpleBus\Message\Bus\Middleware\MessageBusSupportingMiddleware;
 use SimpleBus\Message\CallableResolver\CallableMap;
 use SimpleBus\Message\CallableResolver\ServiceLocatorAwareCallableResolver;
 use SimpleBus\Message\Handler\DelegatesToMessageHandlerMiddleware;
+use SimpleBus\Message\Handler\Resolver\NameBasedMessageHandlerResolver;
 use SimpleBus\Message\Name\ClassBasedNameResolver;
-use SimpleBus\Message\Subscriber\Resolver\NameBasedMessageSubscriberResolver;
 
 class CommandBusFactory
 {
@@ -51,7 +51,7 @@ class CommandBusFactory
             new ServiceLocatorAwareCallableResolver($serviceLocator)
         );
         $commandNameResolver = new ClassBasedNameResolver();
-        $commandHandlerResolver = new NameBasedMessageSubscriberResolver(
+        $commandHandlerResolver = new NameBasedMessageHandlerResolver(
             $commandNameResolver,
             $commandHandlerMap
         );
