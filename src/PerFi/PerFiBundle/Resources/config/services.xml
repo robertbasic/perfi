@@ -6,9 +6,17 @@ xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/sc
     <parameters>
         <parameter key="perfi.perfibundle.menu_listener.class">PerFi\PerFiBundle\EventListener\MenuItemListener</parameter>
     </parameters>
+
     <services>
         <service id="perfi.perfibundle.menu_listener" class="%perfi.perfibundle.menu_listener.class%">
             <tag name="kernel.event_listener" event="theme.sidebar_setup_menu" method="onSetupMenu" />
+        </service>
+
+        <service id="perfi.repository.account" class="PerFi\Application\Account\InMemoryAccountRepository"/>
+
+        <service id="perfi.command_handler.create_account" class="PerFi\Domain\Account\CommandHandler\CreateAccount">
+            <argument type="service" id="perfi.repository.account"/>
+            <tag name="command_handler" handles="PerFi\Domain\Account\Command\CreateAccount"/>
         </service>
     </services>
 
