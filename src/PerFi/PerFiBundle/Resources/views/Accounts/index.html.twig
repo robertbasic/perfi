@@ -26,7 +26,16 @@
 </div>
 {% endblock %}
 
-{% block javascripts_inline %}
+{% block avanzu_head %}
+<link rel="stylesheet" href="{{ asset('theme/plugins/datatables/dataTables.bootstrap.css') }}">
+{% endblock %}
+
+{% block avanzu_javascripts %}
+    <script src="{{ asset('theme/plugins/datatables/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('theme/plugins/datatables/dataTables.bootstrap.min.js') }}"></script>
+{% endblock %}
+
+{% block avanzu_javascripts_inline %}
 <script>
 $(document).ready(function() {
     $('#accounts-table').DataTable({
