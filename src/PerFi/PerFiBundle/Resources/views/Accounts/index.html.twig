@@ -11,12 +11,14 @@
                 <table id="accounts-table" class="table table-bordered table-hover">
                     <thead>
                         <tr>
-                            <th>ID</th>
+                            <th>Title</th>
+                            <th>Type</th>
                         </tr>
                     </thead>
                     <tfoot>
                         <tr>
-                            <th>ID</th>
+                            <th>Title</th>
+                            <th>Type</th>
                         </tr>
                     </tfoot>
                 </table>
@@ -41,7 +43,8 @@ $(document).ready(function() {
     $('#accounts-table').DataTable({
         "ajax": "{{ path('accounts_list') }}",
         "columns": [
-            { "data": "accountId" },
+            { "data": "title" },
+            { "data": "type" },
         ]
     });
 } );
