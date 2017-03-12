@@ -40,7 +40,7 @@ twig:
     debug: '%kernel.debug%'
     strict_variables: '%kernel.debug%'
     globals:
-        admin_skin: skin-green
+        admin_skin: 'skin-green'
 
 # Doctrine Configuration
 doctrine:
