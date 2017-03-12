@@ -103,7 +103,9 @@
     <!-- Main Footer -->
 
     {% block avanzu_footer %}
-        {% include 'AvanzuAdminThemeBundle:Partials:_footer.html.twig' %}
+    <footer class="main-footer">
+        <strong>Per</strong>Fi, a personal finance tracker.
+    </footer>
     {% endblock %}
     {% block avanzu_control_sidebar %}
         {% if avanzu_admin_context.control_sidebar %}
