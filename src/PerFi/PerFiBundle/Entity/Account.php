@@ -26,6 +26,11 @@ class Account
     private $title;
 
     /**
+    * @var string
+    */
+    private $type;
+
+    /**
      * Get id
      *
      * @return int
@@ -81,5 +86,29 @@ class Account
     public function getTitle() : string
     {
         return $this->title;
+    }
+
+    /**
+     * Set type
+     *
+     * @param string $type
+     *
+     * @return Account
+     */
+    public function setType(string $type) : Account
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * Get type
+     *
+     * @return string
+     */
+    public function getType() : string
+    {
+        return $this->type;
     }
 }

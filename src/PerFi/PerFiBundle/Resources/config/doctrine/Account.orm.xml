@@ -6,5 +6,6 @@
     </id>
     <field name="accountId" type="guid" column="account_id" unique="true"/>
     <field name="title" type="string" column="title"/>
+    <field name="type" type="string" column="type"/>
   </entity>
 </doctrine-mapping>
