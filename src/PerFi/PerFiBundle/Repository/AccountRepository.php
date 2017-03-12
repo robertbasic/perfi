@@ -22,6 +22,7 @@ class AccountRepository extends EntityRepository
         $entity = new Entity\Account();
         $entity->setAccountId((string) $account->id());
         $entity->setTitle($account->title());
+        $entity->setType((string) $account->type());
 
         $em = $this->getEntityManager();
         $em->persist($entity);
