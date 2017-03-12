@@ -21,16 +21,16 @@ class MenuItemListener
     protected function getMenu(Request $request)
     {
         $menuItems = array(
-            $homepage = new MenuItemModel('homepage', 'Home', 'homepage', [], 'iconclasses fa fa-home'),
-            $accounts = new MenuItemModel('accounts', 'Accounts', null, [], 'iconclasses fa fa-bank'),
+            $homepage = new MenuItemModel('menu-homepage', 'Home', 'homepage', [], 'iconclasses fa fa-home'),
+            $accounts = new MenuItemModel('menu-accounts', 'Accounts', null, [], 'iconclasses fa fa-bank'),
         );
 
         $accounts->addChild(
-            new MenuItemModel('list_accounts', 'List of accounts', 'accounts', [], 'iconclasses fa fa-list')
+            new MenuItemModel('menu-list_accounts', 'List of accounts', 'accounts', [], 'iconclasses fa fa-list')
         );
 
         $accounts->addChild(
-            new MenuItemModel('create_account', 'Create account', 'create_account', [], 'iconclasses fa fa-plus')
+            new MenuItemModel('menu-create_account', 'Create account', 'create_account', [], 'iconclasses fa fa-plus')
         );
 
         return $this->activateByRoute($request->get('_route'), $menuItems);
