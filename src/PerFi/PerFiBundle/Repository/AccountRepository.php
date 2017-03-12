@@ -41,4 +41,16 @@ class AccountRepository extends EntityRepository
             ->getQuery()
             ->getArrayResult();
     }
+
+    public function getAllByType(string $type) : array
+    {
+        $queryBuilder = $this->createQueryBuilder('a');
+
+        return $queryBuilder
+            ->select('a')
+            ->where('a.type = :type')
+            ->setParameter('type', $type)
+            ->getQuery()
+            ->getArrayResult();
+    }
 }

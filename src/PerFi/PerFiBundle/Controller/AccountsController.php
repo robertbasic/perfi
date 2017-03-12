@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace PerFi\PerFiBundle\Controller;
 
+use PerFi\Domain\Account\AccountTypeView;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -17,7 +18,11 @@ class AccountsController extends Controller
      */
     public function indexAction(Request $request)
     {
-        return [];
+        $accountTypes = AccountTypeView::getTypes();
+
+        return [
+            'account_types' => $accountTypes
+        ];
     }
 
     /**
@@ -25,8 +30,10 @@ class AccountsController extends Controller
      */
     public function listAction(Request $request)
     {
+        $type = $request->get('type');
+
         $repository = $this->get('perfi.repository.account');
-        $accounts = $repository->getAll();
+        $accounts = $repository->getAllByType($type);
 
         return new JsonResponse([
             'data' => $accounts
