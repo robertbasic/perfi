@@ -1,3 +1,5 @@
+{% import "AvanzuAdminThemeBundle:layout:macros.html.twig" as macro %}
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,26 +9,7 @@
     {% include('AvanzuAdminThemeBundle:Partials:_head.html.twig') %}
     {% block avanzu_head %}{% endblock %}
 </head>
-<!--
-BODY TAG OPTIONS:
-=================
-Apply one or more of the following classes to get the
-desired effect
-|---------------------------------------------------------|
-| SKINS         | skin-blue                               |
-|               | skin-black                              |
-|               | skin-purple                             |
-|               | skin-yellow                             |
-|               | skin-red                                |
-|               | skin-green                              |
-|---------------------------------------------------------|
-|LAYOUT OPTIONS | fixed                                   |
-|               | layout-boxed                            |
-|               | layout-top-nav                          |
-|               | sidebar-collapse                        |
-|               | sidebar-mini                            |
-|---------------------------------------------------------|
--->
+
 <body class="{{ avanzu_admin_context.skin|default("")|body_class }}">
 <div class="wrapper">
 
@@ -101,6 +84,16 @@ desired effect
 
         <!-- Main content -->
         <section class="content">
+            {% block flash_messages %}
+                {% if app.session.flashbag.peekAll|length > 0 %}
+                    <div class="row">
+                        <div class="col-sm-12">
+                            {{ macro.session_flash(avanzu_adminlte_close_alert|default(false)) }}
+                        </div>
+                    </div>
+                {% endif %}
+            {% endblock flash_messages %}
+
             {% block avanzu_page_content %}{% endblock %}
         </section>
         <!-- /.content -->
