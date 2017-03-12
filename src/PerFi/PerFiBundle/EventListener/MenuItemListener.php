@@ -26,6 +26,10 @@ class MenuItemListener
         );
 
         $accounts->addChild(
+            new MenuItemModel('list_accounts', 'List of accounts', 'accounts', [], 'iconclasses fa fa-list')
+        );
+
+        $accounts->addChild(
             new MenuItemModel('create_account', 'Create account', 'create_account', [], 'iconclasses fa fa-plus')
         );
 
