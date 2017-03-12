@@ -29,8 +29,11 @@ class CreateAccountController extends Controller
             $title = $formData['title'];
 
             $command = new CreateAccount($type, $title);
-
             $this->get('command_bus')->handle($command);
+
+            $this->addFlash('success', 'Account created!');
+
+            return $this->redirectToRoute('create_account');
         }
 
         return [
