@@ -1,0 +1,23 @@
+{% extends 'base.html.twig' %}
+
+{% block page_title %}Create account{% endblock %}
+{% block page_subtitle %}Create a new asset, expense or income account{% endblock %}
+
+{% block page_content %}
+<div class='row'>
+    <div class='col-sm-6'>
+        <div class='box box-primary'>
+            {{ form_start(form) }}
+
+            <div class='box-body'>
+                {{ form_widget(form) }}
+            </div>
+            <div class='box-footer'>
+                <input type="submit" class="btn btn-primary pull-right" value="Save">
+            </div>
+
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>
+{% endblock %}

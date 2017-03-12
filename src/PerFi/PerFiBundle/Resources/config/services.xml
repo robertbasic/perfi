@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="perfi.perfibundle.menu_listener.class">PerFi\PerFiBundle\EventListener\MenuItemListener</parameter>
+    </parameters>
+
+    <services>
+        <service id="perfi.perfibundle.menu_listener" class="%perfi.perfibundle.menu_listener.class%">
+            <tag name="kernel.event_listener" event="theme.sidebar_setup_menu" method="onSetupMenu" />
+        </service>
+
+        <service id="perfi.repository.account" class="PerFi\PerFiBundle\Repository\AccountRepository">
+            <factory service="doctrine.orm.default_entity_manager" method="getRepository"></factory>
+            <argument>PerFi\PerFiBundle\Entity\Account</argument>
+        </service>
+
+        <service id="perfi.command_handler.create_account" class="PerFi\Domain\Account\CommandHandler\CreateAccount">
+            <argument type="service" id="perfi.repository.account"/>
+            <tag name="command_handler" handles="PerFi\Domain\Account\Command\CreateAccount"/>
+        </service>
+    </services>
+
+</container>

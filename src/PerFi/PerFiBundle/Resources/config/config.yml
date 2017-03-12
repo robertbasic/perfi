@@ -1,0 +1,5 @@
+imports:
+    - { resource: services.xml }
+
+command_bus:
+    logging: ~
