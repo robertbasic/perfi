@@ -1,0 +1,23 @@
+{% extends 'default-layout.html.twig' %}
+
+{% block avanzu_page_title %}Pay{% endblock %}
+{% block avanzu_page_subtitle %}Make a payment for an expense{% endblock %}
+
+{% block avanzu_page_content %}
+<div class='row'>
+    <div class='col-sm-6'>
+        <div class='box box-primary'>
+            {{ form_start(form) }}
+
+            <div class='box-body'>
+                {{ form_widget(form) }}
+            </div>
+            <div class='box-footer'>
+                <input type="submit" class="btn btn-primary pull-right" value="Make payment">
+            </div>
+
+            {{ form_end(form) }}
+        </div>
+    </div>
+</div>
+{% endblock %}
