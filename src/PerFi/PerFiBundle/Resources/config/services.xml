@@ -21,6 +21,11 @@ xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/sc
             <argument type="service" id="perfi.repository.account"/>
             <tag name="command_handler" handles="PerFi\Domain\Account\Command\CreateAccount"/>
         </service>
+
+        <service id="perfi.form.pay" class="PerFi\PerFiBundle\Form\PayType">
+            <argument type="service" id="perfi.repository.account"/>
+            <tag name="form.type"/>
+        </service>
     </services>
 
 </container>
