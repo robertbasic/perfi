@@ -5,7 +5,9 @@ namespace PerFi\PerFiBundle\Repository;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 use PerFi\Domain\Account\Account;
+use PerFi\Domain\Account\AccountId;
 use PerFi\Domain\Account\AccountRepository as AccountRepositoryInterface;
+use PerFi\Domain\Account\AccountType;
 use PerFi\PerFiBundle\Entity;
 
 /**
@@ -46,11 +48,25 @@ class AccountRepository extends EntityRepository
     {
         $queryBuilder = $this->createQueryBuilder('a');
 
-        return $queryBuilder
+        $rows = $queryBuilder
             ->select('a')
             ->where('a.type = :type')
             ->setParameter('type', $type)
             ->getQuery()
-            ->getArrayResult();
+            ->getResult();
+
+        $accounts = [];
+
+        foreach ($rows as $row) {
+            $account = Account::withId(
+                AccountId::fromString($row->getAccountId()),
+                AccountType::fromString($row->getType()),
+                $row->getTitle()
+            );
+
+            $accounts[] = $account;
+        }
+
+        return $accounts;
     }
 }
