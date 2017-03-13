@@ -54,6 +54,24 @@ class AccountTest extends TestCase
 
     /**
      * @test
+     */
+    public function account_can_be_serialized_to_json()
+    {
+        $id = AccountId::fromString('fddf4716-6c0e-4f54-b539-d2d480a50d1a');
+
+        $account = Account::withId($id, $this->type, $this->title);
+
+        $expected = [
+            'id' => 'fddf4716-6c0e-4f54-b539-d2d480a50d1a',
+            'title' => 'Cash',
+            'type' => 'asset',
+        ];
+
+        self::assertSame($expected, $account->jsonSerialize());
+    }
+
+    /**
+     * @test
      * @expectedException InvalidArgumentException
      */
     public function account_cannot_be_created_with_empty_title()

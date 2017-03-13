@@ -10,7 +10,7 @@ use PerFi\Domain\MoneyFactory;
 use Ramsey\Uuid\Uuid;
 use Webmozart\Assert\Assert;
 
-class Account
+class Account implements \JsonSerializable
 {
     /**
      * @var AccountId
@@ -171,5 +171,19 @@ class Account
     public function __toString() : string
     {
         return sprintf("%s, %s", $this->title(), $this->type());
+    }
+
+    /**
+     * JSON serializeable object
+     *
+     * @return array
+     */
+    public function jsonSerialize() : array
+    {
+        return [
+            'id' => (string) $this->id(),
+            'title' => $this->title(),
+            'type' => (string) $this->type(),
+        ];
     }
 }
