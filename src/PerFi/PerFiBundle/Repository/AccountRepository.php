@@ -46,14 +46,20 @@ class AccountRepository extends EntityRepository
         return $this->dtosToEntities($dtos);
     }
 
-    public function getAllByType(string $type) : array
+    /**
+     * Get all accounts by an AccountType
+     *
+     * @param AccountType
+     * @return array
+     */
+    public function getAllByType(AccountType $type) : array
     {
         $queryBuilder = $this->createQueryBuilder('a');
 
         $dtos = $queryBuilder
             ->select('a')
             ->where('a.type = :type')
-            ->setParameter('type', $type)
+            ->setParameter('type', (string) $type)
             ->getQuery()
             ->getResult();
 
