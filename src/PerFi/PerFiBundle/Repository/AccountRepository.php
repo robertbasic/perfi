@@ -38,30 +38,37 @@ class AccountRepository extends EntityRepository
     {
         $queryBuilder = $this->createQueryBuilder('a');
 
-        return $queryBuilder
+        $dtos = $queryBuilder
             ->select('a')
             ->getQuery()
-            ->getArrayResult();
+            ->getResult();
+
+        return $this->dtosToEntities($dtos);
     }
 
     public function getAllByType(string $type) : array
     {
         $queryBuilder = $this->createQueryBuilder('a');
 
-        $rows = $queryBuilder
+        $dtos = $queryBuilder
             ->select('a')
             ->where('a.type = :type')
             ->setParameter('type', $type)
             ->getQuery()
             ->getResult();
 
+        return $this->dtosToEntities($dtos);
+    }
+
+    private function dtosToEntities($dtos)
+    {
         $accounts = [];
 
-        foreach ($rows as $row) {
+        foreach ($dtos as $dto) {
             $account = Account::withId(
-                AccountId::fromString($row->getAccountId()),
-                AccountType::fromString($row->getType()),
-                $row->getTitle()
+                AccountId::fromString($dto->getAccountId()),
+                AccountType::fromString($dto->getType()),
+                $dto->getTitle()
             );
 
             $accounts[] = $account;
