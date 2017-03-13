@@ -22,6 +22,7 @@ class MenuItemListener
     {
         $menuItems = array(
             $homepage = new MenuItemModel('menu-homepage', 'Home', 'homepage', [], 'iconclasses fa fa-home'),
+            $transactions = new MenuItemModel('menu-transactions', 'Transactions', null, [], 'iconclasses fa fa-calculator'),
             $accounts = new MenuItemModel('menu-accounts', 'Accounts', null, [], 'iconclasses fa fa-bank'),
         );
 
