@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace PerFi\PerFiBundle\Controller;
 
+use PerFi\Domain\Account\AccountType;
 use PerFi\Domain\Account\AccountTypeView;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Template;
@@ -18,7 +19,11 @@ class AccountsController extends Controller
      */
     public function indexAction(Request $request)
     {
-        $accountTypes = AccountTypeView::getTypes();
+        $accountTypes = [
+            (string) AccountType::fromString('asset') => 'Asset accounts',
+            (string) AccountType::fromString('expense') => 'Expense accounts',
+            (string) AccountType::fromString('income') => 'Income accounts',
+        ];
 
         return [
             'account_types' => $accountTypes
