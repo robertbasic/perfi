@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace PerFi\PerFiBundle\Form;
 
+use Money\Currencies\ISOCurrencies;
 use PerFi\Domain\Account\AccountRepository;
 use PerFi\Domain\Account\AccountType;
 use Symfony\Component\Form\AbstractType;
@@ -39,11 +40,26 @@ class PayType extends AbstractType
             ])
             ->add('currency', ChoiceType::class, [
                 'required' => true,
-                'choices' => []
+                'choices' => $this->getCurrencies(),
             ])
             ->add('description', TextType::class, [
                 'required' => true,
             ]);
+    }
+
+    private function getCurrencies() : array
+    {
+        $isoCurrencies = new ISOCurrencies();
+        $currencies = [];
+
+        foreach ($isoCurrencies as $currency) {
+            $code = $currency->getCode();
+            if ($code) {
+                $currencies[$code] = $code;
+            }
+        }
+
+        return $currencies;
     }
 
     private function getAssetAccounts() : array
