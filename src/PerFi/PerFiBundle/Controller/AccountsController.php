@@ -35,7 +35,7 @@ class AccountsController extends Controller
      */
     public function listAction(Request $request)
     {
-        $type = $request->get('type');
+        $type = AccountType::fromString($request->get('type'));
 
         $repository = $this->get('perfi.repository.account');
         $accounts = $repository->getAllByType($type);
