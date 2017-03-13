@@ -41,6 +41,8 @@ class Account
      */
     private function __construct(AccountId $id, AccountType $type, string $title)
     {
+        Assert::stringNotEmpty($title);
+
         $this->id = $id;
         $this->type = $type;
         $this->title = $title;
@@ -59,7 +61,12 @@ class Account
     {
         $id = AccountId::fromUuid(Uuid::uuid4());
 
-        Assert::stringNotEmpty($title);
+        return new self(
+            $id,
+            $type,
+            $title
+        );
+    }
 
         return new self(
             $id,
