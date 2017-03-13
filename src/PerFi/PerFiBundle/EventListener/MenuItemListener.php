@@ -26,13 +26,9 @@ class MenuItemListener
             $accounts = new MenuItemModel('menu-accounts', 'Accounts', null, [], 'iconclasses fa fa-bank'),
         );
 
-        $accounts->addChild(
-            new MenuItemModel('menu-list_accounts', 'List of accounts', 'accounts', [], 'iconclasses fa fa-list')
-        );
+        $this->addTransactionsSubItems($transactions);
 
-        $accounts->addChild(
-            new MenuItemModel('menu-create_account', 'Create account', 'create_account', [], 'iconclasses fa fa-plus')
-        );
+        $this->addAccountsSubItems($accounts);
 
         return $this->activateByRoute($request->get('_route'), $menuItems);
     }
@@ -50,5 +46,22 @@ class MenuItemListener
         }
 
         return $items;
+    }
+
+    private function addTransactionsSubItems($transactions)
+    {
+        $transactions->addChild(
+            new MenuItemModel('menu-pay', 'Pay', 'pay', [], 'iconclasses fa fa-money')
+        );
+    }
+
+    private function addAccountsSubItems($accounts)
+    {
+        $accounts->addChild(
+            new MenuItemModel('menu-list_accounts', 'List of accounts', 'accounts', [], 'iconclasses fa fa-list')
+        );
+        $accounts->addChild(
+            new MenuItemModel('menu-create_account', 'Create account', 'create_account', [], 'iconclasses fa fa-plus')
+        );
     }
 }
