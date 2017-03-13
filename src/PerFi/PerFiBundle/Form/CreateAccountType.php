@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace PerFi\PerFiBundle\Form;
 
-use PerFi\Domain\Account\AccountTypeView;
+use PerFi\Domain\Account\AccountType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -16,7 +16,11 @@ class CreateAccountType extends AbstractType
         $builder
             ->add('type', ChoiceType::class, [
                 'required' => true,
-                'choices' => AccountTypeView::getTypes(),
+                'choices' => [
+                    'Asset' => (string) AccountType::fromString('asset'),
+                    'Expense' => (string) AccountType::fromString('expense'),
+                    'Income' => (string) AccountType::fromString('income'),
+                ],
             ])
             ->add('title', TextType::class, [
                 'required' => true,
