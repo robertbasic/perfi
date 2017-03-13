@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace PerFi\PerFiBundle\Controller;
 
+use PerFi\Domain\Account\AccountId;
 use PerFi\Domain\Account\Command\CreateAccount;
 use PerFi\Domain\Transaction\Command\Pay;
 use PerFi\PerFiBundle\Form\PayType;
@@ -26,12 +27,16 @@ class PayController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $formData = $form->getData();
 
+            $accountRepository = $this->get('perfi.repository.account');
+            $source = AccountId::fromString($formData['source']);
+            $destination = AccountId::fromString($formData['destination']);
+
             $command = new Pay(
-                $sourceAccount,
-                $destinationAccount,
-                $amount,
-                $currency,
-                $description
+                $accountRepository->get($source),
+                $accountRepository->get($destination),
+                $formData['amount'],
+                $formData['currency'],
+                $formData['description']
             );
             $this->get('command_bus')->handle($command);
 
