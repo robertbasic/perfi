@@ -5,8 +5,10 @@ namespace PerFi\PerFiBundle\Repository;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 use PerFi\Domain\Account\Account;
+use PerFi\Domain\Account\AccountId;
 use PerFi\Domain\Account\AccountRepository as AccountRepositoryInterface;
-use PerFi\PerFiBundle\Entity;
+use PerFi\Domain\Account\AccountType;
+use PerFi\PerFiBundle\Entity\Account as DtoAccount;
 
 /**
  * AccountRepository
@@ -19,7 +21,7 @@ class AccountRepository extends EntityRepository
      */
     public function add(Account $account)
     {
-        $entity = new Entity\Account();
+        $entity = new DtoAccount();
         $entity->setAccountId((string) $account->id());
         $entity->setTitle($account->title());
         $entity->setType((string) $account->type());
@@ -36,21 +38,42 @@ class AccountRepository extends EntityRepository
     {
         $queryBuilder = $this->createQueryBuilder('a');
 
-        return $queryBuilder
+        $dtos = $queryBuilder
             ->select('a')
             ->getQuery()
-            ->getArrayResult();
+            ->getResult();
+
+        return $this->dtosToEntities($dtos);
     }
 
     public function getAllByType(string $type) : array
     {
         $queryBuilder = $this->createQueryBuilder('a');
 
-        return $queryBuilder
+        $dtos = $queryBuilder
             ->select('a')
             ->where('a.type = :type')
             ->setParameter('type', $type)
             ->getQuery()
-            ->getArrayResult();
+            ->getResult();
+
+        return $this->dtosToEntities($dtos);
+    }
+
+    private function dtosToEntities($dtos)
+    {
+        $accounts = [];
+
+        foreach ($dtos as $dto) {
+            $account = Account::withId(
+                AccountId::fromString($dto->getAccountId()),
+                AccountType::fromString($dto->getType()),
+                $dto->getTitle()
+            );
+
+            $accounts[] = $account;
+        }
+
+        return $accounts;
     }
 }

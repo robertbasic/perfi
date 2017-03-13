@@ -10,7 +10,7 @@ use PerFi\Domain\MoneyFactory;
 use Ramsey\Uuid\Uuid;
 use Webmozart\Assert\Assert;
 
-class Account
+class Account implements \JsonSerializable
 {
     /**
      * @var AccountId
@@ -41,6 +41,8 @@ class Account
      */
     private function __construct(AccountId $id, AccountType $type, string $title)
     {
+        Assert::stringNotEmpty($title);
+
         $this->id = $id;
         $this->type = $type;
         $this->title = $title;
@@ -59,8 +61,23 @@ class Account
     {
         $id = AccountId::fromUuid(Uuid::uuid4());
 
-        Assert::stringNotEmpty($title);
+        return new self(
+            $id,
+            $type,
+            $title
+        );
+    }
 
+    /**
+     * Create an existing account, with ID, type and title
+     *
+     * @param AccountId $id
+     * @param AccountType $type
+     * @param string $title
+     * @return Account
+     */
+    public static function withId(AccountId $id, AccountType $type, string $title) : self
+    {
         return new self(
             $id,
             $type,
@@ -154,5 +171,19 @@ class Account
     public function __toString() : string
     {
         return sprintf("%s, %s", $this->title(), $this->type());
+    }
+
+    /**
+     * JSON serializeable object
+     *
+     * @return array
+     */
+    public function jsonSerialize() : array
+    {
+        return [
+            'id' => (string) $this->id(),
+            'title' => $this->title(),
+            'type' => (string) $this->type(),
+        ];
     }
 }
