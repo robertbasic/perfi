@@ -33,7 +33,9 @@
         "twig/twig": "^2.0",
         "avanzu/admin-theme-bundle": "^2.0.0-beta.5",
         "symfony/assetic-bundle": "^2.8",
-        "simple-bus/symfony-bridge": "^4.1"
+        "simple-bus/symfony-bridge": "^4.1",
+        "jms/serializer": "^1.5",
+        "jms/serializer-bundle": "^1.2"
     },
     "autoload": {
         "psr-4": {
