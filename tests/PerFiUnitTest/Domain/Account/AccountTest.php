@@ -17,9 +17,15 @@ class AccountTest extends TestCase
      */
     private $type;
 
+    /**
+     * @var string
+     */
+    private $title;
+
     public function setup()
     {
         $this->type = AccountType::fromString('asset');
+        $this->title = 'Cash';
     }
 
     /**
@@ -27,12 +33,23 @@ class AccountTest extends TestCase
      */
     public function account_can_be_created_by_type_with_title()
     {
-        $title = 'Cash';
-
-        $account = Account::byTypeWithTitle($this->type, $title);
+        $account = Account::byTypeWithTitle($this->type, $this->title);
 
         self::assertSame('Cash, asset', (string) $account);
         self::assertInstanceOf(AccountId::class, $account->id());
+    }
+
+    /**
+     * @test
+     */
+    public function account_can_be_created_with_an_id()
+    {
+        $id = AccountId::fromString('fddf4716-6c0e-4f54-b539-d2d480a50d1a');
+
+        $account = Account::withId($id, $this->type, $this->title);
+
+        self::assertSame('Cash, asset', (string) $account);
+        self::assertSame($id, $account->id());
     }
 
     /**
@@ -51,9 +68,7 @@ class AccountTest extends TestCase
      */
     public function empty_balances_when_nothing_was_credited_or_debited()
     {
-        $title = 'Cash';
-
-        $account = Account::byTypeWithTitle($this->type, $title);
+        $account = Account::byTypeWithTitle($this->type, $this->title);
 
         $balances = $account->balances();
 

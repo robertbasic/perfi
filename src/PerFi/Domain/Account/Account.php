@@ -68,6 +68,16 @@ class Account
         );
     }
 
+    /**
+     * Create an existing account, with ID, type and title
+     *
+     * @param AccountId $id
+     * @param AccountType $type
+     * @param string $title
+     * @return Account
+     */
+    public static function withId(AccountId $id, AccountType $type, string $title) : self
+    {
         return new self(
             $id,
             $type,

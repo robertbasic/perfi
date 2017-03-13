@@ -34,6 +34,19 @@ class AccountId
     }
 
     /**
+     * Create an account from a string UUID
+     *
+     * @param string $id
+     * @return AccountId
+     */
+    public static function fromString(string $id) : self
+    {
+        return new self(
+            Uuid::fromString($id)
+        );
+    }
+
+    /**
      * String representation of the account ID
      *
      * @return string
