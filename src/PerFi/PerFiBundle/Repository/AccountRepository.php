@@ -8,7 +8,7 @@ use PerFi\Domain\Account\Account;
 use PerFi\Domain\Account\AccountId;
 use PerFi\Domain\Account\AccountRepository as AccountRepositoryInterface;
 use PerFi\Domain\Account\AccountType;
-use PerFi\PerFiBundle\Entity;
+use PerFi\PerFiBundle\Entity\Account as DtoAccount;
 
 /**
  * AccountRepository
@@ -21,7 +21,7 @@ class AccountRepository extends EntityRepository
      */
     public function add(Account $account)
     {
-        $entity = new Entity\Account();
+        $entity = new DtoAccount();
         $entity->setAccountId((string) $account->id());
         $entity->setTitle($account->title());
         $entity->setType((string) $account->type());
