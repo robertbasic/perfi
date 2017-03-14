@@ -27,17 +27,16 @@ class PayController extends Controller
         if ($form->isSubmitted() && $form->isValid()) {
             $formData = $form->getData();
 
-            $accountRepository = $this->get('perfi.repository.account');
-            $source = AccountId::fromString($formData['source']);
-            $destination = AccountId::fromString($formData['destination']);
+            $commandFactory = $this->get('perfi.command.factory.pay');
 
-            $command = new Pay(
-                $accountRepository->get($source),
-                $accountRepository->get($destination),
+            $command = $commandFactory(
+                $formData['source'],
+                $formData['destination'],
                 $formData['amount'],
                 $formData['currency'],
                 $formData['description']
             );
+
             $this->get('command_bus')->handle($command);
 
             $this->addFlash('success', 'Payment made!');
