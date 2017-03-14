@@ -51,7 +51,6 @@ class TransactionTest extends TestCase
         $this->destination = Account::byTypeWithTitle($expense, 'Groceries');
         $this->amount = MoneyFactory::amountInCurrency('500', 'RSD');
         $this->description = 'groceries for dinner';
-
     }
 
     /**
@@ -122,5 +121,45 @@ class TransactionTest extends TestCase
         $balances = $this->destination->balances();
 
         self::assertNotEmpty($balances);
+    }
+
+    /**
+     * @test
+     */
+    public function pay_transaction_can_be_executed_between_asset_and_expense()
+    {
+        $this->markTestIncomplete();
+    }
+
+    /**
+     * @test
+     */
+    public function pay_transaction_can_not_be_executed_between_expense_and_asset()
+    {
+        $this->markTestIncomplete();
+    }
+
+    /**
+     * @test
+     */
+    public function charge_transaction_can_be_executed_between_expense_and_asset()
+    {
+        $this->markTestIncomplete();
+    }
+
+    /**
+     * @test
+     */
+    public function pay_back_transaction_can_be_executed_between_expense_and_asset()
+    {
+        $this->markTestIncomplete();
+    }
+
+    /**
+     * @test
+     */
+    public function refund_transaction_can_be_executed_between_asset_and_expense()
+    {
+        $this->markTestIncomplete();
     }
 }
