@@ -55,6 +55,36 @@ class AccountType
     }
 
     /**
+     * Is account type asset?
+     *
+     * @return bool
+     */
+    public function isAsset() : bool
+    {
+        return $this->type === self::ACCOUNT_TYPE_ASSET;
+    }
+
+    /**
+     * Is account type expense?
+     *
+     * @return bool
+     */
+    public function isExpense() : bool
+    {
+        return $this->type === self::ACCOUNT_TYPE_EXPENSE;
+    }
+
+    /**
+     * Is account type income?
+     *
+     * @return bool
+     */
+    public function isIncome() : bool
+    {
+        return $this->type === self::ACCOUNT_TYPE_INCOME;
+    }
+
+    /**
      * String representation of the account type
      *
      * @return string
