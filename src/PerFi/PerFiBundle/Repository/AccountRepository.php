@@ -32,6 +32,19 @@ class AccountRepository extends EntityRepository
     }
 
     /**
+     * Get an account by it's ID
+     *
+     * @param AccountId $accountId
+     * @return Account
+     */
+    public function get(AccountId $accountId) : Account
+    {
+        $dto = $this->findOneBy(['accountId' => (string) $accountId]);
+
+        return $this->dtoToEntity($dto);
+    }
+
+    /**
      * {@inheritdoc}
      */
     public function getAll() : array
@@ -71,15 +84,20 @@ class AccountRepository extends EntityRepository
         $accounts = [];
 
         foreach ($dtos as $dto) {
-            $account = Account::withId(
-                AccountId::fromString($dto->getAccountId()),
-                AccountType::fromString($dto->getType()),
-                $dto->getTitle()
-            );
-
-            $accounts[] = $account;
+            $accounts[] = $this->dtoToEntity($dto);
         }
 
         return $accounts;
+    }
+
+    private function dtoToEntity($dto)
+    {
+        $account = Account::withId(
+            AccountId::fromString($dto->getAccountId()),
+            AccountType::fromString($dto->getType()),
+            $dto->getTitle()
+        );
+
+        return $account;
     }
 }
