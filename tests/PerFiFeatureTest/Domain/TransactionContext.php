@@ -21,6 +21,13 @@ use PerFi\Domain\Transaction\EventSubscriber\DebitDestinationAccountWhenTransact
 use PerFi\Domain\Transaction\Event\TransactionExecuted;
 use PerFi\Domain\Transaction\TransactionRepository;
 use SimpleBus\Message\Bus\MessageBus;
+use SimpleBus\Message\Bus\Middleware\FinishesHandlingMessageBeforeHandlingNext;
+use SimpleBus\Message\Bus\Middleware\MessageBusSupportingMiddleware;
+use SimpleBus\Message\CallableResolver\CallableCollection;
+use SimpleBus\Message\CallableResolver\ServiceLocatorAwareCallableResolver;
+use SimpleBus\Message\Name\ClassBasedNameResolver;
+use SimpleBus\Message\Subscriber\NotifiesMessageSubscribersMiddleware;
+use SimpleBus\Message\Subscriber\Resolver\NameBasedMessageSubscriberResolver;
 use Webmozart\Assert\Assert;
 
 class TransactionContext implements Context
@@ -56,7 +63,7 @@ class TransactionContext implements Context
     {
         $this->accounts = [];
         $this->repository = new InMemoryTransactionRepository();
-        $this->eventBus = EventBusFactory::getEventBus();
+        $this->eventBus = $this->getEventBus();
         $this->commandHandler = new ExecuteTransactionHandler(
             $this->repository,
             $this->eventBus
@@ -218,5 +225,39 @@ class TransactionContext implements Context
     private function hashAccountTitle($title)
     {
         return trim(strtolower($title));
+    }
+
+    private function getEventBus()
+    {
+        $eventSubscribersByEventName = [
+            TransactionExecuted::class => [
+                CreditSourceAccountWhenTransactionExecuted::class,
+                DebitDestinationAccountWhenTransactionExecuted::class,
+            ]
+        ];
+
+        $serviceLocator = function ($serviceId) {
+            return new $serviceId();
+        };
+
+        $eventSubscriberCollection = new CallableCollection(
+            $eventSubscribersByEventName,
+            new ServiceLocatorAwareCallableResolver($serviceLocator)
+        );
+        $eventNameResolver = new ClassBasedNameResolver();
+        $eventSubscribersResolver = new NameBasedMessageSubscriberResolver(
+            $eventNameResolver,
+            $eventSubscriberCollection
+        );
+
+        $eventBus = new MessageBusSupportingMiddleware();
+        $eventBus->appendMiddleware(new FinishesHandlingMessageBeforeHandlingNext());
+        $eventBus->appendMiddleware(
+            new NotifiesMessageSubscribersMiddleware(
+                $eventSubscribersResolver
+            )
+        );
+
+        return $eventBus;
     }
 }
