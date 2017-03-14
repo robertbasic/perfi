@@ -144,4 +144,60 @@ class AccountTest extends TestCase
             self::assertTrue($expectedBalance->equals($result));
         }
     }
+
+    /**
+     * @test
+     * @dataProvider assetAndExpenseAccounts
+     */
+    public function asset_account_can_pay_expense_account($asset, $expense)
+    {
+        self::assertTrue($asset->canPay($expense));
+        self::assertFalse($expense->canPay($asset));
+    }
+
+    /**
+     * @test
+     * @dataProvider assetAndExpenseAccounts
+     */
+    public function asset_account_can_refund_expense_account($asset, $expense)
+    {
+        self::assertTrue($asset->canRefund($expense));
+        self::assertFalse($expense->canRefund($asset));
+    }
+
+    /**
+     * @test
+     * @dataProvider assetAndExpenseAccounts
+     */
+    public function expense_account_can_charge_asset_account($asset, $expense)
+    {
+        self::assertTrue($expense->canCharge($asset));
+        self::assertFalse($asset->canCharge($expense));
+    }
+
+    /**
+     * @test
+     * @dataProvider assetAndExpenseAccounts
+     */
+    public function expense_account_can_pay_back_asset_account($asset, $expense)
+    {
+        self::assertTrue($expense->canPayBack($asset));
+        self::assertFalse($asset->canPayBack($expense));
+    }
+
+    public function assetAndExpenseAccounts()
+    {
+        $assetType = AccountType::fromString('asset');
+        $asset = Account::byTypeWithTitle($assetType, 'Cash');
+
+        $expenseType = AccountType::fromString('expense');
+        $expense = Account::byTypeWithTitle($expenseType, 'Cash');
+
+        return [
+            [
+                $asset,
+                $expense
+            ],
+        ];
+    }
 }
