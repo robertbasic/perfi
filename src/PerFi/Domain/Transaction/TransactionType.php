@@ -58,6 +58,46 @@ class TransactionType
     }
 
     /**
+     * See if transaction type is pay
+     *
+     * @return bool
+     */
+    public function isPay() : bool
+    {
+        return $this->type === self::TRANSACTION_TYPE_PAY;
+    }
+
+    /**
+     * See if transaction type is charge
+     *
+     * @return bool
+     */
+    public function isCharge() : bool
+    {
+        return $this->type === self::TRANSACTION_TYPE_CHARGE;
+    }
+
+    /**
+     * See if transaction type is refund
+     *
+     * @return bool
+     */
+    public function isRefund() : bool
+    {
+        return $this->type === self::TRANSACTION_TYPE_REFUND;
+    }
+
+    /**
+     * See if transaction type is pay back
+     *
+     * @return bool
+     */
+    public function isPayBack() : bool
+    {
+        return $this->type === self::TRANSACTION_TYPE_PAY_BACK;
+    }
+
+    /**
      * String representation of the transaction type
      *
      * @return string
