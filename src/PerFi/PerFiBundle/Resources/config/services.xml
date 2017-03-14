@@ -12,10 +12,17 @@ xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/sc
             <tag name="kernel.event_listener" event="theme.sidebar_setup_menu" method="onSetupMenu" />
         </service>
 
+        <!-- repositories -->
         <service id="perfi.repository.account" class="PerFi\PerFiBundle\Repository\AccountRepository">
             <factory service="doctrine.orm.default_entity_manager" method="getRepository"></factory>
             <argument>PerFi\PerFiBundle\Entity\Account</argument>
         </service>
+
+        <service id="perfi.repository.transaction" class="PerFi\PerFiBundle\Repository\TransactionRepository">
+            <factory service="doctrine.orm.default_entity_manager" method="getRepository"></factory>
+            <argument>PerFi\PerFiBundle\Entity\Transaction</argument>
+        </service>
+        <!-- repositories -->
 
         <service id="perfi.command_handler.create_account" class="PerFi\Domain\Account\CommandHandler\CreateAccount">
             <argument type="service" id="perfi.repository.account"/>
@@ -28,10 +35,12 @@ xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/sc
             <tag name="command_handler" handles="PerFi\Domain\Transaction\Command\Pay"/>
         </service>
 
+        <!-- forms -->
         <service id="perfi.form.pay" class="PerFi\PerFiBundle\Form\PayType">
             <argument type="service" id="perfi.repository.account"/>
             <tag name="form.type"/>
         </service>
+        <!-- forms -->
     </services>
 
 </container>
