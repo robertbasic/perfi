@@ -24,6 +24,13 @@ xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/sc
         </service>
         <!-- repositories -->
 
+        <!-- commands and command factories -->
+        <service id="perfi.command.factory.pay" class="PerFi\Domain\Transaction\Command\PayFactory">
+            <argument type="service" id="perfi.repository.account"/>
+        </service>
+        <!-- commands and command factories -->
+
+        <!-- command handlers -->
         <service id="perfi.command_handler.create_account" class="PerFi\Domain\Account\CommandHandler\CreateAccount">
             <argument type="service" id="perfi.repository.account"/>
             <tag name="command_handler" handles="PerFi\Domain\Account\Command\CreateAccount"/>
@@ -34,6 +41,7 @@ xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/sc
             <argument type="service" id="event_bus"/>
             <tag name="command_handler" handles="PerFi\Domain\Transaction\Command\Pay"/>
         </service>
+        <!-- command handlers -->
 
         <!-- forms -->
         <service id="perfi.form.pay" class="PerFi\PerFiBundle\Form\PayType">
