@@ -125,41 +125,157 @@ class TransactionTest extends TestCase
 
     /**
      * @test
+     * @dataProvider assetAccountAndExpenseAccount
      */
-    public function pay_transaction_can_be_executed_between_asset_and_expense()
+    public function pay_transaction_can_be_executed_between_asset_and_expense($asset, $expense)
     {
-        $this->markTestIncomplete();
+        $type = TransactionType::fromString('pay');
+        $transaction = Transaction::betweenAccounts(
+            $type,
+            $asset,
+            $expense,
+            $this->amount,
+            $this->description
+        );
+
+        self::assertInstanceOf(Transaction::class, $transaction);
     }
 
     /**
      * @test
+     * @dataProvider assetAccountAndExpenseAccount
+     * @expectedException RuntimeException
      */
-    public function pay_transaction_can_not_be_executed_between_expense_and_asset()
+    public function pay_transaction_can_not_be_executed_between_expense_and_asset($asset, $expense)
     {
-        $this->markTestIncomplete();
+        $type = TransactionType::fromString('pay');
+        $transaction = Transaction::betweenAccounts(
+            $type,
+            $expense,
+            $asset,
+            $this->amount,
+            $this->description
+        );
     }
 
     /**
      * @test
+     * @dataProvider assetAccountAndExpenseAccount
      */
-    public function charge_transaction_can_be_executed_between_expense_and_asset()
+    public function charge_transaction_can_be_executed_between_expense_and_asset($asset, $expense)
     {
-        $this->markTestIncomplete();
+        $type = TransactionType::fromString('charge');
+        $transaction = Transaction::betweenAccounts(
+            $type,
+            $expense,
+            $asset,
+            $this->amount,
+            $this->description
+        );
+
+        self::assertInstanceOf(Transaction::class, $transaction);
     }
 
     /**
      * @test
+     * @dataProvider assetAccountAndExpenseAccount
+     * @expectedException RuntimeException
      */
-    public function pay_back_transaction_can_be_executed_between_expense_and_asset()
+    public function charge_transaction_can_not_be_executed_between_asset_and_expense($asset, $expense)
     {
-        $this->markTestIncomplete();
+        $type = TransactionType::fromString('charge');
+        $transaction = Transaction::betweenAccounts(
+            $type,
+            $asset,
+            $expense,
+            $this->amount,
+            $this->description
+        );
     }
 
     /**
      * @test
+     * @dataProvider assetAccountAndExpenseAccount
      */
-    public function refund_transaction_can_be_executed_between_asset_and_expense()
+    public function pay_back_transaction_can_be_executed_between_expense_and_asset($asset, $expense)
     {
-        $this->markTestIncomplete();
+        $type = TransactionType::fromString('payback');
+        $transaction = Transaction::betweenAccounts(
+            $type,
+            $expense,
+            $asset,
+            $this->amount,
+            $this->description
+        );
+
+        self::assertInstanceOf(Transaction::class, $transaction);
+    }
+
+    /**
+     * @test
+     * @dataProvider assetAccountAndExpenseAccount
+     * @expectedException RuntimeException
+     */
+    public function pay_back_transaction_can_not_be_executed_between_asset_and_expense($asset, $expense)
+    {
+        $type = TransactionType::fromString('payback');
+        $transaction = Transaction::betweenAccounts(
+            $type,
+            $asset,
+            $expense,
+            $this->amount,
+            $this->description
+        );
+    }
+
+    /**
+     * @test
+     * @dataProvider assetAccountAndExpenseAccount
+     */
+    public function refund_transaction_can_be_executed_between_asset_and_expense($asset, $expense)
+    {
+        $type = TransactionType::fromString('refund');
+        $transaction = Transaction::betweenAccounts(
+            $type,
+            $asset,
+            $expense,
+            $this->amount,
+            $this->description
+        );
+
+        self::assertInstanceOf(Transaction::class, $transaction);
+    }
+
+    /**
+     * @test
+     * @dataProvider assetAccountAndExpenseAccount
+     * @expectedException RuntimeException
+     */
+    public function refund_transaction_can_not_be_executed_between_expense_and_asset($asset, $expense)
+    {
+        $type = TransactionType::fromString('refund');
+        $transaction = Transaction::betweenAccounts(
+            $type,
+            $expense,
+            $asset,
+            $this->amount,
+            $this->description
+        );
+    }
+
+    public function assetAccountAndExpenseAccount()
+    {
+        $assetType = AccountType::fromString('asset');
+        $asset = Account::byTypeWithTitle($assetType, 'Cash');
+
+        $expenseType = AccountType::fromString('expense');
+        $expense = Account::byTypeWithTitle($expenseType, 'Cash');
+
+        return [
+            [
+                $asset,
+                $expense,
+            ],
+        ];
     }
 }
