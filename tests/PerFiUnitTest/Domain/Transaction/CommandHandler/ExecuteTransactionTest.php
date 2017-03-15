@@ -71,6 +71,9 @@ class ExecuteTransactionTest extends TestCase
             ->byDefault();
 
         $this->sourceAccount = m::mock(Account::class);
+        $this->sourceAccount->shouldReceive('canPay')
+            ->andReturn(true)
+            ->byDefault();
 
         $this->destinationAccount = m::mock(Account::class);
 

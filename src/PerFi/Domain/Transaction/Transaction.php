@@ -68,6 +68,11 @@ class Transaction
         string $description
     )
     {
+        if (!$this->canTransactionBeExecuted($type, $sourceAccount, $destinationAccount)) {
+            // @todo throw a proper domain exception
+            throw new \RuntimeException();
+        }
+
         $this->id = $id;
         $this->type = $type;
         $this->sourceAccount = $sourceAccount;
@@ -195,5 +200,34 @@ class Transaction
     public function description() : string
     {
         return $this->description;
+    }
+
+    /**
+     * Check can a transaction be executed
+     *
+     * @param TransactionType $type
+     * @param Account $sourceAccount
+     * @param Account $destinationAccount
+     * @return bool
+     */
+    private function canTransactionBeExecuted(TransactionType $type, Account $sourceAccount, Account $destinationAccount) : bool
+    {
+        if ($type->isPay() && $sourceAccount->canPay($destinationAccount)) {
+            return true;
+        }
+
+        if ($type->isCharge() && $sourceAccount->canCharge($destinationAccount)) {
+            return true;
+        }
+
+        if ($type->isRefund() && $sourceAccount->canRefund($destinationAccount)) {
+            return true;
+        }
+
+        if ($type->isPayBack() && $sourceAccount->canPayBack($destinationAccount)) {
+            return true;
+        }
+
+        return false;
     }
 }

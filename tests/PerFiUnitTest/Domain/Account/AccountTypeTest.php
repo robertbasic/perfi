@@ -22,6 +22,36 @@ class AccountTypeTest extends TestCase
 
     /**
      * @test
+     */
+    public function asset_is_asset()
+    {
+        $accountType = AccountType::fromString('asset');
+
+        self::assertTrue($accountType->isAsset());
+    }
+
+    /**
+     * @test
+     */
+    public function expense_is_expense()
+    {
+        $accountType = AccountType::fromString('expense');
+
+        self::assertTrue($accountType->isExpense());
+    }
+
+    /**
+     * @test
+     */
+    public function income_is_income()
+    {
+        $accountType = AccountType::fromString('income');
+
+        self::assertTrue($accountType->isIncome());
+    }
+
+    /**
+     * @test
      * @expectedException InvalidArgumentException
      */
     public function account_type_cannot_be_created_for_empty_type()
