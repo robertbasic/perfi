@@ -81,26 +81,6 @@ class TransactionContext implements Context
     }
 
     /**
-     * @Given I have executed a transaction between :source and :destination for :amount :currency
-     */
-    public function iHaveExecutedATransactionBetweenTwoAccountsForAmountInCurrency($source, $destination, $amount, $currency)
-    {
-        $sourceAccount = $this->getAccountByTitle($source);
-        $destinationAccount = $this->getAccountByTitle($destination);
-        $description = "supermarket";
-
-        $this->command = new Pay(
-            $sourceAccount,
-            $destinationAccount,
-            $amount,
-            $currency,
-            $description
-        );
-
-        $this->commandHandler->__invoke($this->command);
-    }
-
-    /**
      * @When :amount :currency is payed for :description from :source to :destination
      */
     public function anAmountInCurrencyIsPayedForSomething($amount, $currency, $description, $source, $destination)
@@ -139,7 +119,7 @@ class TransactionContext implements Context
     }
 
     /**
-     * @When I refund :amount :currency for the :source to :destination
+     * @When I refund :amount :currency from the :source to :destination
      */
     public function iRefundAmountInCurrency($amount, $currency, $source, $destination)
     {
@@ -147,7 +127,7 @@ class TransactionContext implements Context
         $destinationAccount = $this->getAccountByTitle($destination);
         $description = "supermarket";
 
-        $command = new Refund(
+        $this->command = new Refund(
             $sourceAccount,
             $destinationAccount,
             $amount,
@@ -155,7 +135,7 @@ class TransactionContext implements Context
             $description
         );
 
-        $this->commandHandler->__invoke($command);
+        $this->commandHandler->__invoke($this->command);
     }
 
     /**
@@ -167,7 +147,7 @@ class TransactionContext implements Context
         $destinationAccount = $this->getAccountByTitle($destination);
         $description = "supermarket";
 
-        $command = new PayBack(
+        $this->command = new PayBack(
             $sourceAccount,
             $destinationAccount,
             $amount,
@@ -175,7 +155,7 @@ class TransactionContext implements Context
             $description
         );
 
-        $this->commandHandler->__invoke($command);
+        $this->commandHandler->__invoke($this->command);
     }
 
     /**
