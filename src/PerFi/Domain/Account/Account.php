@@ -104,7 +104,7 @@ class Account implements \JsonSerializable
      */
     public function canRefund(Account $destinationAccount) : bool
     {
-        return $this->type()->isAsset() && $destinationAccount->type()->isExpense();
+        return $this->type()->isExpense() && $destinationAccount->type()->isAsset();
     }
 
     /**

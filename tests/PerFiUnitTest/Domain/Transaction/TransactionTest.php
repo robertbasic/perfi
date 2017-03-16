@@ -196,13 +196,13 @@ class TransactionTest extends TestCase
      * @test
      * @dataProvider assetAccountAndExpenseAccount
      */
-    public function refund_transaction_can_be_executed_between_asset_and_expense($asset, $expense)
+    public function refund_transaction_can_be_executed_between_expense_and_asset($asset, $expense)
     {
         $type = TransactionType::fromString('refund');
         $transaction = Transaction::betweenAccounts(
             $type,
-            $asset,
             $expense,
+            $asset,
             $this->amount,
             $this->date,
             $this->description
@@ -215,15 +215,15 @@ class TransactionTest extends TestCase
      * @test
      * @dataProvider assetAccountAndExpenseAccount
      * @expectedException PerFi\Domain\Transaction\Exception\NotExecutableTransactionException
-     * @expectedExceptionMessage The refund transaction cannot be executed between Groceries, expense and Cash, asset accounts
+     * @expectedExceptionMessage The refund transaction cannot be executed between Cash, asset and Groceries, expense accounts
      */
-    public function refund_transaction_can_not_be_executed_between_expense_and_asset($asset, $expense)
+    public function refund_transaction_can_not_be_executed_between_asset_and_expense($asset, $expense)
     {
         $type = TransactionType::fromString('refund');
         $transaction = Transaction::betweenAccounts(
             $type,
-            $expense,
             $asset,
+            $expense,
             $this->amount,
             $this->date,
             $this->description

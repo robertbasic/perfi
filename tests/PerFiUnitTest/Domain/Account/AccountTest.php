@@ -162,8 +162,8 @@ class AccountTest extends TestCase
      */
     public function asset_account_can_refund_expense_account($asset, $expense)
     {
-        self::assertTrue($asset->canRefund($expense));
-        self::assertFalse($expense->canRefund($asset));
+        self::assertTrue($expense->canRefund($asset));
+        self::assertFalse($asset->canRefund($expense));
     }
 
     public function assetAndExpenseAccounts()
