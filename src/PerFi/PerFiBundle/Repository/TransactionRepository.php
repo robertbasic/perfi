@@ -24,6 +24,7 @@ class TransactionRepository extends EntityRepository
         $entity->setSourceAccount((string) $transaction->sourceAccount()->id());
         $entity->setDestinationAccount((string) $transaction->destinationAccount()->id());
         $entity->setDate($transaction->date());
+        $entity->setRecordDate($transaction->recordDate());
         $entity->setDescription($transaction->description());
 
         $amount = $transaction->amount();
