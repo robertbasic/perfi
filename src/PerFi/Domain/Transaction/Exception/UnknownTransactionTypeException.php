@@ -5,9 +5,9 @@ namespace PerFi\Domain\Transaction\Exception;
 
 class UnknownTransactionTypeException extends \InvalidArgumentException
 {
-    public function __construct(string $type)
+    public static function withType(string $type) : self
     {
         $message = sprintf("The %s transaction type is unknown", $type);
-        parent::__construct($message);
+        return new self($message);
     }
 }

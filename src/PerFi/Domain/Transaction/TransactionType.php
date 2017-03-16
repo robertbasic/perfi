@@ -49,7 +49,7 @@ class TransactionType
         Assert::stringNotEmpty($type, "The transaction type must be provided");
 
         if (!in_array($type, self::TRANSACTION_TYPES)) {
-            throw new UnknownTransactionTypeException($type);
+            throw UnknownTransactionTypeException::withType($type);
         }
 
         return new self(
