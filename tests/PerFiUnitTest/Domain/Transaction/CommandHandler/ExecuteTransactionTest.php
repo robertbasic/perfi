@@ -85,6 +85,7 @@ class ExecuteTransactionTest extends TestCase
             $this->destinationAccount,
             $this->amount,
             $this->currency,
+            '2017-03-12',
             'supermarket'
         );
 
