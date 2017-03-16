@@ -23,27 +23,31 @@ Feature: Transactions
     Scenario: A payment from an asset for an expense
         Given I have an asset account called "Cash"
         And I have an expense account called "Groceries"
-        When 1200 RSD is payed for "supermarket groceries" from "Cash" to "Groceries"
+        When 1200 RSD is payed for "supermarket groceries" from "Cash" to "Groceries" on "2017-03-12"
         Then I should have 1200 RSD funds less in "Cash" asset account
         And I should have 1200 RSD funds more in "Groceries" expense account
+        And the transaction should have happened on "2017-03-12"
 
     Scenario: A charge for an expense from an asset
         Given I have an asset account called "Cash"
         And I have an expense account called "Groceries"
-        When 1200 RSD is charged for "supermarket groceries" from "Groceries" to "Cash"
+        When 1200 RSD is charged for "supermarket groceries" from "Groceries" to "Cash" on "2017-03-12"
         Then I should have 1200 RSD funds less in "Cash" asset account
         And I should have 1200 RSD funds more in "Groceries" expense account
+        And the transaction should have happened on "2017-03-12"
 
     Scenario: A refund for an expense to an asset
         Given I have an asset account called "Cash"
         And I have an expense account called "Groceries"
-        When I refund 200 RSD from the "Cash" to "Groceries"
+        When I refund 200 RSD from the "Cash" to "Groceries" on "2017-03-12"
         Then I should have 200 RSD funds more in "Cash" asset account
         And I should have 200 RSD funds less in "Groceries" expense account
+        And the transaction should have happened on "2017-03-12"
 
     Scenario: A payback to an asset for an expense
         Given I have an asset account called "Cash"
         And I have an expense account called "Groceries"
-        When I pay back 200 RSD from the "Groceries" to "Cash"
+        When I pay back 200 RSD from the "Groceries" to "Cash" on "2017-03-12"
         Then I should have 200 RSD funds more in "Cash" asset account
         And I should have 200 RSD funds less in "Groceries" expense account
+        And the transaction should have happened on "2017-03-12"

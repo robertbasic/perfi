@@ -10,6 +10,7 @@ use PerFi\Domain\MoneyFactory;
 use PerFi\Domain\Transaction\EventSubscriber\CreditSourceAccountWhenTransactionExecuted;
 use PerFi\Domain\Transaction\Event\TransactionExecuted;
 use PerFi\Domain\Transaction\Transaction;
+use PerFi\Domain\Transaction\TransactionDate;
 use PerFi\Domain\Transaction\TransactionType;
 
 class CreditSourceAccountWhenTransactionExecutedTest extends TestCase
@@ -25,6 +26,7 @@ class CreditSourceAccountWhenTransactionExecutedTest extends TestCase
         $source = Account::byTypeWithTitle($asset, 'Cash');
         $destination = Account::byTypeWithTitle($expense, 'Groceries');
         $amount = MoneyFactory::amountInCurrency('500', 'RSD');
+        $date = TransactionDate::fromString('2017-03-12');
         $description = 'groceries for dinner';
 
         $transaction = Transaction::betweenAccounts(
@@ -32,6 +34,7 @@ class CreditSourceAccountWhenTransactionExecutedTest extends TestCase
             $source,
             $destination,
             $amount,
+            $date,
             $description
         );
 

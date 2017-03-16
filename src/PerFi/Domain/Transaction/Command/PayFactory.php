@@ -31,6 +31,7 @@ class PayFactory
      * @param string $destinationAccountId
      * @param string $amount
      * @param string $currency
+     * @param string $date
      * @param string $description
      * @return Pay
      */
@@ -39,6 +40,7 @@ class PayFactory
         string $destinationAccountId,
         string $amount,
         string $currency,
+        string $date,
         string $description
     ) : Pay
     {
@@ -53,6 +55,7 @@ class PayFactory
             $destinationAccount,
             $amount,
             $currency,
+            $date,
             $description
         );
 

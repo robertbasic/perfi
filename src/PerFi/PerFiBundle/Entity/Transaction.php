@@ -48,6 +48,11 @@ class Transaction
     private $date;
 
     /**
+     * @var \DateTime
+     */
+    private $recordDate;
+
+    /**
      * @var string
      */
     private $description;
@@ -228,6 +233,30 @@ class Transaction
     public function getDate()
     {
         return $this->date;
+    }
+
+    /**
+     * Set record date
+     *
+     * @param \DateTime $recordDate
+     *
+     * @return Transaction
+     */
+    public function setRecordDate($recordDate)
+    {
+        $this->recordDate = $recordDate;
+
+        return $this;
+    }
+
+    /**
+     * Get record date
+     *
+     * @return \DateTime
+     */
+    public function getRecordDate()
+    {
+        return $this->recordDate;
     }
 
     /**

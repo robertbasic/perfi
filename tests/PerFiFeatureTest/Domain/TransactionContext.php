@@ -19,6 +19,7 @@ use PerFi\Domain\Transaction\Command\Transaction;
 use PerFi\Domain\Transaction\EventSubscriber\CreditSourceAccountWhenTransactionExecuted;
 use PerFi\Domain\Transaction\EventSubscriber\DebitDestinationAccountWhenTransactionExecuted;
 use PerFi\Domain\Transaction\Event\TransactionExecuted;
+use PerFi\Domain\Transaction\TransactionDate;
 use PerFi\Domain\Transaction\TransactionRepository;
 use SimpleBus\Message\Bus\MessageBus;
 use SimpleBus\Message\Bus\Middleware\FinishesHandlingMessageBeforeHandlingNext;
@@ -81,9 +82,9 @@ class TransactionContext implements Context
     }
 
     /**
-     * @When :amount :currency is payed for :description from :source to :destination
+     * @When :amount :currency is payed for :description from :source to :destination on :date
      */
-    public function anAmountInCurrencyIsPayedForSomething($amount, $currency, $description, $source, $destination)
+    public function anAmountInCurrencyIsPayedForSomething($amount, $currency, $description, $source, $destination, $date)
     {
         $sourceAccount = $this->getAccountByTitle($source);
         $destinationAccount = $this->getAccountByTitle($destination);
@@ -93,6 +94,7 @@ class TransactionContext implements Context
             $destinationAccount,
             $amount,
             $currency,
+            $date,
             $description
         );
 
@@ -100,9 +102,9 @@ class TransactionContext implements Context
     }
 
     /**
-     * @When :amount :currency is charged for :description from :source to :destination
+     * @When :amount :currency is charged for :description from :source to :destination on :date
      */
-    public function anAmountInCurrencyIsChargedForSomething($amount, $currency, $description, $source, $destination)
+    public function anAmountInCurrencyIsChargedForSomething($amount, $currency, $description, $source, $destination, $date)
     {
         $sourceAccount = $this->getAccountByTitle($source);
         $destinationAccount = $this->getAccountByTitle($destination);
@@ -112,6 +114,7 @@ class TransactionContext implements Context
             $destinationAccount,
             $amount,
             $currency,
+            $date,
             $description
         );
 
@@ -119,9 +122,9 @@ class TransactionContext implements Context
     }
 
     /**
-     * @When I refund :amount :currency from the :source to :destination
+     * @When I refund :amount :currency from the :source to :destination on :date
      */
-    public function iRefundAmountInCurrency($amount, $currency, $source, $destination)
+    public function iRefundAmountInCurrency($amount, $currency, $source, $destination, $date)
     {
         $sourceAccount = $this->getAccountByTitle($source);
         $destinationAccount = $this->getAccountByTitle($destination);
@@ -132,6 +135,7 @@ class TransactionContext implements Context
             $destinationAccount,
             $amount,
             $currency,
+            $date,
             $description
         );
 
@@ -139,9 +143,9 @@ class TransactionContext implements Context
     }
 
     /**
-     * @When I pay back :amount :currency from the :source to :destination
+     * @When I pay back :amount :currency from the :source to :destination on :date
      */
-    public function iPayBackAmountInCurrency($amount, $currency, $source, $destination)
+    public function iPayBackAmountInCurrency($amount, $currency, $source, $destination, $date)
     {
         $sourceAccount = $this->getAccountByTitle($source);
         $destinationAccount = $this->getAccountByTitle($destination);
@@ -152,6 +156,7 @@ class TransactionContext implements Context
             $destinationAccount,
             $amount,
             $currency,
+            $date,
             $description
         );
 
@@ -193,6 +198,20 @@ class TransactionContext implements Context
                 Assert::same($result->getAmount(), $expected->getAmount());
                 Assert::same((string) $result->getCurrency(), (string) $expected->getCurrency());
             }
+        }
+    }
+
+    /**
+     * @Then the transaction should have happened on :date
+     */
+    public function theTransactionShouldHaveHappenedOnDate($date)
+    {
+        $expected = TransactionDate::fromString($date);
+
+        $transactions = $this->repository->getAll();
+
+        foreach ($transactions as $transaction) {
+            Assert::same((string) $transaction->date(), (string) $expected);
         }
     }
 

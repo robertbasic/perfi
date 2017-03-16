@@ -15,6 +15,7 @@ class PayBack extends Transaction
      * @param Account $sourceAccount
      * @param Account $destinationAccount
      * @param Money $amount
+     * @param string $date
      * @param string $description
      */
     public function __construct(
@@ -22,6 +23,7 @@ class PayBack extends Transaction
         Account $destinationAccount,
         string $amount,
         string $currency,
+        string $date,
         string $description
     )
     {
@@ -30,6 +32,7 @@ class PayBack extends Transaction
             $destinationAccount,
             $amount,
             $currency,
+            $date,
             $description,
             TransactionType::TRANSACTION_TYPE_PAY_BACK
         );

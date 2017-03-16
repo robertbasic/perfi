@@ -24,6 +24,7 @@ class PayFactoryTest extends TestCase
         $destination = '39e618b3-f58f-47bb-86f8-045767e7409c';
         $amount = '100';
         $currency = 'RSD';
+        $date = '2017-03-12';
         $description = 'supermarket';
 
         $sourceAccount = m::mock(Account::class);
@@ -35,7 +36,7 @@ class PayFactoryTest extends TestCase
             ->andReturn($sourceAccount, $destinationAccount);
 
         $factory = new PayFactory($accountRepository);
-        $command = $factory($source, $destination, $amount, $currency, $description);
+        $command = $factory($source, $destination, $amount, $currency, $date, $description);
 
         self::assertInstanceOf(Pay::class, $command);
     }

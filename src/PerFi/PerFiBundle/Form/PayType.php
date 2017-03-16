@@ -42,6 +42,13 @@ class PayType extends AbstractType
                 'required' => true,
                 'choices' => $this->getCurrencies(),
             ])
+            ->add('date', TextType::class, [
+                'required' => true,
+                'empty_data' => '',
+                'attr' => [
+                    'class' => 'datepicker',
+                ]
+            ])
             ->add('description', TextType::class, [
                 'required' => true,
                 'empty_data' => '',

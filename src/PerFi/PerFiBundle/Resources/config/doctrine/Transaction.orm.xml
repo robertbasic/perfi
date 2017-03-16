@@ -11,6 +11,7 @@
     <field name="amount" type="integer" column="amount"/>
     <field name="currency" type="string" column="currency" length="3"/>
     <field name="date" type="datetime" column="date"/>
+    <field name="recordDate" type="datetime" column="record_date"/>
     <field name="description" type="string" column="description" length="255"/>
   </entity>
 </doctrine-mapping>

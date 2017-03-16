@@ -21,3 +21,26 @@
     </div>
 </div>
 {% endblock %}
+
+{% block avanzu_head %}
+<link rel="stylesheet" href="{{ asset('theme/plugins/datepicker/datepicker3.css') }}">
+{% endblock %}
+
+{% block avanzu_javascripts %}
+<script src="{{ asset('theme/plugins/datepicker/bootstrap-datepicker.js') }}"></script>
+{% endblock %}
+
+{% block avanzu_javascripts_inline %}
+<script type='text/javascript'>
+$(function () {
+    $("input.datepicker").datepicker({
+        "autoclose": true,
+        "clearBtn": true,
+        "endDate": "0d",
+        "format": "yyyy-mm-dd",
+        "todayHighlight": true,
+        "toggleActive": false,
+    });
+});
+</script>
+{% endblock %}

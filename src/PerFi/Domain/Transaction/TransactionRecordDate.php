@@ -3,11 +3,12 @@ declare(strict_types=1);
 
 namespace PerFi\Domain\Transaction;
 
-class TransactionDate extends \DateTimeImmutable
+class TransactionRecordDate extends \DateTimeImmutable
 {
     /**
      * Create a new immutable transaction date and time
      *
+     * Denotes the date and time at which the transaction was recorded.
      * The timezone is UTC.
      *
      * @return TransactionDate
@@ -17,18 +18,5 @@ class TransactionDate extends \DateTimeImmutable
         $timezone = new \DateTimeZone('UTC');
 
         return new self('now', $timezone);
-    }
-
-    public static function fromString(string $date) : self
-    {
-        // @todo assert $date string is in a good format
-        $timezone = new \DateTimeZone('UTC');
-
-        return new self($date, $timezone);
-    }
-
-    public function __toString()
-    {
-        return $this->format('Y-m-d');
     }
 }
