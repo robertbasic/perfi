@@ -99,7 +99,7 @@ class Transaction
         string $description
     ) : self
     {
-        Assert::stringNotEmpty($description);
+        Assert::stringNotEmpty($description, "The transaction description must be provided");
 
         $id = TransactionId::fromUuid(Uuid::uuid4());
 

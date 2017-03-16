@@ -85,6 +85,22 @@ class TransactionTest extends TestCase
 
     /**
      * @test
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage The transaction description must be provided
+     */
+    public function transaction_can_not_be_created_without_a_description()
+    {
+        $transaction = Transaction::betweenAccounts(
+            $this->type,
+            $this->source,
+            $this->destination,
+            $this->amount,
+            ''
+        );
+    }
+
+    /**
+     * @test
      */
     public function credits_source_account()
     {
