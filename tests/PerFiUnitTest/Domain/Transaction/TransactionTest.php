@@ -12,6 +12,7 @@ use PerFi\Domain\Transaction\Exception\NotExecutableTransactionException;
 use PerFi\Domain\Transaction\Transaction;
 use PerFi\Domain\Transaction\TransactionDate;
 use PerFi\Domain\Transaction\TransactionId;
+use PerFi\Domain\Transaction\TransactionRecordDate;
 use PerFi\Domain\Transaction\TransactionType;
 
 class TransactionTest extends TestCase
@@ -69,6 +70,7 @@ class TransactionTest extends TestCase
 
         self::assertInstanceOf(TransactionId::class, $transaction->id());
         self::assertInstanceOf(TransactionDate::class, $transaction->date());
+        self::assertInstanceOf(TransactionRecordDate::class, $transaction->recordDate());
         self::assertSame($this->description, $transaction->description());
 
         self::assertInstanceOf(TransactionType::class, $transaction->type());

@@ -8,6 +8,7 @@ use PerFi\Domain\Account\Account;
 use PerFi\Domain\Transaction\Exception\NotExecutableTransactionException;
 use PerFi\Domain\Transaction\TransactionDate;
 use PerFi\Domain\Transaction\TransactionId;
+use PerFi\Domain\Transaction\TransactionRecordDate;
 use PerFi\Domain\Transaction\TransactionType;
 use Ramsey\Uuid\Uuid;
 use Webmozart\Assert\Assert;
@@ -45,6 +46,11 @@ class Transaction
     private $date;
 
     /**
+     * @var TransactionRecordDate
+     */
+    private $recordDate;
+
+    /**
      * @var string
      */
     private $description;
@@ -66,6 +72,7 @@ class Transaction
         Account $destinationAccount,
         Money $amount,
         TransactionDate $date,
+        TransactionRecordDate $recordDate,
         string $description
     )
     {
@@ -79,6 +86,7 @@ class Transaction
         $this->destinationAccount = $destinationAccount;
         $this->amount = $amount;
         $this->date = $date;
+        $this->recordDate = $recordDate;
         $this->description = $description;
     }
 
@@ -104,6 +112,7 @@ class Transaction
         $id = TransactionId::fromUuid(Uuid::uuid4());
 
         $date = TransactionDate::now();
+        $recordDate = TransactionRecordDate::now();
 
         return new self(
             $id,
@@ -112,6 +121,7 @@ class Transaction
             $destinationAccount,
             $amount,
             $date,
+            $recordDate,
             $description
         );
     }
@@ -190,6 +200,16 @@ class Transaction
     public function date() : TransactionDate
     {
         return $this->date;
+    }
+
+    /**
+     * Get the transaction record date
+     *
+     * @return TransactionRecordDate
+     */
+    public function recordDate() : TransactionRecordDate
+    {
+        return $this->recordDate;
     }
 
     /**
