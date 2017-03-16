@@ -63,6 +63,7 @@ class TransactionTypeTest extends TestCase
     /**
      * @test
      * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage The transaction type must be provided
      */
     public function transaction_type_cannot_be_created_for_empty_type()
     {
@@ -74,6 +75,7 @@ class TransactionTypeTest extends TestCase
     /**
      * @test
      * @expectedException PerFi\Domain\Transaction\Exception\UnknownTransactionTypeException
+     * @expectedExceptionMessage The spam transaction type is unknown
      */
     public function transaction_type_cannot_be_created_for_unknown_type()
     {
