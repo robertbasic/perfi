@@ -49,6 +49,7 @@ class ExecuteTransaction
             $command->sourceAccount(),
             $command->destinationAccount(),
             $command->amount(),
+            $command->date(),
             $command->description()
         );
 
