@@ -8,7 +8,6 @@ use PerFi\Domain\Account\AccountRepository;
 use PerFi\Domain\Account\AccountType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
-use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 
@@ -43,11 +42,12 @@ class PayType extends AbstractType
                 'required' => true,
                 'choices' => $this->getCurrencies(),
             ])
-            ->add('date', DateType::class, [
+            ->add('date', TextType::class, [
                 'required' => true,
-                'widget' => 'single_text',
-                'input' => 'string',
                 'empty_data' => '',
+                'attr' => [
+                    'class' => 'datepicker',
+                ]
             ])
             ->add('description', TextType::class, [
                 'required' => true,
