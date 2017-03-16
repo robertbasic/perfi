@@ -43,10 +43,10 @@ class AccountType
      */
     public static function fromString(string $type) : self
     {
-        Assert::stringNotEmpty($type);
+        Assert::stringNotEmpty($type, "The account type must be provided");
 
         if (!in_array($type, self::ACCOUNT_TYPES)) {
-            throw new UnknownAccountTypeException();
+            throw new UnknownAccountTypeException($type);
         }
 
         return new self(
