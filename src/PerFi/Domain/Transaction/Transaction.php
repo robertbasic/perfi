@@ -236,15 +236,7 @@ class Transaction
             return true;
         }
 
-        if ($type->isCharge() && $sourceAccount->canCharge($destinationAccount)) {
-            return true;
-        }
-
         if ($type->isRefund() && $sourceAccount->canRefund($destinationAccount)) {
-            return true;
-        }
-
-        if ($type->isPayBack() && $sourceAccount->canPayBack($destinationAccount)) {
             return true;
         }
 

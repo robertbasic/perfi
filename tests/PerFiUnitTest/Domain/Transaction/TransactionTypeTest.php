@@ -33,31 +33,11 @@ class TransactionTypeTest extends TestCase
     /**
      * @test
      */
-    public function charge_type_is_charge()
-    {
-        $transactionType = TransactionType::fromString('charge');
-
-        self::assertTrue($transactionType->isCharge());
-    }
-
-    /**
-     * @test
-     */
     public function refund_type_is_refund()
     {
         $transactionType = TransactionType::fromString('refund');
 
         self::assertTrue($transactionType->isRefund());
-    }
-
-    /**
-     * @test
-     */
-    public function payback_type_is_payback()
-    {
-        $transactionType = TransactionType::fromString('payback');
-
-        self::assertTrue($transactionType->isPayBack());
     }
 
     /**
@@ -91,13 +71,7 @@ class TransactionTypeTest extends TestCase
                 'pay',
             ],
             [
-                'charge',
-            ],
-            [
                 'refund',
-            ],
-            [
-                'payback',
             ],
         ];
     }
