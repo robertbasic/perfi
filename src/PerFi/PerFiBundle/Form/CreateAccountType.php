@@ -24,6 +24,7 @@ class CreateAccountType extends AbstractType
             ])
             ->add('title', TextType::class, [
                 'required' => true,
+                'empty_data' => '',
             ]);
     }
 }
