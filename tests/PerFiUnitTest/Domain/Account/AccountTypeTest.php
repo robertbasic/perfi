@@ -53,6 +53,7 @@ class AccountTypeTest extends TestCase
     /**
      * @test
      * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage The account type must be provided
      */
     public function account_type_cannot_be_created_for_empty_type()
     {
@@ -64,6 +65,7 @@ class AccountTypeTest extends TestCase
     /**
      * @test
      * @expectedException PerFi\Domain\Account\Exception\UnknownAccountTypeException
+     * @expectedExceptionMessage The spam account type is unknown
      */
     public function account_type_cannot_be_created_for_unknown_type()
     {

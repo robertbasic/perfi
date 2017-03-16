@@ -5,6 +5,7 @@ namespace PerFi\Domain\Transaction;
 
 use Money\Money;
 use PerFi\Domain\Account\Account;
+use PerFi\Domain\Transaction\Exception\NotExecutableTransactionException;
 use PerFi\Domain\Transaction\TransactionDate;
 use PerFi\Domain\Transaction\TransactionId;
 use PerFi\Domain\Transaction\TransactionType;
@@ -69,8 +70,7 @@ class Transaction
     )
     {
         if (!$this->canTransactionBeExecuted($type, $sourceAccount, $destinationAccount)) {
-            // @todo throw a proper domain exception
-            throw new \RuntimeException();
+            throw new NotExecutableTransactionException($type, $sourceAccount, $destinationAccount);
         }
 
         $this->id = $id;
@@ -99,7 +99,7 @@ class Transaction
         string $description
     ) : self
     {
-        Assert::stringNotEmpty($description);
+        Assert::stringNotEmpty($description, "The transaction description must be provided");
 
         $id = TransactionId::fromUuid(Uuid::uuid4());
 

@@ -46,10 +46,10 @@ class TransactionType
      */
     public static function fromString(string $type) : self
     {
-        Assert::stringNotEmpty($type);
+        Assert::stringNotEmpty($type, "The transaction type must be provided");
 
         if (!in_array($type, self::TRANSACTION_TYPES)) {
-            throw new UnknownTransactionTypeException();
+            throw new UnknownTransactionTypeException($type);
         }
 
         return new self(

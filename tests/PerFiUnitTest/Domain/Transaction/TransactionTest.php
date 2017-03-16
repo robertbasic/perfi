@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
 use PerFi\Domain\Account\Account;
 use PerFi\Domain\Account\AccountType;
 use PerFi\Domain\MoneyFactory;
+use PerFi\Domain\Transaction\Exception\NotExecutableTransactionException;
 use PerFi\Domain\Transaction\Transaction;
 use PerFi\Domain\Transaction\TransactionDate;
 use PerFi\Domain\Transaction\TransactionId;
@@ -85,6 +86,22 @@ class TransactionTest extends TestCase
 
     /**
      * @test
+     * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage The transaction description must be provided
+     */
+    public function transaction_can_not_be_created_without_a_description()
+    {
+        $transaction = Transaction::betweenAccounts(
+            $this->type,
+            $this->source,
+            $this->destination,
+            $this->amount,
+            ''
+        );
+    }
+
+    /**
+     * @test
      */
     public function credits_source_account()
     {
@@ -144,7 +161,8 @@ class TransactionTest extends TestCase
     /**
      * @test
      * @dataProvider assetAccountAndExpenseAccount
-     * @expectedException RuntimeException
+     * @expectedException PerFi\Domain\Transaction\Exception\NotExecutableTransactionException
+     * @expectedExceptionMessage The pay transaction cannot be executed between Groceries, expense and Cash, asset accounts
      */
     public function pay_transaction_can_not_be_executed_between_expense_and_asset($asset, $expense)
     {
@@ -179,7 +197,8 @@ class TransactionTest extends TestCase
     /**
      * @test
      * @dataProvider assetAccountAndExpenseAccount
-     * @expectedException RuntimeException
+     * @expectedException PerFi\Domain\Transaction\Exception\NotExecutableTransactionException
+     * @expectedExceptionMessage The charge transaction cannot be executed between Cash, asset and Groceries, expense accounts
      */
     public function charge_transaction_can_not_be_executed_between_asset_and_expense($asset, $expense)
     {
@@ -214,7 +233,8 @@ class TransactionTest extends TestCase
     /**
      * @test
      * @dataProvider assetAccountAndExpenseAccount
-     * @expectedException RuntimeException
+     * @expectedException PerFi\Domain\Transaction\Exception\NotExecutableTransactionException
+     * @expectedExceptionMessage The payback transaction cannot be executed between Cash, asset and Groceries, expense accounts
      */
     public function pay_back_transaction_can_not_be_executed_between_asset_and_expense($asset, $expense)
     {
@@ -249,7 +269,8 @@ class TransactionTest extends TestCase
     /**
      * @test
      * @dataProvider assetAccountAndExpenseAccount
-     * @expectedException RuntimeException
+     * @expectedException PerFi\Domain\Transaction\Exception\NotExecutableTransactionException
+     * @expectedExceptionMessage The refund transaction cannot be executed between Groceries, expense and Cash, asset accounts
      */
     public function refund_transaction_can_not_be_executed_between_expense_and_asset($asset, $expense)
     {
@@ -269,7 +290,7 @@ class TransactionTest extends TestCase
         $asset = Account::byTypeWithTitle($assetType, 'Cash');
 
         $expenseType = AccountType::fromString('expense');
-        $expense = Account::byTypeWithTitle($expenseType, 'Cash');
+        $expense = Account::byTypeWithTitle($expenseType, 'Groceries');
 
         return [
             [
