@@ -4,18 +4,13 @@ Feature: Transactions
     Between two accounts
 
     An asset can pay an expense
-    An asset can be refunded by an expense
     An asset can be funded by an income
 
-    An expense can be paid by an asset
-    An expense can charge an asset
-    An expense can pay back an asset
+    # fix wording (can be refunded to an)
+    # fix scenario
+    An expense can refund an asset
 
     An income can fund an asset
-
-    An asset payment and an expense charge are each other's inversions.
-
-    An asset refund and an expense pay back are each other's inversions.
 
     A source of a transaction decreases it's ballance
     A destination of a transaction increases it's ballance
@@ -28,26 +23,10 @@ Feature: Transactions
         And I should have 1200 RSD funds more in "Groceries" expense account
         And the transaction should have happened on "2017-03-12"
 
-    Scenario: A charge for an expense from an asset
-        Given I have an asset account called "Cash"
-        And I have an expense account called "Groceries"
-        When 1200 RSD is charged for "supermarket groceries" from "Groceries" to "Cash" on "2017-03-12"
-        Then I should have 1200 RSD funds less in "Cash" asset account
-        And I should have 1200 RSD funds more in "Groceries" expense account
-        And the transaction should have happened on "2017-03-12"
-
     Scenario: A refund for an expense to an asset
         Given I have an asset account called "Cash"
         And I have an expense account called "Groceries"
         When I refund 200 RSD from the "Cash" to "Groceries" on "2017-03-12"
-        Then I should have 200 RSD funds more in "Cash" asset account
-        And I should have 200 RSD funds less in "Groceries" expense account
-        And the transaction should have happened on "2017-03-12"
-
-    Scenario: A payback to an asset for an expense
-        Given I have an asset account called "Cash"
-        And I have an expense account called "Groceries"
-        When I pay back 200 RSD from the "Groceries" to "Cash" on "2017-03-12"
         Then I should have 200 RSD funds more in "Cash" asset account
         And I should have 200 RSD funds less in "Groceries" expense account
         And the transaction should have happened on "2017-03-12"

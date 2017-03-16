@@ -11,9 +11,7 @@ use PerFi\Domain\Account\AccountType;
 use PerFi\Domain\EventBusFactory;
 use PerFi\Domain\MoneyFactory;
 use PerFi\Domain\Transaction\CommandHandler\ExecuteTransaction as ExecuteTransactionHandler;
-use PerFi\Domain\Transaction\Command\Charge;
 use PerFi\Domain\Transaction\Command\Pay;
-use PerFi\Domain\Transaction\Command\PayBack;
 use PerFi\Domain\Transaction\Command\Refund;
 use PerFi\Domain\Transaction\Command\Transaction;
 use PerFi\Domain\Transaction\EventSubscriber\CreditSourceAccountWhenTransactionExecuted;
@@ -102,26 +100,6 @@ class TransactionContext implements Context
     }
 
     /**
-     * @When :amount :currency is charged for :description from :source to :destination on :date
-     */
-    public function anAmountInCurrencyIsChargedForSomething($amount, $currency, $description, $source, $destination, $date)
-    {
-        $sourceAccount = $this->getAccountByTitle($source);
-        $destinationAccount = $this->getAccountByTitle($destination);
-
-        $this->command = new Charge(
-            $sourceAccount,
-            $destinationAccount,
-            $amount,
-            $currency,
-            $date,
-            $description
-        );
-
-        $this->commandHandler->__invoke($this->command);
-    }
-
-    /**
      * @When I refund :amount :currency from the :source to :destination on :date
      */
     public function iRefundAmountInCurrency($amount, $currency, $source, $destination, $date)
@@ -131,27 +109,6 @@ class TransactionContext implements Context
         $description = "supermarket";
 
         $this->command = new Refund(
-            $sourceAccount,
-            $destinationAccount,
-            $amount,
-            $currency,
-            $date,
-            $description
-        );
-
-        $this->commandHandler->__invoke($this->command);
-    }
-
-    /**
-     * @When I pay back :amount :currency from the :source to :destination on :date
-     */
-    public function iPayBackAmountInCurrency($amount, $currency, $source, $destination, $date)
-    {
-        $sourceAccount = $this->getAccountByTitle($source);
-        $destinationAccount = $this->getAccountByTitle($destination);
-        $description = "supermarket";
-
-        $this->command = new PayBack(
             $sourceAccount,
             $destinationAccount,
             $amount,

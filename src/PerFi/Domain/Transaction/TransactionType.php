@@ -10,17 +10,11 @@ class TransactionType
 {
     const TRANSACTION_TYPE_PAY = 'pay';
 
-    const TRANSACTION_TYPE_CHARGE = 'charge';
-
     const TRANSACTION_TYPE_REFUND = 'refund';
-
-    const TRANSACTION_TYPE_PAY_BACK = 'payback';
 
     const TRANSACTION_TYPES = [
         self::TRANSACTION_TYPE_PAY,
-        self::TRANSACTION_TYPE_CHARGE,
         self::TRANSACTION_TYPE_REFUND,
-        self::TRANSACTION_TYPE_PAY_BACK
     ];
 
     /**
@@ -68,16 +62,6 @@ class TransactionType
     }
 
     /**
-     * See if transaction type is charge
-     *
-     * @return bool
-     */
-    public function isCharge() : bool
-    {
-        return $this->type === self::TRANSACTION_TYPE_CHARGE;
-    }
-
-    /**
      * See if transaction type is refund
      *
      * @return bool
@@ -85,16 +69,6 @@ class TransactionType
     public function isRefund() : bool
     {
         return $this->type === self::TRANSACTION_TYPE_REFUND;
-    }
-
-    /**
-     * See if transaction type is pay back
-     *
-     * @return bool
-     */
-    public function isPayBack() : bool
-    {
-        return $this->type === self::TRANSACTION_TYPE_PAY_BACK;
     }
 
     /**

@@ -166,26 +166,6 @@ class AccountTest extends TestCase
         self::assertFalse($expense->canRefund($asset));
     }
 
-    /**
-     * @test
-     * @dataProvider assetAndExpenseAccounts
-     */
-    public function expense_account_can_charge_asset_account($asset, $expense)
-    {
-        self::assertTrue($expense->canCharge($asset));
-        self::assertFalse($asset->canCharge($expense));
-    }
-
-    /**
-     * @test
-     * @dataProvider assetAndExpenseAccounts
-     */
-    public function expense_account_can_pay_back_asset_account($asset, $expense)
-    {
-        self::assertTrue($expense->canPayBack($asset));
-        self::assertFalse($asset->canPayBack($expense));
-    }
-
     public function assetAndExpenseAccounts()
     {
         $assetType = AccountType::fromString('asset');
