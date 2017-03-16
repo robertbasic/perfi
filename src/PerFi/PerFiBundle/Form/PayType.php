@@ -36,6 +36,7 @@ class PayType extends AbstractType
             ])
             ->add('amount', TextType::class, [
                 'required' => true,
+                'empty_data' => '',
             ])
             ->add('currency', ChoiceType::class, [
                 'required' => true,
@@ -43,6 +44,7 @@ class PayType extends AbstractType
             ])
             ->add('description', TextType::class, [
                 'required' => true,
+                'empty_data' => '',
             ]);
     }
 
