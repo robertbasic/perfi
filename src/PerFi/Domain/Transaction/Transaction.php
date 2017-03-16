@@ -104,6 +104,7 @@ class Transaction
         Account $sourceAccount,
         Account $destinationAccount,
         Money $amount,
+        TransactionDate $date,
         string $description
     ) : self
     {
@@ -111,7 +112,6 @@ class Transaction
 
         $id = TransactionId::fromUuid(Uuid::uuid4());
 
-        $date = TransactionDate::now();
         $recordDate = TransactionRecordDate::now();
 
         return new self(

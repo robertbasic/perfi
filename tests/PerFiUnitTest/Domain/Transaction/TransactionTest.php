@@ -39,6 +39,11 @@ class TransactionTest extends TestCase
     private $amount;
 
     /**
+     * @var TransactionDate
+     */
+    private $date;
+
+    /**
      * @var string
      */
     private $description;
@@ -52,6 +57,7 @@ class TransactionTest extends TestCase
         $this->source = Account::byTypeWithTitle($asset, 'Cash');
         $this->destination = Account::byTypeWithTitle($expense, 'Groceries');
         $this->amount = MoneyFactory::amountInCurrency('500', 'RSD');
+        $this->date = TransactionDate::fromString('2017-03-12');
         $this->description = 'groceries for dinner';
     }
 
@@ -65,6 +71,7 @@ class TransactionTest extends TestCase
             $this->source,
             $this->destination,
             $this->amount,
+            $this->date,
             $this->description
         );
 
@@ -98,6 +105,7 @@ class TransactionTest extends TestCase
             $this->source,
             $this->destination,
             $this->amount,
+            $this->date,
             ''
         );
     }
@@ -112,6 +120,7 @@ class TransactionTest extends TestCase
             $this->source,
             $this->destination,
             $this->amount,
+            $this->date,
             $this->description
         );
 
@@ -132,6 +141,7 @@ class TransactionTest extends TestCase
             $this->source,
             $this->destination,
             $this->amount,
+            $this->date,
             $this->description
         );
 
@@ -154,6 +164,7 @@ class TransactionTest extends TestCase
             $asset,
             $expense,
             $this->amount,
+            $this->date,
             $this->description
         );
 
@@ -174,6 +185,7 @@ class TransactionTest extends TestCase
             $expense,
             $asset,
             $this->amount,
+            $this->date,
             $this->description
         );
     }
@@ -190,6 +202,7 @@ class TransactionTest extends TestCase
             $expense,
             $asset,
             $this->amount,
+            $this->date,
             $this->description
         );
 
@@ -210,6 +223,7 @@ class TransactionTest extends TestCase
             $asset,
             $expense,
             $this->amount,
+            $this->date,
             $this->description
         );
     }
@@ -226,6 +240,7 @@ class TransactionTest extends TestCase
             $expense,
             $asset,
             $this->amount,
+            $this->date,
             $this->description
         );
 
@@ -246,6 +261,7 @@ class TransactionTest extends TestCase
             $asset,
             $expense,
             $this->amount,
+            $this->date,
             $this->description
         );
     }
@@ -262,6 +278,7 @@ class TransactionTest extends TestCase
             $asset,
             $expense,
             $this->amount,
+            $this->date,
             $this->description
         );
 
@@ -282,6 +299,7 @@ class TransactionTest extends TestCase
             $expense,
             $asset,
             $this->amount,
+            $this->date,
             $this->description
         );
     }
