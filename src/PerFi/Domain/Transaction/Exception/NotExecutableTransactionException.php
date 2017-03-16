@@ -8,13 +8,13 @@ use PerFi\Domain\Transaction\TransactionType;
 
 class NotExecutableTransactionException extends \DomainException
 {
-    public function __construct(
+    public static function withTypeAndAccounts(
         TransactionType $type,
         Account $sourceAccount,
         Account $destinationAccount
-    )
+    ) : self
     {
         $message = sprintf("The %s transaction cannot be executed between %s and %s accounts", $type, $sourceAccount, $destinationAccount);
-        parent::__construct($message);
+        return new self($message);
     }
 }

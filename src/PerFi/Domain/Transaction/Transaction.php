@@ -77,7 +77,7 @@ class Transaction
     )
     {
         if (!$this->canTransactionBeExecuted($type, $sourceAccount, $destinationAccount)) {
-            throw new NotExecutableTransactionException($type, $sourceAccount, $destinationAccount);
+            throw NotExecutableTransactionException::withTypeAndAccounts($type, $sourceAccount, $destinationAccount);
         }
 
         $this->id = $id;

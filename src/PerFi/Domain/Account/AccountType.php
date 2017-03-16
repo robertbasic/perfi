@@ -46,7 +46,7 @@ class AccountType
         Assert::stringNotEmpty($type, "The account type must be provided");
 
         if (!in_array($type, self::ACCOUNT_TYPES)) {
-            throw new UnknownAccountTypeException($type);
+            throw UnknownAccountTypeException::withType($type);
         }
 
         return new self(
