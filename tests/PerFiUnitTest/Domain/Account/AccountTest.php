@@ -73,6 +73,7 @@ class AccountTest extends TestCase
     /**
      * @test
      * @expectedException InvalidArgumentException
+     * @expectedExceptionMessage The account title must be provided
      */
     public function account_cannot_be_created_with_empty_title()
     {

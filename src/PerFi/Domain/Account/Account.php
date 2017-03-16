@@ -41,7 +41,7 @@ class Account implements \JsonSerializable
      */
     private function __construct(AccountId $id, AccountType $type, string $title)
     {
-        Assert::stringNotEmpty($title);
+        Assert::stringNotEmpty($title, "The account title must be provided");
 
         $this->id = $id;
         $this->type = $type;
