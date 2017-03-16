@@ -34,6 +34,7 @@ class PayController extends Controller
                 $formData['destination'],
                 $formData['amount'],
                 $formData['currency'],
+                $formData['date'],
                 $formData['description']
             );
 
