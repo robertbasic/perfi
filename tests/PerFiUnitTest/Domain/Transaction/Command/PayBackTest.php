@@ -8,6 +8,7 @@ use PerFi\Domain\Account\Account;
 use PerFi\Domain\Account\AccountType;
 use PerFi\Domain\MoneyFactory;
 use PerFi\Domain\Transaction\Command\PayBack;
+use PerFi\Domain\Transaction\TransactionDate;
 use PerFi\Domain\Transaction\TransactionType;
 
 class PayBackTest extends TestCase
@@ -23,6 +24,7 @@ class PayBackTest extends TestCase
         $destinationAccount = Account::byTypeWithTitle($expense, 'Groceries');
         $amount = '500';
         $currency = 'RSD';
+        $date = '2017-03-12';
         $description = 'supermarket';
 
         $command = new PayBack(
@@ -30,6 +32,7 @@ class PayBackTest extends TestCase
             $destinationAccount,
             $amount,
             $currency,
+            $date,
             $description
         );
 
@@ -37,6 +40,7 @@ class PayBackTest extends TestCase
         $sourceAccount = $command->sourceAccount();
         $destinationAccount = $command->destinationAccount();
         $amount = $command->amount();
+        $date = $command->date();
         $description = $command->description();
 
         $expectedAmount = MoneyFactory::amountInCurrency('500', 'RSD');
@@ -48,6 +52,8 @@ class PayBackTest extends TestCase
         self::assertInstanceOf(Account::class, $destinationAccount);
 
         self::assertTrue($expectedAmount->equals($amount));
+
+        self::assertInstanceOf(TransactionDate::class, $date);
 
         self::assertSame('supermarket', $description);
     }

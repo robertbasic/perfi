@@ -6,6 +6,7 @@ namespace PerFi\Domain\Transaction\Command;
 use Money\Money;
 use PerFi\Domain\Account\Account;
 use PerFi\Domain\MoneyFactory;
+use PerFi\Domain\Transaction\TransactionDate;
 use PerFi\Domain\Transaction\TransactionType;
 
 abstract class Transaction
@@ -36,6 +37,11 @@ abstract class Transaction
     private $description;
 
     /**
+     * @var TransactionDate
+     */
+    private $date;
+
+    /**
      * Execute transaction command
      *
      * @param Account $sourceAccount
@@ -49,6 +55,7 @@ abstract class Transaction
         Account $destinationAccount,
         string $amount,
         string $currency,
+        string $date,
         string $description,
         string $transactionType
     )
@@ -60,6 +67,7 @@ abstract class Transaction
         $this->destinationAccount = $destinationAccount;
         $this->amount = MoneyFactory::amountInCurrency($amount, $currency);
         $this->description = $description;
+        $this->date = TransactionDate::fromString($date);
     }
 
     /**
@@ -110,5 +118,15 @@ abstract class Transaction
     public function description() : string
     {
         return $this->description;
+    }
+
+    /**
+     * Get the transaction date
+     *
+     * @return TransactionDate
+     */
+    public function date() : TransactionDate
+    {
+        return $this->date;
     }
 }

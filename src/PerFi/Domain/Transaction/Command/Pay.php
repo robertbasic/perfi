@@ -5,6 +5,7 @@ namespace PerFi\Domain\Transaction\Command;
 
 use PerFi\Domain\Account\Account;
 use PerFi\Domain\Transaction\Command\Transaction;
+use PerFi\Domain\Transaction\TransactionDate;
 use PerFi\Domain\Transaction\TransactionType;
 
 class Pay extends Transaction
@@ -15,6 +16,7 @@ class Pay extends Transaction
      * @param Account $sourceAccount
      * @param Account $destinationAccount
      * @param Money $amount
+     * @param string $date
      * @param string $description
      */
     public function __construct(
@@ -22,6 +24,7 @@ class Pay extends Transaction
         Account $destinationAccount,
         string $amount,
         string $currency,
+        string $date,
         string $description
     )
     {
@@ -30,6 +33,7 @@ class Pay extends Transaction
             $destinationAccount,
             $amount,
             $currency,
+            $date,
             $description,
             TransactionType::TRANSACTION_TYPE_PAY
         );
