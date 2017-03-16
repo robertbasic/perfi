@@ -18,4 +18,17 @@ class TransactionDate extends \DateTimeImmutable
 
         return new self('now', $timezone);
     }
+
+    public static function fromString(string $date) : self
+    {
+        // @todo assert $date string is in a good format
+        $timezone = new \DateTimeZone('UTC');
+
+        return new self($date, $timezone);
+    }
+
+    public function __toString()
+    {
+        return $this->format('Y-m-d');
+    }
 }
