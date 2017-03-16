@@ -20,4 +20,9 @@ class TransactionDate extends \DateTimeImmutable
 
         return new self($date, $timezone);
     }
+
+    public function __toString()
+    {
+        return $this->format('Y-m-d');
+    }
 }
