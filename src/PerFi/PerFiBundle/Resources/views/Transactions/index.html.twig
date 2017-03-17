@@ -4,4 +4,56 @@
 {% block avanzu_page_subtitle %}All the transactions that were executed{% endblock %}
 
 {% block avanzu_page_content %}
+<div class='row'>
+    <div class='col-sm-12'>
+        <div class='box box-primary'>
+            <div class='box-header with-border'>
+                <h3 class='box-title'>Transaction logs</h3>
+            </div>
+            <div class='box-body'>
+                <table id="transactions-table" class="table table-bordered table-hover" width="100%">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Description</th>
+                            <th>Amount</th>
+                            <th>Source</th>
+                            <th>Destination</th>
+                            <th>Type</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block avanzu_head %}
+<link rel="stylesheet" href="{{ asset('theme/plugins/datatables/dataTables.bootstrap.css') }}">
+{% endblock %}
+
+{% block avanzu_javascripts %}
+    <script src="{{ asset('theme/plugins/datatables/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('theme/plugins/datatables/dataTables.bootstrap.min.js') }}"></script>
+{% endblock %}
+
+{% block avanzu_javascripts_inline %}
+<script>
+$(document).ready(function() {
+    $('#transactions-table').DataTable({
+        "ajax": "{{ path('transactions_list') }}",
+        "searching": false,
+        "lengthChange": false,
+        "columns": [
+            { "data": "date" },
+            { "data": "description" },
+            { "data": "amount" },
+            { "data": "source_account" },
+            { "data": "destination_account" },
+            { "data": "type" },
+        ]
+    });
+} );
+</script>
 {% endblock %}
