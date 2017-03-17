@@ -97,6 +97,29 @@ class TransactionTest extends TestCase
 
     /**
      * @test
+     */
+    public function transaction_can_be_created_with_an_id()
+    {
+        $id = TransactionId::fromString('fddf4716-6c0e-4f54-b539-d2d480a50d1a');
+
+        $recordDate = TransactionRecordDate::fromString('2017-03-17 11:29:00');
+
+        $transaction = Transaction::withId(
+            $id,
+            $this->type,
+            $this->source,
+            $this->destination,
+            $this->amount,
+            $this->date,
+            $recordDate,
+            $this->description
+        );
+
+        self::assertSame($id, $transaction->id());
+    }
+
+    /**
+     * @test
      * @expectedException InvalidArgumentException
      * @expectedExceptionMessage The transaction description must be provided
      */

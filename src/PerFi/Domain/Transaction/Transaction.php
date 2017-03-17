@@ -127,6 +127,42 @@ class Transaction
     }
 
     /**
+     * Create an existing transaction
+     *
+     * @param TransactionId $id
+     * @param TransactionType $type
+     * @param Account $sourceAccount
+     * @param Account $destinationAccount
+     * @param Money $amount
+     * @param TransactionDate $date
+     * @param TransactionRecordDate $recordDate
+     * @param string $description
+     * @return Transaction
+     */
+    public static function withId(
+        TransactionId $id,
+        TransactionType $type,
+        Account $sourceAccount,
+        Account $destinationAccount,
+        Money $amount,
+        TransactionDate $date,
+        TransactionRecordDate $recordDate,
+        string $description
+    ) : self
+    {
+        return new self(
+            $id,
+            $type,
+            $sourceAccount,
+            $destinationAccount,
+            $amount,
+            $date,
+            $recordDate,
+            $description
+        );
+    }
+
+    /**
      * Credit the source account for the transaction amount
      */
     public function creditSourceAccount()
