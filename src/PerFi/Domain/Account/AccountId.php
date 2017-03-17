@@ -34,7 +34,7 @@ class AccountId
     }
 
     /**
-     * Create an account from a string UUID
+     * Create an account ID from a string UUID
      *
      * @param string $id
      * @return AccountId
