@@ -3,6 +3,7 @@
 namespace PerFi\PerFiBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
+use PerFi\Domain\Account\AccountRepository;
 use PerFi\Domain\Transaction\Transaction;
 use PerFi\Domain\Transaction\TransactionRepository as TransactionRepositoryInterface;
 use PerFi\PerFiBundle\Entity\Transaction as DtoTransaction;
@@ -13,6 +14,17 @@ use PerFi\PerFiBundle\Entity\Transaction as DtoTransaction;
 class TransactionRepository extends EntityRepository
     implements TransactionRepositoryInterface
 {
+
+    /**
+     * @var AccountRepository
+     */
+    private $accountRepository;
+
+    public function setAccountRepository(AccountRepository $accountRepository)
+    {
+        $this->accountRepository = $accountRepository;
+    }
+
     /**
      * {@inheritdoc}
      */
