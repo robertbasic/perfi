@@ -76,6 +76,8 @@ class Transaction
         string $description
     )
     {
+        Assert::stringNotEmpty($description, "The transaction description must be provided");
+
         if (!$this->canTransactionBeExecuted($type, $sourceAccount, $destinationAccount)) {
             throw NotExecutableTransactionException::withTypeAndAccounts($type, $sourceAccount, $destinationAccount);
         }
@@ -108,8 +110,6 @@ class Transaction
         string $description
     ) : self
     {
-        Assert::stringNotEmpty($description, "The transaction description must be provided");
-
         $id = TransactionId::fromUuid(Uuid::uuid4());
 
         $recordDate = TransactionRecordDate::now();
