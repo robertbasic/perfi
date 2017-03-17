@@ -11,12 +11,24 @@ class TransactionRecordDate extends \DateTimeImmutable
      * Denotes the date and time at which the transaction was recorded.
      * The timezone is UTC.
      *
-     * @return TransactionDate
+     * @return TransactionRecordDate
      */
     public static function now() : self
     {
         $timezone = new \DateTimeZone('UTC');
 
         return new self('now', $timezone);
+    }
+
+    /**
+     * Recreate a transaction record date from a string
+     *
+     * @return TransactionRecordDate
+     */
+    public static function fromString(string $date) : self
+    {
+        $timezone = new \DateTimeZone('UTC');
+
+        return new self($date, $timezone);
     }
 }
