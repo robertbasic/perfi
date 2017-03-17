@@ -34,6 +34,19 @@ class TransactionId
     }
 
     /**
+     * Create a transaction ID from a string UUID
+     *
+     * @param string $id
+     * @return AccountId
+     */
+    public static function fromString(string $id) : self
+    {
+        return new self(
+            Uuid::fromString($id)
+        );
+    }
+
+    /**
      * String representation of the transaction ID
      *
      * @return string
