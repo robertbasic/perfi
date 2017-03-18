@@ -26,7 +26,11 @@ class TransactionsController extends Controller
      */
     public function listAction(Request $request)
     {
+        $repository = $this->get('perfi.repository.transaction');
+        $transactions = $repository->getAll();
+
         return new JsonResponse([
+            'data' => $transactions
         ]);
     }
 }
