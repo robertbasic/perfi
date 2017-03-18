@@ -13,7 +13,7 @@ use PerFi\Domain\Transaction\TransactionType;
 use Ramsey\Uuid\Uuid;
 use Webmozart\Assert\Assert;
 
-class Transaction
+class Transaction implements \JsonSerializable
 {
     /**
      * @var TransactionId
@@ -277,5 +277,25 @@ class Transaction
         }
 
         return false;
+    }
+
+    /**
+     * JSON serializeable object
+     *
+     * @return array
+     */
+    public function jsonSerialize() : array
+    {
+        $amount = $this->amount();
+
+        return [
+            'id' => (string) $this->id(),
+            'type' => (string) $this->type(),
+            'source_account' => (string) $this->sourceAccount(),
+            'destination_account' => (string) $this->destinationAccount(),
+            'amount' => number_format($amount->getAmount() / 100, 2) . ' ' . (string) $amount->getCurrency(),
+            'date' => (string) $this->date(),
+            'description' => $this->description(),
+        ];
     }
 }

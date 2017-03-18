@@ -120,6 +120,39 @@ class TransactionTest extends TestCase
 
     /**
      * @test
+     */
+    public function transaction_can_be_serialized_to_json()
+    {
+        $id = TransactionId::fromString('fddf4716-6c0e-4f54-b539-d2d480a50d1a');
+
+        $recordDate = TransactionRecordDate::fromString('2017-03-17 11:29:00');
+
+        $transaction = Transaction::withId(
+            $id,
+            $this->type,
+            $this->source,
+            $this->destination,
+            $this->amount,
+            $this->date,
+            $recordDate,
+            $this->description
+        );
+
+        $expected = [
+            'id' => 'fddf4716-6c0e-4f54-b539-d2d480a50d1a',
+            'type' => 'pay',
+            'source_account' => 'Cash, asset',
+            'destination_account' => 'Groceries, expense',
+            'amount' => '500.00 RSD',
+            'date' => '2017-03-12',
+            'description' => 'groceries for dinner',
+        ];
+
+        self::assertSame($expected, $transaction->jsonSerialize());
+    }
+
+    /**
+     * @test
      * @expectedException InvalidArgumentException
      * @expectedExceptionMessage The transaction description must be provided
      */
