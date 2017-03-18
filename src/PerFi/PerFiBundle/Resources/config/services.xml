@@ -21,6 +21,9 @@ xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/sc
         <service id="perfi.repository.transaction" class="PerFi\PerFiBundle\Repository\TransactionRepository">
             <factory service="doctrine.orm.default_entity_manager" method="getRepository"></factory>
             <argument>PerFi\PerFiBundle\Entity\Transaction</argument>
+            <call method="setAccountRepository">
+                <argument type="service" id="perfi.repository.account"/>
+            </call>
         </service>
         <!-- repositories -->
 

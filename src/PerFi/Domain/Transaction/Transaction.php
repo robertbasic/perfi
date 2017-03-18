@@ -13,7 +13,7 @@ use PerFi\Domain\Transaction\TransactionType;
 use Ramsey\Uuid\Uuid;
 use Webmozart\Assert\Assert;
 
-class Transaction
+class Transaction implements \JsonSerializable
 {
     /**
      * @var TransactionId
@@ -76,6 +76,8 @@ class Transaction
         string $description
     )
     {
+        Assert::stringNotEmpty($description, "The transaction description must be provided");
+
         if (!$this->canTransactionBeExecuted($type, $sourceAccount, $destinationAccount)) {
             throw NotExecutableTransactionException::withTypeAndAccounts($type, $sourceAccount, $destinationAccount);
         }
@@ -108,12 +110,46 @@ class Transaction
         string $description
     ) : self
     {
-        Assert::stringNotEmpty($description, "The transaction description must be provided");
-
         $id = TransactionId::fromUuid(Uuid::uuid4());
 
         $recordDate = TransactionRecordDate::now();
 
+        return new self(
+            $id,
+            $type,
+            $sourceAccount,
+            $destinationAccount,
+            $amount,
+            $date,
+            $recordDate,
+            $description
+        );
+    }
+
+    /**
+     * Create an existing transaction
+     *
+     * @param TransactionId $id
+     * @param TransactionType $type
+     * @param Account $sourceAccount
+     * @param Account $destinationAccount
+     * @param Money $amount
+     * @param TransactionDate $date
+     * @param TransactionRecordDate $recordDate
+     * @param string $description
+     * @return Transaction
+     */
+    public static function withId(
+        TransactionId $id,
+        TransactionType $type,
+        Account $sourceAccount,
+        Account $destinationAccount,
+        Money $amount,
+        TransactionDate $date,
+        TransactionRecordDate $recordDate,
+        string $description
+    ) : self
+    {
         return new self(
             $id,
             $type,
@@ -241,5 +277,25 @@ class Transaction
         }
 
         return false;
+    }
+
+    /**
+     * JSON serializeable object
+     *
+     * @return array
+     */
+    public function jsonSerialize() : array
+    {
+        $amount = $this->amount();
+
+        return [
+            'id' => (string) $this->id(),
+            'type' => (string) $this->type(),
+            'source_account' => (string) $this->sourceAccount(),
+            'destination_account' => (string) $this->destinationAccount(),
+            'amount' => number_format($amount->getAmount() / 100, 2) . ' ' . (string) $amount->getCurrency(),
+            'date' => (string) $this->date(),
+            'description' => $this->description(),
+        ];
     }
 }

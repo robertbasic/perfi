@@ -53,6 +53,9 @@ class MenuItemListener
         $transactions->addChild(
             new MenuItemModel('menu-pay', 'Pay', 'pay', [], 'iconclasses fa fa-money')
         );
+        $transactions->addChild(
+            new MenuItemModel('menu-transaction-logs', 'Transaction logs', 'transactions', [], 'iconclasses fa fa-book')
+        );
     }
 
     private function addAccountsSubItems($accounts)
