@@ -36,15 +36,11 @@ class AccountRepository extends EntityRepository
      */
     public function get(AccountId $accountId) : Account
     {
-        $qb = $this->getEntityManager()->getConnection()->createQueryBuilder();
+        $query = $this->getQuery();
 
-        $statement = $qb->select(
-            'a.account_id AS id', 'a.title', 'a.type'
-        )
-        ->from('account', 'a')
-        ->where('a.account_id = :accountId')
-        ->setParameter('accountId', $accountId)
-        ->execute();
+        $statement = $query->where('a.account_id = :accountId')
+            ->setParameter('accountId', $accountId)
+            ->execute();
 
         return $this->mapToEntity($statement->fetch());
     }
@@ -54,13 +50,10 @@ class AccountRepository extends EntityRepository
      */
     public function getAll() : array
     {
-        $qb = $this->getEntityManager()->getConnection()->createQueryBuilder();
+        $query = $this->getQuery();
 
-        $statement = $qb->select(
-            'a.account_id AS id', 'a.title', 'a.type'
-        )
-        ->from('account', 'a')
-        ->execute();
+        $statement = $query->from('account', 'a')
+            ->execute();
 
         return $this->mapToEntities($statement);
     }
@@ -73,17 +66,25 @@ class AccountRepository extends EntityRepository
      */
     public function getAllByType(AccountType $type) : array
     {
-        $qb = $this->getEntityManager()->getConnection()->createQueryBuilder();
+        $query = $this->getQuery();
 
-        $statement = $qb->select(
-            'a.account_id AS id', 'a.title', 'a.type'
-        )
-        ->from('account', 'a')
-        ->where('a.type = :type')
-        ->setParameter('type', $type)
-        ->execute();
+        $statement = $query->where('a.type = :type')
+            ->setParameter('type', $type)
+            ->execute();
 
         return $this->mapToEntities($statement);
+    }
+
+    private function getQuery()
+    {
+        $qb = $this->getEntityManager()->getConnection()->createQueryBuilder();
+
+        $query = $qb->select(
+                'a.account_id AS id', 'a.title', 'a.type'
+            )
+            ->from('account', 'a');
+
+        return $query;
     }
 
     private function mapToEntities($statement)
