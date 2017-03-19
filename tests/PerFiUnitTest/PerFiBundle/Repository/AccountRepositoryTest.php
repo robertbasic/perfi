@@ -150,6 +150,29 @@ class AccountRepositoryTest extends TestCase
         self::assertInstanceOf(Account::class, $account);
     }
 
+    /**
+     * @test
+     * @dataProvider accounts
+     */
+    public function can_get_all_accounts_from_repository($accounts)
+    {
+        $this->queryBuilder->shouldReceive('select')
+            ->once()
+            ->with('a.account_id AS id', 'a.title', 'a.type')
+            ->andReturnSelf();
+        $this->queryBuilder->shouldReceive('from')
+            ->once()
+            ->with('account', 'a')
+            ->andReturnSelf();
+
+        $this->statement->shouldReceive('fetch')
+            ->andReturnUsing(function() use (&$accounts) { return array_pop($accounts); });
+
+        $result = $this->repository->getAll();
+
+        self::assertInstanceOf(Account::class, array_pop($result));
+    }
+
     public function accounts()
     {
         return [

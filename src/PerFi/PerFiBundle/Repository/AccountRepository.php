@@ -60,8 +60,7 @@ class AccountRepository extends Repository
     {
         $query = $this->getQuery();
 
-        $statement = $query->from('account', 'a')
-            ->execute();
+        $statement = $query->execute();
 
         return $this->mapToEntities($statement);
     }
