@@ -3,11 +3,13 @@ declare(strict_types=1);
 
 namespace PerFiUnitTest\PerFiBundle\Repository;
 
+use Doctrine\DBAL\Driver\PDOStatement;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Doctrine\ORM\EntityManagerInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use PerFi\Domain\Account\Account;
 use PerFi\Domain\Account\AccountId;
 use PerFi\Domain\Account\AccountType;
 use PerFi\PerFiBundle\Factory\AccountFactory;
@@ -21,6 +23,11 @@ class AccountRepositoryTest extends TestCase
      * @var AccountRepository
      */
     private $repository;
+
+    /**
+     * @var PDOStatement
+     */
+    private $statement;
 
     /**
      * @var QueryBuilder
@@ -54,7 +61,12 @@ class AccountRepositoryTest extends TestCase
 
     public function setup()
     {
+        $this->statement = m::mock(PDOStatement::class);
+
         $this->queryBuilder = m::mock(QueryBuilder::class);
+        $this->queryBuilder->shouldReceive('execute')
+            ->andReturn($this->statement)
+            ->byDefault();
 
         $this->entityManager = m::mock(EntityManagerInterface::class);
         $this->entityManager->shouldReceive('getConnection->createQueryBuilder')
@@ -103,9 +115,51 @@ class AccountRepositoryTest extends TestCase
             ->with(2, (string) $this->accountType)
             ->andReturnSelf();
 
-        $this->queryBuilder->shouldReceive('execute')
-            ->once();
-
         $this->repository->add($this->account);
+    }
+
+    /**
+     * @test
+     * @dataProvider accounts
+     */
+    public function can_get_account_from_repository($accounts)
+    {
+        $this->queryBuilder->shouldReceive('select')
+            ->once()
+            ->with('a.account_id AS id', 'a.title', 'a.type')
+            ->andReturnSelf();
+        $this->queryBuilder->shouldReceive('from')
+            ->once()
+            ->with('account', 'a')
+            ->andReturnSelf();
+        $this->queryBuilder->shouldReceive('where')
+            ->once()
+            ->with('a.account_id = :accountId')
+            ->andReturnSelf();
+        $this->queryBuilder->shouldReceive('setParameter')
+            ->once()
+            ->with('accountId', $this->accountId)
+            ->andReturnSelf();
+
+        $this->statement->shouldReceive('fetch')
+            ->once()
+            ->andReturn(array_pop($accounts));
+
+        $account = $this->repository->get($this->accountId);
+
+        self::assertInstanceOf(Account::class, $account);
+    }
+
+    public function accounts()
+    {
+        return [
+            [
+                [[
+                    'id' => 'fddf4716-6c0e-4f54-b539-d2d480a50d1a',
+                    'title' => 'Cash',
+                    'type' => 'asset',
+                ]]
+            ]
+        ];
     }
 }
