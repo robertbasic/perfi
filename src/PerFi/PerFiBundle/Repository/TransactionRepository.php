@@ -3,16 +3,10 @@
 namespace PerFi\PerFiBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use PerFi\Domain\Account\AccountId;
-use PerFi\Domain\Account\AccountRepository;
-use PerFi\Domain\MoneyFactory;
 use PerFi\Domain\Transaction\Transaction;
-use PerFi\Domain\Transaction\TransactionDate;
-use PerFi\Domain\Transaction\TransactionId;
-use PerFi\Domain\Transaction\TransactionRecordDate;
 use PerFi\Domain\Transaction\TransactionRepository as TransactionRepositoryInterface;
-use PerFi\Domain\Transaction\TransactionType;
 use PerFi\PerFiBundle\Entity\Transaction as DtoTransaction;
+use PerFi\PerFiBundle\Factory\TransactionFactory;
 
 /**
  * TransactionRepository
@@ -59,43 +53,39 @@ class TransactionRepository extends EntityRepository
      */
     public function getAll() : array
     {
-        $queryBuilder = $this->createQueryBuilder('t');
+        $qb = $this->getEntityManager()->getConnection()->createQueryBuilder();
 
-        $dtos = $queryBuilder
-            ->select('t')
-            ->getQuery()
-            ->getResult();
+        $statement = $qb->select(
+            't.transaction_id', 't.type', 't.amount', 't.currency',
+            't.date', 't.record_date', 't.description',
+            'sa.account_id AS source_account_id',
+            'sa.title AS source_account_title',
+            'sa.type AS source_account_type',
+            'da.account_id AS destination_account_id',
+            'da.title AS destination_account_title',
+            'da.type AS destination_account_type'
+        )
+        ->from('transaction', 't')
+        ->innerJoin('t', 'account', 'sa', 't.source_account = sa.account_id')
+        ->innerJoin('t', 'account', 'da', 't.destination_account = da.account_id')
+        ->execute();
 
-        return $this->dtosToEntities($dtos);
+        return $this->mapToEntities($statement);
     }
 
-    private function dtosToEntities($dtos)
+    private function mapToEntities($statement) : array
     {
         $transactions = [];
 
-        foreach ($dtos as $dto) {
-            $transactions[] = $this->dtoToEntity($dto);
+        while ($row = $statement->fetch()) {
+            $transactions[] = $this->mapToEntity($row);
         }
 
         return $transactions;
     }
 
-    private function dtoToEntity($dto)
+    private function mapToEntity(array $row) : Transaction
     {
-        $sourceAccountId = AccountId::fromString($dto->getSourceAccount());
-        $destinationAccountId = AccountId::fromString($dto->getDestinationAccount());
-
-        $transaction = Transaction::withId(
-            TransactionId::fromString($dto->getTransactionId()),
-            TransactionType::fromString($dto->getType()),
-            $this->accountRepository->get($sourceAccountId),
-            $this->accountRepository->get($destinationAccountId),
-            MoneyFactory::centsInCurrency($dto->getAmount(), $dto->getCurrency()),
-            TransactionDate::fromString($dto->getDate()->format('Y-m-d')),
-            TransactionRecordDate::fromString($dto->getRecordDate()->format('Y-m-d H:i:s')),
-            $dto->getDescription()
-        );
-
-        return $transaction;
+        return TransactionFactory::fromArray($row);
     }
 }
