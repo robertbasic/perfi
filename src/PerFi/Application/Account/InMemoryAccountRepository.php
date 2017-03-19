@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace PerFi\Application\Account;
 
 use PerFi\Domain\Account\Account;
+use PerFi\Domain\Account\AccountId;
 use PerFi\Domain\Account\AccountRepository;
 
 class InMemoryAccountRepository implements AccountRepository
@@ -19,6 +20,14 @@ class InMemoryAccountRepository implements AccountRepository
     public function add(Account $account)
     {
         $this->accounts[(string) $account->id()] = $account;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function get(AccountId $accountId) : Account
+    {
+        return $this->accounts[(string) $accountId];
     }
 
     /**
