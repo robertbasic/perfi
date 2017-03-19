@@ -14,13 +14,11 @@ xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/sc
 
         <!-- repositories -->
         <service id="perfi.repository.account" class="PerFi\PerFiBundle\Repository\AccountRepository">
-            <factory service="doctrine.orm.default_entity_manager" method="getRepository"></factory>
-            <argument>PerFi\PerFiBundle\Entity\Account</argument>
+            <argument type="service" id="doctrine.orm.default_entity_manager"/>
         </service>
 
         <service id="perfi.repository.transaction" class="PerFi\PerFiBundle\Repository\TransactionRepository">
-            <factory service="doctrine.orm.default_entity_manager" method="getRepository"></factory>
-            <argument>PerFi\PerFiBundle\Entity\Transaction</argument>
+            <argument type="service" id="doctrine.orm.default_entity_manager"/>
         </service>
         <!-- repositories -->
 

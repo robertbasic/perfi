@@ -2,18 +2,19 @@
 
 namespace PerFi\PerFiBundle\Repository;
 
-use Doctrine\ORM\EntityRepository;
+use Doctrine\DBAL\Query\QueryBuilder;
 use PerFi\Domain\Account\Account;
 use PerFi\Domain\Account\AccountId;
 use PerFi\Domain\Account\AccountRepository as AccountRepositoryInterface;
 use PerFi\Domain\Account\AccountType;
 use PerFi\PerFiBundle\Entity\Account as DtoAccount;
 use PerFi\PerFiBundle\Factory\AccountFactory;
+use PerFi\PerFiBundle\Repository\Repository;
 
 /**
  * AccountRepository
  */
-class AccountRepository extends EntityRepository
+class AccountRepository extends Repository
     implements AccountRepositoryInterface
 {
     /**
@@ -75,7 +76,7 @@ class AccountRepository extends EntityRepository
         return $this->mapToEntities($statement);
     }
 
-    private function getQuery()
+    private function getQuery() : QueryBuilder
     {
         $qb = $this->getEntityManager()->getConnection()->createQueryBuilder();
 

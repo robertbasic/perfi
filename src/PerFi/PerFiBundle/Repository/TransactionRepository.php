@@ -2,16 +2,17 @@
 
 namespace PerFi\PerFiBundle\Repository;
 
-use Doctrine\ORM\EntityRepository;
+use Doctrine\DBAL\Query\QueryBuilder;
 use PerFi\Domain\Transaction\Transaction;
 use PerFi\Domain\Transaction\TransactionRepository as TransactionRepositoryInterface;
 use PerFi\PerFiBundle\Entity\Transaction as DtoTransaction;
 use PerFi\PerFiBundle\Factory\TransactionFactory;
+use PerFi\PerFiBundle\Repository\Repository;
 
 /**
  * TransactionRepository
  */
-class TransactionRepository extends EntityRepository
+class TransactionRepository extends Repository
     implements TransactionRepositoryInterface
 {
     /**
@@ -49,7 +50,7 @@ class TransactionRepository extends EntityRepository
         return $this->mapToEntities($statement);
     }
 
-    private function getQuery()
+    private function getQuery() : QueryBuilder
     {
         $qb = $this->getEntityManager()->getConnection()->createQueryBuilder();
 
