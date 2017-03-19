@@ -14,17 +14,6 @@ use PerFi\PerFiBundle\Factory\TransactionFactory;
 class TransactionRepository extends EntityRepository
     implements TransactionRepositoryInterface
 {
-
-    /**
-     * @var AccountRepository
-     */
-    private $accountRepository;
-
-    public function setAccountRepository(AccountRepository $accountRepository)
-    {
-        $this->accountRepository = $accountRepository;
-    }
-
     /**
      * {@inheritdoc}
      */
