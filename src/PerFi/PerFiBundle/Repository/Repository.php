@@ -23,4 +23,8 @@ abstract class Repository
         return $this->entityManager;
     }
 
+    protected function getQueryBuilder() : QueryBuilder
+    {
+        return $this->getEntityManager()->getConnection()->createQueryBuilder();
+    }
 }

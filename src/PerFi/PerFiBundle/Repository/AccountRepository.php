@@ -7,7 +7,6 @@ use PerFi\Domain\Account\Account;
 use PerFi\Domain\Account\AccountId;
 use PerFi\Domain\Account\AccountRepository as AccountRepositoryInterface;
 use PerFi\Domain\Account\AccountType;
-use PerFi\PerFiBundle\Entity\Account as DtoAccount;
 use PerFi\PerFiBundle\Factory\AccountFactory;
 use PerFi\PerFiBundle\Repository\Repository;
 
@@ -22,14 +21,21 @@ class AccountRepository extends Repository
      */
     public function add(Account $account)
     {
-        $entity = new DtoAccount();
-        $entity->setAccountId((string) $account->id());
-        $entity->setTitle($account->title());
-        $entity->setType((string) $account->type());
+        $qb = $this->getQueryBuilder();
 
-        $em = $this->getEntityManager();
-        $em->persist($entity);
-        $em->flush();
+        $query = $qb->insert('account')
+            ->values(
+                [
+                    'account_id' => '?',
+                    'title' => '?',
+                    'type' => '?',
+                ]
+            )
+            ->setParameter(0, (string) $account->id())
+            ->setParameter(1, $account->title())
+            ->setParameter(2, (string) $account->type());
+
+        $query->execute();
     }
 
     /**
@@ -78,7 +84,7 @@ class AccountRepository extends Repository
 
     private function getQuery() : QueryBuilder
     {
-        $qb = $this->getEntityManager()->getConnection()->createQueryBuilder();
+        $qb = $this->getQueryBuilder();
 
         $query = $qb->select(
                 'a.account_id AS id', 'a.title', 'a.type'
