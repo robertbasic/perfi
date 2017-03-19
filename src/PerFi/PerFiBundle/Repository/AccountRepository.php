@@ -3,12 +3,12 @@
 namespace PerFi\PerFiBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\Query;
 use PerFi\Domain\Account\Account;
 use PerFi\Domain\Account\AccountId;
 use PerFi\Domain\Account\AccountRepository as AccountRepositoryInterface;
 use PerFi\Domain\Account\AccountType;
 use PerFi\PerFiBundle\Entity\Account as DtoAccount;
+use PerFi\PerFiBundle\Factory\AccountFactory;
 
 /**
  * AccountRepository
@@ -49,14 +49,15 @@ class AccountRepository extends EntityRepository
      */
     public function getAll() : array
     {
-        $queryBuilder = $this->createQueryBuilder('a');
+        $qb = $this->getEntityManager()->getConnection()->createQueryBuilder();
 
-        $dtos = $queryBuilder
-            ->select('a')
-            ->getQuery()
-            ->getResult();
+        $statement = $qb->select(
+            'a.account_id AS id', 'a.title', 'a.type'
+        )
+        ->from('account', 'a')
+        ->execute();
 
-        return $this->dtosToEntities($dtos);
+        return $this->mapToEntities($statement);
     }
 
     /**
@@ -67,37 +68,32 @@ class AccountRepository extends EntityRepository
      */
     public function getAllByType(AccountType $type) : array
     {
-        $queryBuilder = $this->createQueryBuilder('a');
+        $qb = $this->getEntityManager()->getConnection()->createQueryBuilder();
 
-        $dtos = $queryBuilder
-            ->select('a')
-            ->where('a.type = :type')
-            ->setParameter('type', (string) $type)
-            ->getQuery()
-            ->getResult();
+        $statement = $qb->select(
+            'a.account_id AS id', 'a.title', 'a.type'
+        )
+        ->from('account', 'a')
+        ->where('a.type = :type')
+        ->setParameter('type', $type)
+        ->execute();
 
-        return $this->dtosToEntities($dtos);
+        return $this->mapToEntities($statement);
     }
 
-    private function dtosToEntities($dtos)
+    private function mapToEntities($statement)
     {
         $accounts = [];
 
-        foreach ($dtos as $dto) {
-            $accounts[] = $this->dtoToEntity($dto);
+        while ($row = $statement->fetch()) {
+            $accounts[] = $this->mapToEntity($row);
         }
 
         return $accounts;
     }
 
-    private function dtoToEntity($dto)
+    private function mapToEntity(array $row) : Account
     {
-        $account = Account::withId(
-            AccountId::fromString($dto->getAccountId()),
-            AccountType::fromString($dto->getType()),
-            $dto->getTitle()
-        );
-
-        return $account;
+        return AccountFactory::fromArray($row);
     }
 }
