@@ -32,10 +32,7 @@ class AccountRepository extends EntityRepository
     }
 
     /**
-     * Get an account by it's ID
-     *
-     * @param AccountId $accountId
-     * @return Account
+     * {@inheritdoc}
      */
     public function get(AccountId $accountId) : Account
     {
