@@ -5,7 +5,6 @@ namespace PerFi\PerFiBundle\Repository;
 use Doctrine\DBAL\Query\QueryBuilder;
 use PerFi\Domain\Transaction\Transaction;
 use PerFi\Domain\Transaction\TransactionRepository as TransactionRepositoryInterface;
-use PerFi\PerFiBundle\Entity\Transaction as DtoTransaction;
 use PerFi\PerFiBundle\Factory\TransactionFactory;
 use PerFi\PerFiBundle\Repository\Repository;
 
@@ -20,22 +19,35 @@ class TransactionRepository extends Repository
      */
     public function add(Transaction $transaction)
     {
-        $entity = new DtoTransaction();
-        $entity->setTransactionId((string) $transaction->id());
-        $entity->setType((string) $transaction->type());
-        $entity->setSourceAccount((string) $transaction->sourceAccount()->id());
-        $entity->setDestinationAccount((string) $transaction->destinationAccount()->id());
-        $entity->setDate($transaction->date());
-        $entity->setRecordDate($transaction->recordDate());
-        $entity->setDescription($transaction->description());
+        $qb = $this->getQueryBuilder();
 
         $amount = $transaction->amount();
-        $entity->setAmount($amount->getAmount());
-        $entity->setCurrency((string) $amount->getCurrency());
 
-        $em = $this->getEntityManager();
-        $em->persist($entity);
-        $em->flush();
+        $query = $qb->insert('transaction')
+            ->values(
+                [
+                    'transaction_id' => '?',
+                    'type' => '?',
+                    'source_account' => '?',
+                    'destination_account' => '?',
+                    'amount' => '?',
+                    'currency' => '?',
+                    'date' => '?',
+                    'record_date' => '?',
+                    'description' => '?',
+                ]
+            )
+            ->setParameter(0, (string) $transaction->id())
+            ->setParameter(1, (string) $transaction->type())
+            ->setParameter(2, (string) $transaction->sourceAccount()->id())
+            ->setParameter(3, (string) $transaction->destinationAccount()->id())
+            ->setParameter(4, $amount->getAmount())
+            ->setParameter(5, (string) $amount->getCurrency())
+            ->setParameter(6, $transaction->date()->format('Y-m-d H:i:s'))
+            ->setParameter(7, $transaction->recordDate()->format('Y-m-d H:i:s'))
+            ->setParameter(8, $transaction->description());
+
+        $query->execute();
     }
 
     /**
