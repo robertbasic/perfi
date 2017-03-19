@@ -4,6 +4,7 @@ namespace PerFi\PerFiBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use PerFi\Domain\Account\Account;
+use PerFi\Domain\Account\AccountId;
 use PerFi\Domain\Account\AccountRepository as AccountRepositoryInterface;
 use PerFi\Domain\Account\AccountType;
 use PerFi\PerFiBundle\Entity\Account as DtoAccount;
@@ -28,6 +29,27 @@ class AccountRepository extends EntityRepository
         $em = $this->getEntityManager();
         $em->persist($entity);
         $em->flush();
+    }
+
+    /**
+     * Get an account by it's ID
+     *
+     * @param AccountId $accountId
+     * @return Account
+     */
+    public function get(AccountId $accountId) : Account
+    {
+        $qb = $this->getEntityManager()->getConnection()->createQueryBuilder();
+
+        $statement = $qb->select(
+            'a.account_id AS id', 'a.title', 'a.type'
+        )
+        ->from('account', 'a')
+        ->where('a.account_id = :accountId')
+        ->setParameter('accountId', $accountId)
+        ->execute();
+
+        return $this->mapToEntity($statement->fetch());
     }
 
     /**
