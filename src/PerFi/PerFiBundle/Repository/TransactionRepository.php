@@ -52,7 +52,7 @@ class TransactionRepository extends Repository
 
     private function getQuery() : QueryBuilder
     {
-        $qb = $this->getEntityManager()->getConnection()->createQueryBuilder();
+        $qb = $this->getQueryBuilder();
 
         $query = $qb->select(
                 't.transaction_id', 't.type', 't.amount', 't.currency',

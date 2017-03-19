@@ -78,7 +78,7 @@ class AccountRepository extends Repository
 
     private function getQuery() : QueryBuilder
     {
-        $qb = $this->getEntityManager()->getConnection()->createQueryBuilder();
+        $qb = $this->getQueryBuilder();
 
         $query = $qb->select(
                 'a.account_id AS id', 'a.title', 'a.type'
