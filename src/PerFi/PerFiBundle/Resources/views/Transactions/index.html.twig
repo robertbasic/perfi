@@ -20,6 +20,7 @@
                             <th>Source</th>
                             <th>Destination</th>
                             <th>Type</th>
+                            <th>Refund</th>
                         </tr>
                     </thead>
                 </table>
@@ -41,7 +42,7 @@
 {% block avanzu_javascripts_inline %}
 <script>
 $(document).ready(function() {
-    $('#transactions-table').DataTable({
+    var transactionsTable = $('#transactions-table').DataTable({
         "ajax": "{{ path('transactions_list') }}",
         "searching": false,
         "lengthChange": false,
@@ -52,8 +53,26 @@ $(document).ready(function() {
             { "data": "source_account" },
             { "data": "destination_account" },
             { "data": "type" },
+            { "data": "id", "render": function (data, type, row, meta) {
+                if (type == 'display') {
+                    return '<button data-transaction-id="'+data+'" type="button" class="btn btn-small btn-danger refund-transaction">Refund</button>';
+                }
+                return data;
+            } },
         ]
     });
-} );
+
+    $('#transactions-table tbody').on('click', 'button.refund-transaction', function () {
+        var id = $(this).data('transaction-id');
+        $.post(
+            "{{ path('refund') }}",
+            { id: id },
+            function (response) {
+                console.log(response);
+            },
+            'json'
+        );
+    });
+});
 </script>
 {% endblock %}
