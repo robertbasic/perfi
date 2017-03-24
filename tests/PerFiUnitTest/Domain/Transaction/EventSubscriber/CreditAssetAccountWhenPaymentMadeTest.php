@@ -7,18 +7,18 @@ use PHPUnit\Framework\TestCase;
 use PerFi\Domain\Account\Account;
 use PerFi\Domain\Account\AccountType;
 use PerFi\Domain\MoneyFactory;
-use PerFi\Domain\Transaction\EventSubscriber\DebitDestinationAccountWhenTransactionExecuted;
-use PerFi\Domain\Transaction\Event\TransactionExecuted;
+use PerFi\Domain\Transaction\EventSubscriber\CreditAssetAccountWhenPaymentMade;
+use PerFi\Domain\Transaction\Event\PaymentMade;
 use PerFi\Domain\Transaction\Transaction;
 use PerFi\Domain\Transaction\TransactionDate;
 use PerFi\Domain\Transaction\TransactionType;
 
-class DebitDestinationAccountWhenTransactionExecutedTest extends TestCase
+class CreditAssetAccountWhenPaymentMadeTest extends TestCase
 {
     /**
      * @test
      */
-    public function destination_account_is_debited()
+    public function asset_account_is_credited()
     {
         $type = TransactionType::fromString('pay');
         $asset = AccountType::fromString('asset');
@@ -38,12 +38,12 @@ class DebitDestinationAccountWhenTransactionExecutedTest extends TestCase
             $description
         );
 
-        $event = new TransactionExecuted($transaction);
+        $event = new PaymentMade($transaction);
 
-        $eventSubscriber = new DebitDestinationAccountWhenTransactionExecuted();
+        $eventSubscriber = new CreditAssetAccountWhenPaymentMade();
         $eventSubscriber->__invoke($event);
 
-        $balances = $destination->balances();
+        $balances = $source->balances();
 
         self::assertNotEmpty($balances);
     }

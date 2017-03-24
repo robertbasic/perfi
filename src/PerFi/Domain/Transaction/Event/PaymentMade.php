@@ -5,7 +5,7 @@ namespace PerFi\Domain\Transaction\Event;
 
 use PerFi\Domain\Transaction\Transaction;
 
-class TransactionExecuted
+class PaymentMade
 {
     /**
      * @var Transaction

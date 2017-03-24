@@ -12,13 +12,13 @@ use PerFi\Domain\Account\Account;
 use PerFi\Domain\Command;
 use PerFi\Domain\CommandHandler;
 use PerFi\Domain\MoneyFactory;
-use PerFi\Domain\Transaction\CommandHandler\ExecuteTransaction as ExecuteTransactionHandler;
+use PerFi\Domain\Transaction\CommandHandler\ExecutePayment;
 use PerFi\Domain\Transaction\Command\Pay;
-use PerFi\Domain\Transaction\Event\TransactionExecuted;
+use PerFi\Domain\Transaction\Event\PaymentMade;
 use PerFi\Domain\Transaction\TransactionRepository;
 use SimpleBus\Message\Bus\Middleware\MessageBusSupportingMiddleware;
 
-class ExecuteTransactionTest extends TestCase
+class ExecutePaymentTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
 
@@ -58,7 +58,7 @@ class ExecuteTransactionTest extends TestCase
     private $command;
 
     /**
-     * @var ExecuteTransactionHandler
+     * @var ExecutePayment
      */
     private $commandHandler;
 
@@ -89,7 +89,7 @@ class ExecuteTransactionTest extends TestCase
             'supermarket'
         );
 
-        $this->commandHandler = new ExecuteTransactionHandler(
+        $this->commandHandler = new ExecutePayment(
             $this->repository,
             $this->eventBus
         );
@@ -116,7 +116,7 @@ class ExecuteTransactionTest extends TestCase
     {
         $this->eventBus->shouldReceive('handle')
             ->once()
-            ->with(m::type(TransactionExecuted::class));
+            ->with(m::type(PaymentMade::class));
 
         $this->commandHandler->__invoke($this->command);
     }

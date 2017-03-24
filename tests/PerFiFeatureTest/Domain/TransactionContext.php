@@ -8,15 +8,14 @@ use Behat\Behat\Tester\Exception\PendingException;
 use PerFi\Application\Transaction\InMemoryTransactionRepository;
 use PerFi\Domain\Account\Account;
 use PerFi\Domain\Account\AccountType;
-use PerFi\Domain\EventBusFactory;
 use PerFi\Domain\MoneyFactory;
-use PerFi\Domain\Transaction\CommandHandler\ExecuteTransaction as ExecuteTransactionHandler;
+use PerFi\Domain\Transaction\CommandHandler\ExecutePayment;
 use PerFi\Domain\Transaction\Command\Pay;
 use PerFi\Domain\Transaction\Command\Refund;
 use PerFi\Domain\Transaction\Command\Transaction;
-use PerFi\Domain\Transaction\EventSubscriber\CreditSourceAccountWhenTransactionExecuted;
-use PerFi\Domain\Transaction\EventSubscriber\DebitDestinationAccountWhenTransactionExecuted;
-use PerFi\Domain\Transaction\Event\TransactionExecuted;
+use PerFi\Domain\Transaction\EventSubscriber\CreditAssetAccountWhenPaymentMade;
+use PerFi\Domain\Transaction\EventSubscriber\DebitExpenseAccountWhenPaymentMade;
+use PerFi\Domain\Transaction\Event\PaymentMade;
 use PerFi\Domain\Transaction\TransactionDate;
 use PerFi\Domain\Transaction\TransactionRepository;
 use SimpleBus\Message\Bus\MessageBus;
@@ -43,7 +42,7 @@ class TransactionContext implements Context
     private $command;
 
     /**
-     * @var ExecuteTransactionHandler
+     * @var ExecutePayment
      */
     private $commandHandler;
 
@@ -63,7 +62,7 @@ class TransactionContext implements Context
         $this->accounts = [];
         $this->repository = new InMemoryTransactionRepository();
         $this->eventBus = $this->getEventBus();
-        $this->commandHandler = new ExecuteTransactionHandler(
+        $this->commandHandler = new ExecutePayment(
             $this->repository,
             $this->eventBus
         );
@@ -104,6 +103,7 @@ class TransactionContext implements Context
      */
     public function iRefundAmountInCurrency($amount, $currency, $source, $destination, $date)
     {
+        throw new PendingException();
         $sourceAccount = $this->getAccountByTitle($source);
         $destinationAccount = $this->getAccountByTitle($destination);
         $description = "supermarket";
@@ -186,9 +186,9 @@ class TransactionContext implements Context
     private function getEventBus()
     {
         $eventSubscribersByEventName = [
-            TransactionExecuted::class => [
-                CreditSourceAccountWhenTransactionExecuted::class,
-                DebitDestinationAccountWhenTransactionExecuted::class,
+            PaymentMade::class => [
+                CreditAssetAccountWhenPaymentMade::class,
+                DebitExpenseAccountWhenPaymentMade::class,
             ]
         ];
 

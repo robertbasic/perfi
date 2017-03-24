@@ -18,6 +18,7 @@ class RefundTest extends TestCase
      */
     public function refund_transaction_command_is_created()
     {
+        $this->markTestIncomplete();
         $asset = AccountType::fromString('asset');
         $expense = AccountType::fromString('expense');
         $sourceAccount = Account::byTypeWithTitle($asset, 'Cash');

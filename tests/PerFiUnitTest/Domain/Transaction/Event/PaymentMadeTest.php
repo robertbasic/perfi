@@ -7,12 +7,12 @@ use PHPUnit\Framework\TestCase;
 use PerFi\Domain\Account\Account;
 use PerFi\Domain\Account\AccountType;
 use PerFi\Domain\MoneyFactory;
-use PerFi\Domain\Transaction\Event\TransactionExecuted;
+use PerFi\Domain\Transaction\Event\PaymentMade;
 use PerFi\Domain\Transaction\Transaction;
 use PerFi\Domain\Transaction\TransactionDate;
 use PerFi\Domain\Transaction\TransactionType;
 
-class TransactionExecutedTest extends TestCase
+class PaymentMadeTest extends TestCase
 {
     /**
      * @test
@@ -37,7 +37,7 @@ class TransactionExecutedTest extends TestCase
             $description
         );
 
-        $event = new TransactionExecuted($transaction);
+        $event = new PaymentMade($transaction);
 
         $result = $event->transaction();
 
