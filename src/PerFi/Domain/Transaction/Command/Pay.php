@@ -42,7 +42,7 @@ class Pay
     private $date;
 
     /**
-     * Execute pay command
+     * Create a pay command
      *
      * @param Account $sourceAccount
      * @param Account $destinationAccount

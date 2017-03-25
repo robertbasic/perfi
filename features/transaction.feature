@@ -27,4 +27,4 @@ Feature: Transactions
         When I refund 200 RSD from the "Groceries" to "Cash" on "2017-03-12"
         Then I should have 200 RSD funds more in "Cash" asset account
         And I should have 200 RSD funds less in "Groceries" expense account
-        And the transaction should have happened on "2017-03-12"
+        And the transaction should have happened on "today"
