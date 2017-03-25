@@ -13,8 +13,11 @@ use PerFi\Domain\Transaction\CommandHandler\ExecuteRefund;
 use PerFi\Domain\Transaction\Command\Pay;
 use PerFi\Domain\Transaction\Command\Refund;
 use PerFi\Domain\Transaction\EventSubscriber\CreditAssetAccountWhenPaymentMade;
+use PerFi\Domain\Transaction\EventSubscriber\CreditExpenseAccountWhenTransactionRefunded;
+use PerFi\Domain\Transaction\EventSubscriber\DebitAssetAccountWhenTransactionRefunded;
 use PerFi\Domain\Transaction\EventSubscriber\DebitExpenseAccountWhenPaymentMade;
 use PerFi\Domain\Transaction\Event\PaymentMade;
+use PerFi\Domain\Transaction\Event\TransactionRefunded;
 use PerFi\Domain\Transaction\Transaction;
 use PerFi\Domain\Transaction\TransactionDate;
 use PerFi\Domain\Transaction\TransactionRepository;
@@ -147,6 +150,8 @@ class TransactionContext implements Context
 
         $balances = $sourceAccount->balances();
 
+        Assert::notEq(0, count($balances));
+
         foreach ($balances as $result) {
             if ((string) $result->getCurrency() === $currency) {
                 Assert::same($result->getAmount(), $expected->getAmount());
@@ -165,6 +170,8 @@ class TransactionContext implements Context
         $destinationAccount = $this->command->destinationAccount();
 
         $balances = $destinationAccount->balances();
+
+        Assert::notEq(0, count($balances));
 
         foreach ($balances as $result) {
             if ((string) $result->getCurrency() === $currency) {
@@ -205,6 +212,10 @@ class TransactionContext implements Context
             PaymentMade::class => [
                 CreditAssetAccountWhenPaymentMade::class,
                 DebitExpenseAccountWhenPaymentMade::class,
+            ],
+            TransactionRefunded::class => [
+                CreditExpenseAccountWhenTransactionRefunded::class,
+                DebitAssetAccountWhenTransactionRefunded::class,
             ]
         ];
 
