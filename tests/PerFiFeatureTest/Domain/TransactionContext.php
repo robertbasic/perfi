@@ -4,21 +4,24 @@ declare(strict_types=1);
 namespace PerFiFeatureTest\Domain;
 
 use Behat\Behat\Context\Context;
-use Behat\Behat\Tester\Exception\PendingException;
 use PerFi\Application\Transaction\InMemoryTransactionRepository;
 use PerFi\Domain\Account\Account;
 use PerFi\Domain\Account\AccountType;
-use PerFi\Domain\EventBusFactory;
 use PerFi\Domain\MoneyFactory;
-use PerFi\Domain\Transaction\CommandHandler\ExecuteTransaction as ExecuteTransactionHandler;
+use PerFi\Domain\Transaction\CommandHandler\ExecutePayment;
+use PerFi\Domain\Transaction\CommandHandler\ExecuteRefund;
 use PerFi\Domain\Transaction\Command\Pay;
 use PerFi\Domain\Transaction\Command\Refund;
-use PerFi\Domain\Transaction\Command\Transaction;
-use PerFi\Domain\Transaction\EventSubscriber\CreditSourceAccountWhenTransactionExecuted;
-use PerFi\Domain\Transaction\EventSubscriber\DebitDestinationAccountWhenTransactionExecuted;
-use PerFi\Domain\Transaction\Event\TransactionExecuted;
+use PerFi\Domain\Transaction\EventSubscriber\CreditAssetAccountWhenPaymentMade;
+use PerFi\Domain\Transaction\EventSubscriber\CreditExpenseAccountWhenTransactionRefunded;
+use PerFi\Domain\Transaction\EventSubscriber\DebitAssetAccountWhenTransactionRefunded;
+use PerFi\Domain\Transaction\EventSubscriber\DebitExpenseAccountWhenPaymentMade;
+use PerFi\Domain\Transaction\Event\PaymentMade;
+use PerFi\Domain\Transaction\Event\TransactionRefunded;
+use PerFi\Domain\Transaction\Transaction;
 use PerFi\Domain\Transaction\TransactionDate;
 use PerFi\Domain\Transaction\TransactionRepository;
+use PerFi\Domain\Transaction\TransactionType;
 use SimpleBus\Message\Bus\MessageBus;
 use SimpleBus\Message\Bus\Middleware\FinishesHandlingMessageBeforeHandlingNext;
 use SimpleBus\Message\Bus\Middleware\MessageBusSupportingMiddleware;
@@ -38,14 +41,19 @@ class TransactionContext implements Context
     private $accounts;
 
     /**
-     * @var Transaction
+     * @var Pay|Refund
      */
     private $command;
 
     /**
-     * @var ExecuteTransactionHandler
+     * @var ExecutePayment
      */
-    private $commandHandler;
+    private $payCommandHandler;
+
+    /**
+     * @var ExecuteRefund
+     */
+    private $refundCommandHandler;
 
     /**
      * @var TransactionRepository
@@ -63,7 +71,11 @@ class TransactionContext implements Context
         $this->accounts = [];
         $this->repository = new InMemoryTransactionRepository();
         $this->eventBus = $this->getEventBus();
-        $this->commandHandler = new ExecuteTransactionHandler(
+        $this->payCommandHandler = new ExecutePayment(
+            $this->repository,
+            $this->eventBus
+        );
+        $this->refundCommandHandler = new ExecuteRefund(
             $this->repository,
             $this->eventBus
         );
@@ -96,7 +108,7 @@ class TransactionContext implements Context
             $description
         );
 
-        $this->commandHandler->__invoke($this->command);
+        $this->payCommandHandler->__invoke($this->command);
     }
 
     /**
@@ -104,20 +116,27 @@ class TransactionContext implements Context
      */
     public function iRefundAmountInCurrency($amount, $currency, $source, $destination, $date)
     {
-        $sourceAccount = $this->getAccountByTitle($source);
-        $destinationAccount = $this->getAccountByTitle($destination);
+        // Source and destination intentionally switched
+        // because we're first creating a "pay" transaction
+        // which will be refunded
+        $sourceAccount = $this->getAccountByTitle($destination);
+        $destinationAccount = $this->getAccountByTitle($source);
         $description = "supermarket";
+        $amount = MoneyFactory::amountInCurrency($amount, $currency);
+        $date = TransactionDate::fromString('2017-03-12');
 
-        $this->command = new Refund(
+        $transaction = Transaction::betweenAccounts(
+            TransactionType::fromString('pay'),
             $sourceAccount,
             $destinationAccount,
             $amount,
-            $currency,
             $date,
             $description
         );
 
-        $this->commandHandler->__invoke($this->command);
+        $this->command = new Refund($transaction);
+
+        $this->refundCommandHandler->__invoke($this->command);
     }
 
     /**
@@ -130,6 +149,8 @@ class TransactionContext implements Context
         $sourceAccount = $this->command->sourceAccount();
 
         $balances = $sourceAccount->balances();
+
+        Assert::notEq(0, count($balances));
 
         foreach ($balances as $result) {
             if ((string) $result->getCurrency() === $currency) {
@@ -149,6 +170,8 @@ class TransactionContext implements Context
         $destinationAccount = $this->command->destinationAccount();
 
         $balances = $destinationAccount->balances();
+
+        Assert::notEq(0, count($balances));
 
         foreach ($balances as $result) {
             if ((string) $result->getCurrency() === $currency) {
@@ -186,9 +209,13 @@ class TransactionContext implements Context
     private function getEventBus()
     {
         $eventSubscribersByEventName = [
-            TransactionExecuted::class => [
-                CreditSourceAccountWhenTransactionExecuted::class,
-                DebitDestinationAccountWhenTransactionExecuted::class,
+            PaymentMade::class => [
+                CreditAssetAccountWhenPaymentMade::class,
+                DebitExpenseAccountWhenPaymentMade::class,
+            ],
+            TransactionRefunded::class => [
+                CreditExpenseAccountWhenTransactionRefunded::class,
+                DebitAssetAccountWhenTransactionRefunded::class,
             ]
         ];
 

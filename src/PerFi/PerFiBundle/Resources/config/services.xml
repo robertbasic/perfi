@@ -34,7 +34,7 @@ xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/sc
             <tag name="command_handler" handles="PerFi\Domain\Account\Command\CreateAccount"/>
         </service>
 
-        <service id="perfi.command_handler.execute_transaction" class="PerFi\Domain\Transaction\CommandHandler\ExecuteTransaction">
+        <service id="perfi.command_handler.execute_payment" class="PerFi\Domain\Transaction\CommandHandler\ExecutePayment">
             <argument type="service" id="perfi.repository.transaction"/>
             <argument type="service" id="event_bus"/>
             <tag name="command_handler" handles="PerFi\Domain\Transaction\Command\Pay"/>

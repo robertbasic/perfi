@@ -51,6 +51,9 @@ class PayTest extends TestCase
         self::assertInstanceOf(Account::class, $sourceAccount);
         self::assertInstanceOf(Account::class, $destinationAccount);
 
+        self::assertSame('asset', (string) $sourceAccount->type());
+        self::assertSame('expense', (string) $destinationAccount->type());
+
         self::assertTrue($expectedAmount->equals($amount));
 
         self::assertInstanceOf(TransactionDate::class, $date);

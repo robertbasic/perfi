@@ -5,7 +5,7 @@ namespace PerFi\Domain\Transaction\Event;
 
 use PerFi\Domain\Transaction\Transaction;
 
-class TransactionExecuted
+class PaymentMade
 {
     /**
      * @var Transaction
@@ -13,7 +13,7 @@ class TransactionExecuted
     private $transaction;
 
     /**
-     * Create a transaction executed event
+     * Create a payment made event
      *
      * @param Transaction $transaction
      */
@@ -23,7 +23,7 @@ class TransactionExecuted
     }
 
     /**
-     * The transaction that was just executed
+     * The transaction that is the payment
      *
      * @return Transaction
      */

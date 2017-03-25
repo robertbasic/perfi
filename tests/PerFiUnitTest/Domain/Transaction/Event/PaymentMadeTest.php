@@ -1,24 +1,23 @@
 <?php
 declare(strict_types=1);
 
-namespace PerFiUnitTest\Domain\Transaction\EventSubscriber;
+namespace PerFiUnitTest\Domain\Transaction\Event;
 
 use PHPUnit\Framework\TestCase;
 use PerFi\Domain\Account\Account;
 use PerFi\Domain\Account\AccountType;
 use PerFi\Domain\MoneyFactory;
-use PerFi\Domain\Transaction\EventSubscriber\CreditSourceAccountWhenTransactionExecuted;
-use PerFi\Domain\Transaction\Event\TransactionExecuted;
+use PerFi\Domain\Transaction\Event\PaymentMade;
 use PerFi\Domain\Transaction\Transaction;
 use PerFi\Domain\Transaction\TransactionDate;
 use PerFi\Domain\Transaction\TransactionType;
 
-class CreditSourceAccountWhenTransactionExecutedTest extends TestCase
+class PaymentMadeTest extends TestCase
 {
     /**
      * @test
      */
-    public function source_account_is_credited()
+    public function transaction_is_set_on_event()
     {
         $type = TransactionType::fromString('pay');
         $asset = AccountType::fromString('asset');
@@ -38,13 +37,10 @@ class CreditSourceAccountWhenTransactionExecutedTest extends TestCase
             $description
         );
 
-        $event = new TransactionExecuted($transaction);
+        $event = new PaymentMade($transaction);
 
-        $eventSubscriber = new CreditSourceAccountWhenTransactionExecuted();
-        $eventSubscriber->__invoke($event);
+        $result = $event->transaction();
 
-        $balances = $source->balances();
-
-        self::assertNotEmpty($balances);
+        self::assertSame($transaction, $result);
     }
 }

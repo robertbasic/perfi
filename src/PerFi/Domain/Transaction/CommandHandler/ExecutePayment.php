@@ -3,13 +3,14 @@ declare(strict_types=1);
 
 namespace PerFi\Domain\Transaction\CommandHandler;
 
-use PerFi\Domain\Transaction\Command\Transaction as TransactionCommand;
+use PerFi\Domain\Transaction\Command\Pay;
+use PerFi\Domain\Transaction\Event\PaymentMade;
 use PerFi\Domain\Transaction\Event\TransactionExecuted;
 use PerFi\Domain\Transaction\Transaction;
 use PerFi\Domain\Transaction\TransactionRepository;
 use SimpleBus\Message\Bus\MessageBus;
 
-class ExecuteTransaction
+class ExecutePayment
 {
 
     /**
@@ -23,7 +24,7 @@ class ExecuteTransaction
     private $eventBus;
 
     /**
-     * A handler that handles the execution of a transaction
+     * A handler that handles the execution of a transaction payment
      *
      * @param TransactionRepository $transactions
      * @param MessageBus $eventBus
@@ -35,14 +36,14 @@ class ExecuteTransaction
     }
 
     /**
-     * Handle the execute transaction command
+     * Handle the pay command
      *
-     * Add the executed transaction to the repository.
-     * Tell the event bus to handle the transaction executed event.
+     * Add the payment transaction to the repository.
+     * Tell the event bus to handle the payment made event.
      *
-     * @param TransactionCommand $executeTransaction
+     * @param Pay $command
      */
-    public function __invoke(TransactionCommand $command)
+    public function __invoke(Pay $command)
     {
         $transaction = Transaction::betweenAccounts(
             $command->transactionType(),
@@ -55,7 +56,7 @@ class ExecuteTransaction
 
         $this->transactions->add($transaction);
 
-        $event = new TransactionExecuted($transaction);
+        $event = new PaymentMade($transaction);
 
         $this->eventBus->handle($event);
     }
