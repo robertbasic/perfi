@@ -46,6 +46,10 @@ class InMemoryTransactionRepositoryTest extends TestCase
         foreach ($transactions as $id => $result) {
             self::assertSame((string) $transaction->id(), $id);
             self::assertSame($result, $transaction);
+
+            $result = $repository->get($transaction->id());
+
+            self::assertSame($result, $transaction);
         }
     }
 }
