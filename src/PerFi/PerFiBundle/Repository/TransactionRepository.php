@@ -37,6 +37,7 @@ class TransactionRepository extends Repository
                     'date' => '?',
                     'record_date' => '?',
                     'description' => '?',
+                    'refunded' => '?',
                 ]
             )
             ->setParameter(0, (string) $transaction->id())
@@ -47,7 +48,8 @@ class TransactionRepository extends Repository
             ->setParameter(5, (string) $amount->getCurrency())
             ->setParameter(6, $transaction->date()->format('Y-m-d H:i:s'))
             ->setParameter(7, $transaction->recordDate()->format('Y-m-d H:i:s'))
-            ->setParameter(8, $transaction->description());
+            ->setParameter(8, $transaction->description())
+            ->setParameter(9, $transaction->refunded());
 
         $query->execute();
     }

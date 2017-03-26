@@ -103,6 +103,7 @@ class TransactionRepositoryTest extends TestCase
                 'date' => '?',
                 'record_date' => '?',
                 'description' => '?',
+                'refunded' => '?',
             ])
             ->andReturnSelf();
         $this->queryBuilder->shouldReceive('setParameter')
@@ -140,6 +141,10 @@ class TransactionRepositoryTest extends TestCase
         $this->queryBuilder->shouldReceive('setParameter')
             ->once()
             ->with(8, 'supermarket')
+            ->andReturnSelf();
+        $this->queryBuilder->shouldReceive('setParameter')
+            ->once()
+            ->with(9, false)
             ->andReturnSelf();
 
         $this->repository->add($this->transaction);
