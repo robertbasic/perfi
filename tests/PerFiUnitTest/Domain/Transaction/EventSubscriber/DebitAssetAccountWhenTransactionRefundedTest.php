@@ -29,6 +29,15 @@ class DebitAssetAccountWhenTransactionRefundedTest extends TestCase
         $date = TransactionDate::fromString('2017-03-12');
         $description = 'groceries for dinner';
 
+        $refundedTransaction = Transaction::betweenAccounts(
+            TransactionType::fromString('pay'),
+            $asset,
+            $expense,
+            $amount,
+            $date,
+            'groceries for dinner'
+        );
+
         $transaction = Transaction::betweenAccounts(
             $type,
             $expense,
@@ -38,7 +47,7 @@ class DebitAssetAccountWhenTransactionRefundedTest extends TestCase
             $description
         );
 
-        $event = new TransactionRefunded($transaction);
+        $event = new TransactionRefunded($transaction, $refundedTransaction);
 
         $eventSubscriber = new DebitAssetAccountWhenTransactionRefunded();
         $eventSubscriber->__invoke($event);

@@ -43,7 +43,9 @@ class ExecuteRefund
      */
     public function __invoke(Refund $command)
     {
-        $transaction = Transaction::betweenAccounts(
+        $refundedTransaction = $command->transaction();
+
+        $refundTransaction = Transaction::betweenAccounts(
             $command->transactionType(),
             $command->sourceAccount(),
             $command->destinationAccount(),
@@ -52,9 +54,9 @@ class ExecuteRefund
             $command->description()
         );
 
-        $this->transactions->add($transaction);
+        $this->transactions->add($refundTransaction);
 
-        $event = new TransactionRefunded($transaction);
+        $event = new TransactionRefunded($refundTransaction, $refundedTransaction);
 
         $this->eventBus->handle($event);
     }

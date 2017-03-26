@@ -10,16 +10,23 @@ class TransactionRefunded
     /**
      * @var Transaction
      */
-    private $transaction;
+    private $refundTransaction;
+
+    /**
+     * @var Transaction
+     */
+    private $refundedTransaction;
 
     /**
      * Create a transaction refunded event
      *
-     * @param Transaction $transaction
+     * @param Transaction $refundTransaction
+     * @param Transaction $refundedTransaction
      */
-    public function __construct(Transaction $transaction)
+    public function __construct(Transaction $refundTransaction, Transaction $refundedTransaction)
     {
-        $this->transaction = $transaction;
+        $this->refundTransaction = $refundTransaction;
+        $this->refundedTransaction = $refundedTransaction;
     }
 
     /**
@@ -29,6 +36,16 @@ class TransactionRefunded
      */
     public function transaction() : Transaction
     {
-        return $this->transaction;
+        return $this->refundTransaction;
+    }
+
+    /**
+     * The transaction that was refunded
+     *
+     * @return Transaction
+     */
+    public function refundedTransaction() : Transaction
+    {
+        return $this->refundedTransaction;
     }
 }
