@@ -272,6 +272,16 @@ class Transaction implements \JsonSerializable
     }
 
     /**
+     * Get the refunded flag
+     *
+     * @return bool
+     */
+    public function refunded() : bool
+    {
+        return $this->refunded;
+    }
+
+    /**
      * Check can a transaction be refunded
      *
      * Only a Pay transaction can be refunded.

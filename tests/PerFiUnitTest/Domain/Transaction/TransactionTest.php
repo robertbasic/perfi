@@ -93,6 +93,8 @@ class TransactionTest extends TestCase
         self::assertInstanceOf(Money::class, $transaction->amount());
         self::assertSame($this->amount->getAmount(), $transaction->amount()->getAmount());
         self::assertSame($this->amount->getCurrency(), $transaction->amount()->getCurrency());
+
+        self::assertFalse($transaction->refunded());
     }
 
     /**
