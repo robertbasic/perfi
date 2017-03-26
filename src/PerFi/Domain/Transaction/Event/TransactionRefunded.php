@@ -34,7 +34,7 @@ class TransactionRefunded
      *
      * @return Transaction
      */
-    public function transaction() : Transaction
+    public function refundTransaction() : Transaction
     {
         return $this->refundTransaction;
     }

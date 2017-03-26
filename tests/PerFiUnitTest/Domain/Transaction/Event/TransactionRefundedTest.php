@@ -48,7 +48,7 @@ class TransactionRefundedTest extends TestCase
 
         $event = new TransactionRefunded($transaction, $refundedTransaction);
 
-        $result = $event->transaction();
+        $result = $event->refundTransaction();
         $refundedTransactionResult = $event->refundedTransaction();
 
         self::assertSame($transaction, $result);
