@@ -19,6 +19,12 @@ class RefundController extends Controller
     {
         $id = $request->request->get('id');
 
+        $commandFactory = $this->get('perfi.command.factory.refund');
+
+        $command = $commandFactory($id);
+
+        $this->get('command_bus')->handle($command);
+
         return new JsonResponse([
             $id
         ]);
