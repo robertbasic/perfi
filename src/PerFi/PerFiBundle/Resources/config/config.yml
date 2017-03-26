@@ -3,3 +3,5 @@ imports:
 
 command_bus:
     logging: ~
+event_bus:
+    logging: ~

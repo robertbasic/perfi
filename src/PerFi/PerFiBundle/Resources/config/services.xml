@@ -51,6 +51,26 @@ xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/sc
         </service>
         <!-- command handlers -->
 
+        <!-- event subscribers -->
+        <service id="perfi.event_subscriber.credit_asset_account_when_payment_made"
+            class="PerFi\Domain\Transaction\EventSubscriber\CreditAssetAccountWhenPaymentMade">
+            <tag name="event_subscriber" subscribes_to="PerFi\Domain\Transaction\Event\PaymentMade"/>
+        </service>
+        <service id="perfi.event_subscriber.debit_expense_account_when_payment_made"
+            class="PerFi\Domain\Transaction\EventSubscriber\DebitExpenseAccountWhenPaymentMade">
+            <tag name="event_subscriber" subscribes_to="PerFi\Domain\Transaction\Event\PaymentMade"/>
+        </service>
+
+        <service id="perfi.event_subscriber.credit_expense_account_when_transaction_refunded"
+            class="PerFi\Domain\Transaction\EventSubscriber\CreditExpenseAccountWhenTransactionRefunded">
+            <tag name="event_subscriber" subscribes_to="PerFi\Domain\Transaction\Event\TransactionRefunded"/>
+        </service>
+        <service id="perfi.event_subscriber.debit_asset_account_when_transaction_refunded"
+            class="PerFi\Domain\Transaction\EventSubscriber\DebitAssetAccountWhenTransactionRefunded">
+            <tag name="event_subscriber" subscribes_to="PerFi\Domain\Transaction\Event\TransactionRefunded"/>
+        </service>
+        <!-- event subscribers -->
+
         <!-- forms -->
         <service id="perfi.form.pay" class="PerFi\PerFiBundle\Form\PayType">
             <argument type="service" id="perfi.repository.account"/>
