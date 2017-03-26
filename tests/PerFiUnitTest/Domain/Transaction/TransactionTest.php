@@ -189,6 +189,23 @@ class TransactionTest extends TestCase
     /**
      * @test
      */
+    public function refunded_pay_transaction_can_not_be_refunded()
+    {
+        $transaction = Transaction::betweenAccounts(
+            TransactionType::fromString('pay'),
+            $this->asset,
+            $this->expense,
+            $this->amount,
+            $this->date,
+            $this->description
+        );
+        $transaction->markAsRefunded();
+
+        self::assertFalse($transaction->canBeRefunded());
+    }
+    /**
+     * @test
+     */
     public function refund_transaction_can_not_be_refunded()
     {
         $transaction = Transaction::betweenAccounts(

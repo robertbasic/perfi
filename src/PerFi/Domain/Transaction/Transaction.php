@@ -56,6 +56,11 @@ class Transaction implements \JsonSerializable
     private $description;
 
     /**
+     * @var bool
+     */
+    private $refunded = false;
+
+    /**
      * Create a transaction
      *
      * @param TransactionId $id
@@ -179,6 +184,14 @@ class Transaction implements \JsonSerializable
     }
 
     /**
+     * Mark the transaction as refunded
+     */
+    public function markAsRefunded()
+    {
+        $this->refunded = true;
+    }
+
+    /**
      * Get the ID of the transaction
      *
      * @return TransactionId
@@ -267,7 +280,15 @@ class Transaction implements \JsonSerializable
      */
     public function canBeRefunded() : bool
     {
-        return $this->type->isPay();
+        if ($this->type->isRefund()) {
+            return false;
+        }
+
+        if ($this->refunded) {
+            return false;
+        }
+
+        return true;
     }
 
     /**
