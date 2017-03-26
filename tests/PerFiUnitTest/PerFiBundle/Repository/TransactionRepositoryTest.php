@@ -153,6 +153,99 @@ class TransactionRepositoryTest extends TestCase
 
     /**
      * @test
+     */
+    public function can_save_transaction_to_repository()
+    {
+        $this->queryBuilder->shouldReceive('update')
+            ->once()
+            ->with('transaction')
+            ->andReturnSelf();
+        $this->queryBuilder->shouldReceive('set')
+            ->once()
+            ->with('type', '?')
+            ->andReturnSelf();
+        $this->queryBuilder->shouldReceive('set')
+            ->once()
+            ->with('source_account', '?')
+            ->andReturnSelf();
+        $this->queryBuilder->shouldReceive('set')
+            ->once()
+            ->with('destination_account', '?')
+            ->andReturnSelf();
+        $this->queryBuilder->shouldReceive('set')
+            ->once()
+            ->with('amount', '?')
+            ->andReturnSelf();
+        $this->queryBuilder->shouldReceive('set')
+            ->once()
+            ->with('currency', '?')
+            ->andReturnSelf();
+        $this->queryBuilder->shouldReceive('set')
+            ->once()
+            ->with('date', '?')
+            ->andReturnSelf();
+        $this->queryBuilder->shouldReceive('set')
+            ->once()
+            ->with('record_date', '?')
+            ->andReturnSelf();
+        $this->queryBuilder->shouldReceive('set')
+            ->once()
+            ->with('description', '?')
+            ->andReturnSelf();
+        $this->queryBuilder->shouldReceive('set')
+            ->once()
+            ->with('refunded', '?')
+            ->andReturnSelf();
+        $this->queryBuilder->shouldReceive('where')
+            ->once()
+            ->with('transaction_id = ?')
+            ->andReturnSelf();
+        $this->queryBuilder->shouldReceive('setParameter')
+            ->once()
+            ->with(0, 'pay')
+            ->andReturnSelf();
+        $this->queryBuilder->shouldReceive('setParameter')
+            ->once()
+            ->with(1, 'fddf4716-6c0e-4f54-b539-d2d480a50d1a')
+            ->andReturnSelf();
+        $this->queryBuilder->shouldReceive('setParameter')
+            ->once()
+            ->with(2, 'fddf4716-6c0e-4f54-b539-d2d480a50d1b')
+            ->andReturnSelf();
+        $this->queryBuilder->shouldReceive('setParameter')
+            ->once()
+            ->with(3, 50000)
+            ->andReturnSelf();
+        $this->queryBuilder->shouldReceive('setParameter')
+            ->once()
+            ->with(4, 'RSD')
+            ->andReturnSelf();
+        $this->queryBuilder->shouldReceive('setParameter')
+            ->once()
+            ->with(5, '2017-03-12 00:00:00')
+            ->andReturnSelf();
+        $this->queryBuilder->shouldReceive('setParameter')
+            ->once()
+            ->with(6, '2017-03-20 06:55:00')
+            ->andReturnSelf();
+        $this->queryBuilder->shouldReceive('setParameter')
+            ->once()
+            ->with(7, 'supermarket')
+            ->andReturnSelf();
+        $this->queryBuilder->shouldReceive('setParameter')
+            ->once()
+            ->with(8, 0)
+            ->andReturnSelf();
+        $this->queryBuilder->shouldReceive('setParameter')
+            ->once()
+            ->with(9, 'fddf4716-6c0e-4f54-b539-d2d480a50d1c')
+            ->andReturnSelf();
+
+        $this->repository->save($this->transaction);
+    }
+
+    /**
+     * @test
      * @dataProvider transactions
      */
     public function can_get_transaction_from_repository($transactions)
