@@ -71,7 +71,7 @@ $(document).ready(function() {
             "{{ path('refund') }}",
             { id: id },
             function (response) {
-                console.log(response);
+                transactionsTable.ajax.reload();
             },
             'json'
         );
