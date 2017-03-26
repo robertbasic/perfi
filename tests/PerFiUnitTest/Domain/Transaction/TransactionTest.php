@@ -26,12 +26,12 @@ class TransactionTest extends TestCase
     /**
      * @var Account
      */
-    private $source;
+    private $asset;
 
     /**
      * @var Account
      */
-    private $destination;
+    private $expense;
 
     /**
      * @var Money
@@ -54,8 +54,8 @@ class TransactionTest extends TestCase
         $expense = AccountType::fromString('expense');
 
         $this->type = TransactionType::fromString('pay');
-        $this->source = Account::byTypeWithTitle($asset, 'Cash');
-        $this->destination = Account::byTypeWithTitle($expense, 'Groceries');
+        $this->asset = Account::byTypeWithTitle($asset, 'Cash');
+        $this->expense = Account::byTypeWithTitle($expense, 'Groceries');
         $this->amount = MoneyFactory::amountInCurrency('500', 'RSD');
         $this->date = TransactionDate::fromString('2017-03-12');
         $this->description = 'groceries for dinner';
@@ -68,8 +68,8 @@ class TransactionTest extends TestCase
     {
         $transaction = Transaction::betweenAccounts(
             $this->type,
-            $this->source,
-            $this->destination,
+            $this->asset,
+            $this->expense,
             $this->amount,
             $this->date,
             $this->description
@@ -85,10 +85,10 @@ class TransactionTest extends TestCase
         self::assertInstanceOf(TransactionType::class, $transaction->type());
 
         self::assertInstanceOf(Account::class, $transaction->sourceAccount());
-        self::assertSame($this->source->id(), $transaction->sourceAccount()->id());
+        self::assertSame($this->asset->id(), $transaction->sourceAccount()->id());
 
         self::assertInstanceOf(Account::class, $transaction->destinationAccount());
-        self::assertSame($this->destination->id(), $transaction->destinationAccount()->id());
+        self::assertSame($this->expense->id(), $transaction->destinationAccount()->id());
 
         self::assertInstanceOf(Money::class, $transaction->amount());
         self::assertSame($this->amount->getAmount(), $transaction->amount()->getAmount());
@@ -107,8 +107,8 @@ class TransactionTest extends TestCase
         $transaction = Transaction::withId(
             $id,
             $this->type,
-            $this->source,
-            $this->destination,
+            $this->asset,
+            $this->expense,
             $this->amount,
             $this->date,
             $recordDate,
@@ -130,8 +130,8 @@ class TransactionTest extends TestCase
         $transaction = Transaction::withId(
             $id,
             $this->type,
-            $this->source,
-            $this->destination,
+            $this->asset,
+            $this->expense,
             $this->amount,
             $this->date,
             $recordDate,
@@ -161,8 +161,8 @@ class TransactionTest extends TestCase
     {
         $transaction = Transaction::betweenAccounts(
             $this->type,
-            $this->source,
-            $this->destination,
+            $this->asset,
+            $this->expense,
             $this->amount,
             $this->date,
             ''
@@ -176,8 +176,8 @@ class TransactionTest extends TestCase
     {
         $transaction = Transaction::betweenAccounts(
             TransactionType::fromString('pay'),
-            $this->source,
-            $this->destination,
+            $this->asset,
+            $this->expense,
             $this->amount,
             $this->date,
             $this->description
@@ -193,8 +193,8 @@ class TransactionTest extends TestCase
     {
         $transaction = Transaction::betweenAccounts(
             TransactionType::fromString('refund'),
-            $this->destination,
-            $this->source,
+            $this->expense,
+            $this->asset,
             $this->amount,
             $this->date,
             $this->description
@@ -210,8 +210,8 @@ class TransactionTest extends TestCase
     {
         $transaction = Transaction::betweenAccounts(
             $this->type,
-            $this->source,
-            $this->destination,
+            $this->asset,
+            $this->expense,
             $this->amount,
             $this->date,
             $this->description
@@ -219,7 +219,7 @@ class TransactionTest extends TestCase
 
         $transaction->creditSourceAccount();
 
-        $balances = $this->source->balances();
+        $balances = $this->asset->balances();
 
         self::assertNotEmpty($balances);
     }
@@ -231,8 +231,8 @@ class TransactionTest extends TestCase
     {
         $transaction = Transaction::betweenAccounts(
             $this->type,
-            $this->source,
-            $this->destination,
+            $this->asset,
+            $this->expense,
             $this->amount,
             $this->date,
             $this->description
@@ -240,7 +240,7 @@ class TransactionTest extends TestCase
 
         $transaction->debitDestinationAccount();
 
-        $balances = $this->destination->balances();
+        $balances = $this->expense->balances();
 
         self::assertNotEmpty($balances);
     }

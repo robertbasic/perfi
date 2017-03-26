@@ -23,16 +23,16 @@ class CreditAssetAccountWhenPaymentMadeTest extends TestCase
         $type = TransactionType::fromString('pay');
         $asset = AccountType::fromString('asset');
         $expense = AccountType::fromString('expense');
-        $source = Account::byTypeWithTitle($asset, 'Cash');
-        $destination = Account::byTypeWithTitle($expense, 'Groceries');
+        $asset = Account::byTypeWithTitle($asset, 'Cash');
+        $expense = Account::byTypeWithTitle($expense, 'Groceries');
         $amount = MoneyFactory::amountInCurrency('500', 'RSD');
         $date = TransactionDate::fromString('2017-03-12');
         $description = 'groceries for dinner';
 
         $transaction = Transaction::betweenAccounts(
             $type,
-            $source,
-            $destination,
+            $asset,
+            $expense,
             $amount,
             $date,
             $description
@@ -43,7 +43,7 @@ class CreditAssetAccountWhenPaymentMadeTest extends TestCase
         $eventSubscriber = new CreditAssetAccountWhenPaymentMade();
         $eventSubscriber->__invoke($event);
 
-        $balances = $source->balances();
+        $balances = $asset->balances();
 
         self::assertNotEmpty($balances);
     }

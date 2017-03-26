@@ -37,12 +37,12 @@ class ExecuteRefundTest extends TestCase
     /**
      * @var Account
      */
-    private $sourceAccount;
+    private $assetAccount;
 
     /**
      * @var Account
      */
-    private $destinationAccount;
+    private $expenseAccount;
 
     /**
      * @var string
@@ -72,15 +72,15 @@ class ExecuteRefundTest extends TestCase
         $this->eventBus->shouldReceive('handle')
             ->byDefault();
 
-        $this->sourceAccount = m::mock(Account::class);
-        $this->sourceAccount->shouldReceive('canPay')
+        $this->assetAccount = m::mock(Account::class);
+        $this->assetAccount->shouldReceive('canPay')
             ->andReturn(false)
             ->byDefault();
-        $this->sourceAccount->shouldReceive('canRefund')
+        $this->assetAccount->shouldReceive('canRefund')
             ->andReturn(true)
             ->byDefault();
 
-        $this->destinationAccount = m::mock(Account::class);
+        $this->expenseAccount = m::mock(Account::class);
 
         $amount = MoneyFactory::amountInCurrency('500', 'RSD');
 
@@ -89,10 +89,10 @@ class ExecuteRefundTest extends TestCase
             ->andReturn(true)
             ->byDefault();
         $transaction->shouldReceive('destinationAccount')
-            ->andReturn($this->sourceAccount)
+            ->andReturn($this->assetAccount)
             ->byDefault();
         $transaction->shouldReceive('sourceAccount')
-            ->andReturn($this->destinationAccount)
+            ->andReturn($this->expenseAccount)
             ->byDefault();
         $transaction->shouldReceive('amount')
             ->andReturn($amount);

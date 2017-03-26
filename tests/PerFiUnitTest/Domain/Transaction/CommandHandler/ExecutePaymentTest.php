@@ -35,12 +35,12 @@ class ExecutePaymentTest extends TestCase
     /**
      * @var Account
      */
-    private $sourceAccount;
+    private $assetAccount;
 
     /**
      * @var Account
      */
-    private $destinationAccount;
+    private $expenseAccount;
 
     /**
      * @var string
@@ -70,19 +70,19 @@ class ExecutePaymentTest extends TestCase
         $this->eventBus->shouldReceive('handle')
             ->byDefault();
 
-        $this->sourceAccount = m::mock(Account::class);
-        $this->sourceAccount->shouldReceive('canPay')
+        $this->assetAccount = m::mock(Account::class);
+        $this->assetAccount->shouldReceive('canPay')
             ->andReturn(true)
             ->byDefault();
 
-        $this->destinationAccount = m::mock(Account::class);
+        $this->expenseAccount = m::mock(Account::class);
 
         $this->amount = '500';
         $this->currency = 'RSD';
 
         $this->command = new Pay(
-            $this->sourceAccount,
-            $this->destinationAccount,
+            $this->assetAccount,
+            $this->expenseAccount,
             $this->amount,
             $this->currency,
             '2017-03-12',
