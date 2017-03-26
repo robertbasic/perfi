@@ -58,7 +58,7 @@ class Transaction implements \JsonSerializable
     /**
      * @var bool
      */
-    private $refunded = false;
+    private $refunded;
 
     /**
      * Create a transaction
@@ -69,6 +69,7 @@ class Transaction implements \JsonSerializable
      * @param Money $amount
      * @param TransactionDate $date
      * @param string $description
+     * @param bool $refunded
      */
     private function __construct(
         TransactionId $id,
@@ -78,7 +79,8 @@ class Transaction implements \JsonSerializable
         Money $amount,
         TransactionDate $date,
         TransactionRecordDate $recordDate,
-        string $description
+        string $description,
+        bool $refunded
     )
     {
         Assert::stringNotEmpty($description, "The transaction description must be provided");
@@ -95,6 +97,7 @@ class Transaction implements \JsonSerializable
         $this->date = $date;
         $this->recordDate = $recordDate;
         $this->description = $description;
+        $this->refunded = $refunded;
     }
 
     /**
@@ -127,7 +130,8 @@ class Transaction implements \JsonSerializable
             $amount,
             $date,
             $recordDate,
-            $description
+            $description,
+            false
         );
     }
 
@@ -142,6 +146,7 @@ class Transaction implements \JsonSerializable
      * @param TransactionDate $date
      * @param TransactionRecordDate $recordDate
      * @param string $description
+     * @param bool $refunded
      * @return Transaction
      */
     public static function withId(
@@ -152,7 +157,8 @@ class Transaction implements \JsonSerializable
         Money $amount,
         TransactionDate $date,
         TransactionRecordDate $recordDate,
-        string $description
+        string $description,
+        bool $refunded
     ) : self
     {
         return new self(
@@ -163,7 +169,8 @@ class Transaction implements \JsonSerializable
             $amount,
             $date,
             $recordDate,
-            $description
+            $description,
+            $refunded
         );
     }
 

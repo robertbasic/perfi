@@ -77,6 +77,7 @@ class TransactionRepositoryTest extends TestCase
             'date' => '2017-03-12',
             'record_date' => '2017-03-20 06:55:00',
             'description' => 'supermarket',
+            'refunded' => '0',
         ]);
 
         $this->repository = new TransactionRepository($this->entityManager);
@@ -160,7 +161,7 @@ class TransactionRepositoryTest extends TestCase
             ->once()
             ->with(
                 't.transaction_id', 't.type', 't.amount', 't.currency',
-                't.date', 't.record_date', 't.description',
+                't.date', 't.record_date', 't.description', 't.refunded',
                 'sa.account_id AS source_account_id',
                 'sa.title AS source_account_title',
                 'sa.type AS source_account_type',
@@ -209,7 +210,7 @@ class TransactionRepositoryTest extends TestCase
             ->once()
             ->with(
                 't.transaction_id', 't.type', 't.amount', 't.currency',
-                't.date', 't.record_date', 't.description',
+                't.date', 't.record_date', 't.description', 't.refunded',
                 'sa.account_id AS source_account_id',
                 'sa.title AS source_account_title',
                 'sa.type AS source_account_type',
@@ -257,6 +258,7 @@ class TransactionRepositoryTest extends TestCase
                     'date' => '2017-03-12',
                     'record_date' => '2017-03-20 06:55:00',
                     'description' => 'supermarket',
+                    'refunded' => '0',
                 ]]
             ]
         ];

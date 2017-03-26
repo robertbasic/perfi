@@ -32,7 +32,8 @@ class TransactionFactory
             MoneyFactory::centsInCurrency($transaction['amount'], $transaction['currency']),
             TransactionDate::fromString($transaction['date']),
             TransactionRecordDate::fromString($transaction['record_date']),
-            $transaction['description']
+            $transaction['description'],
+            (bool) $transaction['refunded']
         );
     }
 

@@ -122,7 +122,7 @@ class TransactionRepository extends Repository
 
         $query = $qb->select(
                 't.transaction_id', 't.type', 't.amount', 't.currency',
-                't.date', 't.record_date', 't.description',
+                't.date', 't.record_date', 't.description', 't.refunded',
                 'sa.account_id AS source_account_id',
                 'sa.title AS source_account_title',
                 'sa.type AS source_account_type',

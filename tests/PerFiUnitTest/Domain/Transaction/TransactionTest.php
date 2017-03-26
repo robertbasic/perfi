@@ -114,7 +114,8 @@ class TransactionTest extends TestCase
             $this->amount,
             $this->date,
             $recordDate,
-            $this->description
+            $this->description,
+            false
         );
 
         self::assertSame($id, $transaction->id());
@@ -137,7 +138,8 @@ class TransactionTest extends TestCase
             $this->amount,
             $this->date,
             $recordDate,
-            $this->description
+            $this->description,
+            false
         );
 
         $expected = [
