@@ -55,7 +55,10 @@ $(document).ready(function() {
             { "data": "type" },
             { "data": "id", "render": function (data, type, row, meta) {
                 if (type == 'display') {
-                    return '<button data-transaction-id="'+data+'" type="button" class="btn btn-small btn-danger refund-transaction">Refund</button>';
+                    if (row.refundable) {
+                        return '<button data-transaction-id="'+data+'" type="button" class="btn btn-small btn-danger refund-transaction">Refund</button>';
+                    }
+                    return '';
                 }
                 return data;
             } },
