@@ -62,4 +62,31 @@ class RefundTest extends TestCase
 
         self::assertSame('Refund supermarket', $description);
     }
+
+    /**
+     * @test
+     * @expectedException PerFi\Domain\Transaction\Exception\NotRefundableTransactionException
+     * @expectedExceptionMessageRegExp ~The transaction cannot be refunded, transaction ID: .*~
+     */
+    public function refund_command_for_refunding_a_refund_transaction_can_not_be_created()
+    {
+        $asset = AccountType::fromString('asset');
+        $expense = AccountType::fromString('expense');
+        $sourceAccount = Account::byTypeWithTitle($asset, 'Cash');
+        $destinationAccount = Account::byTypeWithTitle($expense, 'Groceries');
+        $amount = MoneyFactory::amountInCurrency('500', 'RSD');
+        $date = TransactionDate::fromString('2017-03-12');
+        $description = 'supermarket';
+
+        $transaction = Transaction::betweenAccounts(
+            TransactionType::fromString('refund'),
+            $destinationAccount,
+            $sourceAccount,
+            $amount,
+            $date,
+            $description
+        );
+
+        $command = new Refund($transaction);
+    }
 }

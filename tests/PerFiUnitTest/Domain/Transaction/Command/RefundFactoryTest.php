@@ -25,9 +25,11 @@ class RefundFactoryTest extends TestCase
         $transactionId = 'fddf4716-6c0e-4f54-b539-d2d480a50d1a';
 
         $transaction = m::mock(Transaction::class);
-        $transaction->shouldReceive('destinationAccount')
-            ->andReturn(m::mock(Account::class));
+        $transaction->shouldReceive('canBeRefunded')
+            ->andReturn(true);
         $transaction->shouldReceive('sourceAccount')
+            ->andReturn(m::mock(Account::class));
+        $transaction->shouldReceive('destinationAccount')
             ->andReturn(m::mock(Account::class));
         $transaction->shouldReceive('amount')
             ->andReturn(MoneyFactory::amountInCurrency('500', 'RSD'));
