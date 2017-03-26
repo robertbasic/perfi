@@ -146,6 +146,7 @@ class TransactionTest extends TestCase
             'amount' => '500.00 RSD',
             'date' => '2017-03-12',
             'description' => 'groceries for dinner',
+            'refundable' => true,
         ];
 
         self::assertSame($expected, $transaction->jsonSerialize());

@@ -308,6 +308,7 @@ class Transaction implements \JsonSerializable
             'amount' => number_format($amount->getAmount() / 100, 2) . ' ' . (string) $amount->getCurrency(),
             'date' => (string) $this->date(),
             'description' => $this->description(),
+            'refundable' => $this->canBeRefunded(),
         ];
     }
 }
