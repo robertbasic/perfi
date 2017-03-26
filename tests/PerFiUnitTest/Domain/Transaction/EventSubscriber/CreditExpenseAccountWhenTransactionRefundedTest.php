@@ -23,16 +23,16 @@ class CreditExpenseAccountWhenTransactionRefundedTest extends TestCase
         $type = TransactionType::fromString('refund');
         $asset = AccountType::fromString('asset');
         $expense = AccountType::fromString('expense');
-        $source = Account::byTypeWithTitle($expense, 'Groceries');
-        $destination = Account::byTypeWithTitle($asset, 'Cash');
+        $expense = Account::byTypeWithTitle($expense, 'Groceries');
+        $asset = Account::byTypeWithTitle($asset, 'Cash');
         $amount = MoneyFactory::amountInCurrency('500', 'RSD');
         $date = TransactionDate::fromString('2017-03-12');
         $description = 'Refund groceries for dinner';
 
         $transaction = Transaction::betweenAccounts(
             $type,
-            $source,
-            $destination,
+            $expense,
+            $asset,
             $amount,
             $date,
             $description
@@ -43,7 +43,7 @@ class CreditExpenseAccountWhenTransactionRefundedTest extends TestCase
         $eventSubscriber = new CreditExpenseAccountWhenTransactionRefunded();
         $eventSubscriber->__invoke($event);
 
-        $balances = $source->balances();
+        $balances = $expense->balances();
 
         self::assertNotEmpty($balances);
     }

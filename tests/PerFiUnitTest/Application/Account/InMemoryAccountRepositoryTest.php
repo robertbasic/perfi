@@ -29,6 +29,10 @@ class InMemoryAccountRepositoryTest extends TestCase
         foreach ($accounts as $id => $result) {
             self::assertSame((string) $account->id(), $id);
             self::assertSame($result, $account);
+
+            $result = $repository->get($account->id());
+
+            self::assertSame($result, $account);
         }
     }
 }

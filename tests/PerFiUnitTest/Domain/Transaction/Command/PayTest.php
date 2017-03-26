@@ -20,16 +20,16 @@ class PayTest extends TestCase
     {
         $asset = AccountType::fromString('asset');
         $expense = AccountType::fromString('expense');
-        $sourceAccount = Account::byTypeWithTitle($asset, 'Cash');
-        $destinationAccount = Account::byTypeWithTitle($expense, 'Groceries');
+        $assetAccount = Account::byTypeWithTitle($asset, 'Cash');
+        $expenseAccount = Account::byTypeWithTitle($expense, 'Groceries');
         $amount = '500';
         $currency = 'RSD';
         $date = '2017-03-12';
         $description = 'supermarket';
 
         $command = new Pay(
-            $sourceAccount,
-            $destinationAccount,
+            $assetAccount,
+            $expenseAccount,
             $amount,
             $currency,
             $date,
