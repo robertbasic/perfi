@@ -16,7 +16,7 @@ class DebitAssetAccountWhenTransactionRefunded
      */
     public function __invoke(TransactionRefunded $event)
     {
-        $transaction = $event->transaction();
+        $transaction = $event->refundTransaction();
 
         $transaction->debitDestinationAccount();
     }

@@ -4,21 +4,23 @@ declare(strict_types=1);
 namespace PerFiUnitTest\Domain\Transaction\EventSubscriber;
 
 use PHPUnit\Framework\TestCase;
+use PerFi\Application\Transaction\InMemoryTransactionRepository;
 use PerFi\Domain\Account\Account;
 use PerFi\Domain\Account\AccountType;
 use PerFi\Domain\MoneyFactory;
-use PerFi\Domain\Transaction\EventSubscriber\CreditExpenseAccountWhenTransactionRefunded;
+use PerFi\Domain\Transaction\EventSubscriber\MarkRefundedTransactionAsRefundedWhenTransactionRefunded;
 use PerFi\Domain\Transaction\Event\TransactionRefunded;
 use PerFi\Domain\Transaction\Transaction;
 use PerFi\Domain\Transaction\TransactionDate;
+use PerFi\Domain\Transaction\TransactionRepository;
 use PerFi\Domain\Transaction\TransactionType;
 
-class CreditExpenseAccountWhenTransactionRefundedTest extends TestCase
+class MarkRefundedTransactionAsRefundedWhenTransactionRefundedTest extends TestCase
 {
     /**
      * @test
      */
-    public function expense_account_is_credited()
+    public function refunded_transaction_is_marked_as_refunded()
     {
         $type = TransactionType::fromString('refund');
         $asset = AccountType::fromString('asset');
@@ -27,7 +29,9 @@ class CreditExpenseAccountWhenTransactionRefundedTest extends TestCase
         $asset = Account::byTypeWithTitle($asset, 'Cash');
         $amount = MoneyFactory::amountInCurrency('500', 'RSD');
         $date = TransactionDate::fromString('2017-03-12');
-        $description = 'Refund groceries for dinner';
+        $description = 'groceries for dinner';
+
+        $transactionRepository = new InMemoryTransactionRepository();
 
         $refundedTransaction = Transaction::betweenAccounts(
             TransactionType::fromString('pay'),
@@ -49,11 +53,11 @@ class CreditExpenseAccountWhenTransactionRefundedTest extends TestCase
 
         $event = new TransactionRefunded($transaction, $refundedTransaction);
 
-        $eventSubscriber = new CreditExpenseAccountWhenTransactionRefunded();
+        $eventSubscriber = new MarkRefundedTransactionAsRefundedWhenTransactionRefunded($transactionRepository);
         $eventSubscriber->__invoke($event);
 
-        $balances = $expense->balances();
+        $result = $transactionRepository->get($refundedTransaction->id());
 
-        self::assertNotEmpty($balances);
+        self::assertTrue($result->refunded());
     }
 }

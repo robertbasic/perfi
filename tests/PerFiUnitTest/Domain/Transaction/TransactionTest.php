@@ -93,6 +93,8 @@ class TransactionTest extends TestCase
         self::assertInstanceOf(Money::class, $transaction->amount());
         self::assertSame($this->amount->getAmount(), $transaction->amount()->getAmount());
         self::assertSame($this->amount->getCurrency(), $transaction->amount()->getCurrency());
+
+        self::assertFalse($transaction->refunded());
     }
 
     /**
@@ -112,7 +114,8 @@ class TransactionTest extends TestCase
             $this->amount,
             $this->date,
             $recordDate,
-            $this->description
+            $this->description,
+            false
         );
 
         self::assertSame($id, $transaction->id());
@@ -135,7 +138,8 @@ class TransactionTest extends TestCase
             $this->amount,
             $this->date,
             $recordDate,
-            $this->description
+            $this->description,
+            false
         );
 
         $expected = [
@@ -186,6 +190,23 @@ class TransactionTest extends TestCase
         self::assertTrue($transaction->canBeRefunded());
     }
 
+    /**
+     * @test
+     */
+    public function refunded_pay_transaction_can_not_be_refunded()
+    {
+        $transaction = Transaction::betweenAccounts(
+            TransactionType::fromString('pay'),
+            $this->asset,
+            $this->expense,
+            $this->amount,
+            $this->date,
+            $this->description
+        );
+        $transaction->markAsRefunded();
+
+        self::assertFalse($transaction->canBeRefunded());
+    }
     /**
      * @test
      */

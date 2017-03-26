@@ -13,6 +13,11 @@ use PerFi\Domain\Transaction\TransactionType;
 class Refund
 {
     /**
+     * @var Transaction
+     */
+    private $transaction;
+
+    /**
      * @var TransactionType
      */
     private $transactionType;
@@ -56,12 +61,23 @@ class Refund
             throw NotRefundableTransactionException::withTransactionId($transaction->id());
         }
 
+        $this->transaction = $transaction;
         $this->transactionType = TransactionType::fromString('refund');
         $this->sourceAccount = $transaction->destinationAccount();
         $this->destinationAccount = $transaction->sourceAccount();
         $this->amount = $transaction->amount();
         $this->description = "Refund " . $transaction->description();
         $this->date = TransactionDate::fromString('now');
+    }
+
+    /**
+     * Get the Transaction that is to be refunded
+     *
+     * @return Transaction
+     */
+    public function transaction() : Transaction
+    {
+        return $this->transaction;
     }
 
     /**

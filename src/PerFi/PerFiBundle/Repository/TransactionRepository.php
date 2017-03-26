@@ -37,6 +37,7 @@ class TransactionRepository extends Repository
                     'date' => '?',
                     'record_date' => '?',
                     'description' => '?',
+                    'refunded' => '?',
                 ]
             )
             ->setParameter(0, (string) $transaction->id())
@@ -47,7 +48,44 @@ class TransactionRepository extends Repository
             ->setParameter(5, (string) $amount->getCurrency())
             ->setParameter(6, $transaction->date()->format('Y-m-d H:i:s'))
             ->setParameter(7, $transaction->recordDate()->format('Y-m-d H:i:s'))
-            ->setParameter(8, $transaction->description());
+            ->setParameter(8, $transaction->description())
+            ->setParameter(9, (int) $transaction->refunded());
+
+        $query->execute();
+    }
+
+    /**
+     * Save a transaction
+     *
+     * @param Transaction $transaction
+     */
+    public function save(Transaction $transaction)
+    {
+        $qb = $this->getQueryBuilder();
+
+        $amount = $transaction->amount();
+
+        $query = $qb->update('transaction')
+            ->set('type', '?')
+            ->set('source_account', '?')
+            ->set('destination_account', '?')
+            ->set('amount', '?')
+            ->set('currency', '?')
+            ->set('date', '?')
+            ->set('record_date', '?')
+            ->set('description', '?')
+            ->set('refunded', '?')
+            ->where('transaction_id = ?')
+            ->setParameter(0, (string) $transaction->type())
+            ->setParameter(1, (string) $transaction->sourceAccount()->id())
+            ->setParameter(2, (string) $transaction->destinationAccount()->id())
+            ->setParameter(3, $amount->getAmount())
+            ->setParameter(4, (string) $amount->getCurrency())
+            ->setParameter(5, $transaction->date()->format('Y-m-d H:i:s'))
+            ->setParameter(6, $transaction->recordDate()->format('Y-m-d H:i:s'))
+            ->setParameter(7, $transaction->description())
+            ->setParameter(8, (int) $transaction->refunded())
+            ->setParameter(9, (string) $transaction->id());
 
         $query->execute();
     }
@@ -84,7 +122,7 @@ class TransactionRepository extends Repository
 
         $query = $qb->select(
                 't.transaction_id', 't.type', 't.amount', 't.currency',
-                't.date', 't.record_date', 't.description',
+                't.date', 't.record_date', 't.description', 't.refunded',
                 'sa.account_id AS source_account_id',
                 'sa.title AS source_account_title',
                 'sa.type AS source_account_type',

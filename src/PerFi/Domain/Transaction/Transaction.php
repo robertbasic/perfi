@@ -56,6 +56,11 @@ class Transaction implements \JsonSerializable
     private $description;
 
     /**
+     * @var bool
+     */
+    private $refunded;
+
+    /**
      * Create a transaction
      *
      * @param TransactionId $id
@@ -64,6 +69,7 @@ class Transaction implements \JsonSerializable
      * @param Money $amount
      * @param TransactionDate $date
      * @param string $description
+     * @param bool $refunded
      */
     private function __construct(
         TransactionId $id,
@@ -73,7 +79,8 @@ class Transaction implements \JsonSerializable
         Money $amount,
         TransactionDate $date,
         TransactionRecordDate $recordDate,
-        string $description
+        string $description,
+        bool $refunded
     )
     {
         Assert::stringNotEmpty($description, "The transaction description must be provided");
@@ -90,6 +97,7 @@ class Transaction implements \JsonSerializable
         $this->date = $date;
         $this->recordDate = $recordDate;
         $this->description = $description;
+        $this->refunded = $refunded;
     }
 
     /**
@@ -122,7 +130,8 @@ class Transaction implements \JsonSerializable
             $amount,
             $date,
             $recordDate,
-            $description
+            $description,
+            false
         );
     }
 
@@ -137,6 +146,7 @@ class Transaction implements \JsonSerializable
      * @param TransactionDate $date
      * @param TransactionRecordDate $recordDate
      * @param string $description
+     * @param bool $refunded
      * @return Transaction
      */
     public static function withId(
@@ -147,7 +157,8 @@ class Transaction implements \JsonSerializable
         Money $amount,
         TransactionDate $date,
         TransactionRecordDate $recordDate,
-        string $description
+        string $description,
+        bool $refunded
     ) : self
     {
         return new self(
@@ -158,7 +169,8 @@ class Transaction implements \JsonSerializable
             $amount,
             $date,
             $recordDate,
-            $description
+            $description,
+            $refunded
         );
     }
 
@@ -176,6 +188,14 @@ class Transaction implements \JsonSerializable
     public function debitDestinationAccount()
     {
         $this->destinationAccount->debit($this->amount);
+    }
+
+    /**
+     * Mark the transaction as refunded
+     */
+    public function markAsRefunded()
+    {
+        $this->refunded = true;
     }
 
     /**
@@ -259,6 +279,16 @@ class Transaction implements \JsonSerializable
     }
 
     /**
+     * Get the refunded flag
+     *
+     * @return bool
+     */
+    public function refunded() : bool
+    {
+        return $this->refunded;
+    }
+
+    /**
      * Check can a transaction be refunded
      *
      * Only a Pay transaction can be refunded.
@@ -267,7 +297,15 @@ class Transaction implements \JsonSerializable
      */
     public function canBeRefunded() : bool
     {
-        return $this->type->isPay();
+        if ($this->type->isRefund()) {
+            return false;
+        }
+
+        if ($this->refunded) {
+            return false;
+        }
+
+        return true;
     }
 
     /**

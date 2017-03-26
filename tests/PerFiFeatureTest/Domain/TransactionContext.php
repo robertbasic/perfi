@@ -16,6 +16,7 @@ use PerFi\Domain\Transaction\EventSubscriber\CreditAssetAccountWhenPaymentMade;
 use PerFi\Domain\Transaction\EventSubscriber\CreditExpenseAccountWhenTransactionRefunded;
 use PerFi\Domain\Transaction\EventSubscriber\DebitAssetAccountWhenTransactionRefunded;
 use PerFi\Domain\Transaction\EventSubscriber\DebitExpenseAccountWhenPaymentMade;
+use PerFi\Domain\Transaction\EventSubscriber\MarkRefundedTransactionAsRefundedWhenTransactionRefunded;
 use PerFi\Domain\Transaction\Event\PaymentMade;
 use PerFi\Domain\Transaction\Event\TransactionRefunded;
 use PerFi\Domain\Transaction\Transaction;
@@ -189,6 +190,7 @@ class TransactionContext implements Context
         $expected = TransactionDate::fromString($date);
 
         $transactions = $this->repository->getAll();
+        array_pop($transactions);
 
         foreach ($transactions as $transaction) {
             Assert::same((string) $transaction->date(), (string) $expected);
@@ -216,10 +218,14 @@ class TransactionContext implements Context
             TransactionRefunded::class => [
                 CreditExpenseAccountWhenTransactionRefunded::class,
                 DebitAssetAccountWhenTransactionRefunded::class,
+                MarkRefundedTransactionAsRefundedWhenTransactionRefunded::class,
             ]
         ];
 
         $serviceLocator = function ($serviceId) {
+            if ($serviceId === MarkRefundedTransactionAsRefundedWhenTransactionRefunded::class) {
+                return new $serviceId($this->repository);
+            }
             return new $serviceId();
         };
 

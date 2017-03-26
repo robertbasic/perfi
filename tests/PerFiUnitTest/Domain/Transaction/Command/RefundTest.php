@@ -77,6 +77,8 @@ class RefundTest extends TestCase
 
         $expectedAmount = MoneyFactory::amountInCurrency('500', 'RSD');
 
+        self::assertSame($transaction, $command->transaction());
+
         self::assertInstanceOf(TransactionType::class, $transactionType);
         self::assertSame('refund', (string) $transactionType);
 
