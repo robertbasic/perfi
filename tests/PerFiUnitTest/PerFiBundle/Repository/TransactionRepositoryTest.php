@@ -144,7 +144,7 @@ class TransactionRepositoryTest extends TestCase
             ->andReturnSelf();
         $this->queryBuilder->shouldReceive('setParameter')
             ->once()
-            ->with(9, false)
+            ->with(9, 0)
             ->andReturnSelf();
 
         $this->repository->add($this->transaction);
