@@ -58,6 +58,11 @@ class Transaction
     private $description;
 
     /**
+     * @var bool
+     */
+    private $refunded;
+
+    /**
      * Get id
      *
      * @return int
@@ -281,5 +286,29 @@ class Transaction
     public function getDescription()
     {
         return $this->description;
+    }
+
+    /**
+     * Set refunded
+     *
+     * @param boolean $refunded
+     *
+     * @return Transaction
+     */
+    public function setRefunded($refunded)
+    {
+        $this->refunded = $refunded;
+
+        return $this;
+    }
+
+    /**
+     * Get refunded
+     *
+     * @return boolean
+     */
+    public function getRefunded()
+    {
+        return $this->refunded;
     }
 }

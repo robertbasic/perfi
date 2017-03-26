@@ -13,5 +13,6 @@
     <field name="date" type="datetime" column="date"/>
     <field name="recordDate" type="datetime" column="record_date"/>
     <field name="description" type="string" column="description" length="255"/>
+    <field name="refunded" type="boolean" column="refunded"/>
   </entity>
 </doctrine-mapping>
