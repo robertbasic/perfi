@@ -259,6 +259,18 @@ class Transaction implements \JsonSerializable
     }
 
     /**
+     * Check can a transaction be refunded
+     *
+     * Only a Pay transaction can be refunded.
+     *
+     * @return bool
+     */
+    public function canBeRefunded() : bool
+    {
+        return $this->type->isPay();
+    }
+
+    /**
      * Check can a transaction be executed
      *
      * @param TransactionType $type
