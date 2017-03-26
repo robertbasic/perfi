@@ -26,6 +26,10 @@ xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/sc
         <service id="perfi.command.factory.pay" class="PerFi\Domain\Transaction\Command\PayFactory">
             <argument type="service" id="perfi.repository.account"/>
         </service>
+
+        <service id="perfi.command.factory.refund" class="PerFi\Domain\Transaction\Command\RefundFactory">
+            <argument type="service" id="perfi.repository.transaction"/>
+        </service>
         <!-- commands and command factories -->
 
         <!-- command handlers -->
