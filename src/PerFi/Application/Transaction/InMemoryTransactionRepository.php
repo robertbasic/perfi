@@ -23,6 +23,11 @@ class InMemoryTransactionRepository implements TransactionRepository
         $this->transactions[(string) $transaction->id()] = $transaction;
     }
 
+    public function save(Transaction $transaction)
+    {
+        $this->add($transaction);
+    }
+
     /**
      * {@inheritdoc}
      */
