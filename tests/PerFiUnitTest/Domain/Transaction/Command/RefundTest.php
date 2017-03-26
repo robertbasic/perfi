@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace PerFiUnitTest\Domain\Transaction\Command;
 
+use Money\Money;
 use PHPUnit\Framework\TestCase;
 use PerFi\Domain\Account\Account;
 use PerFi\Domain\Account\AccountType;
@@ -14,26 +15,55 @@ use PerFi\Domain\Transaction\TransactionType;
 
 class RefundTest extends TestCase
 {
+
+    /**
+     * @var Account
+     */
+    private $assetAccount;
+
+    /**
+     * @var Account
+     */
+    private $expenseAccount;
+
+    /**
+     * @var Money
+     */
+    private $amount;
+
+    /**
+     * @var TransactionDate
+     */
+    private $date;
+
+    /**
+     * @var string
+     */
+    private $description;
+
+    public function setup()
+    {
+        $asset = AccountType::fromString('asset');
+        $expense = AccountType::fromString('expense');
+        $this->assetAccount = Account::byTypeWithTitle($asset, 'Cash');
+        $this->expenseAccount = Account::byTypeWithTitle($expense, 'Groceries');
+        $this->amount = MoneyFactory::amountInCurrency('500', 'RSD');
+        $this->date = TransactionDate::fromString('2017-03-12');
+        $this->description = 'supermarket';
+    }
+
     /**
      * @test
      */
     public function refund_transaction_command_is_created()
     {
-        $asset = AccountType::fromString('asset');
-        $expense = AccountType::fromString('expense');
-        $sourceAccount = Account::byTypeWithTitle($asset, 'Cash');
-        $destinationAccount = Account::byTypeWithTitle($expense, 'Groceries');
-        $amount = MoneyFactory::amountInCurrency('500', 'RSD');
-        $date = TransactionDate::fromString('2017-03-12');
-        $description = 'supermarket';
-
         $transaction = Transaction::betweenAccounts(
             TransactionType::fromString('pay'),
-            $sourceAccount,
-            $destinationAccount,
-            $amount,
-            $date,
-            $description
+            $this->assetAccount,
+            $this->expenseAccount,
+            $this->amount,
+            $this->date,
+            $this->description
         );
 
         $command = new Refund($transaction);
@@ -70,21 +100,13 @@ class RefundTest extends TestCase
      */
     public function refund_command_for_refunding_a_refund_transaction_can_not_be_created()
     {
-        $asset = AccountType::fromString('asset');
-        $expense = AccountType::fromString('expense');
-        $sourceAccount = Account::byTypeWithTitle($asset, 'Cash');
-        $destinationAccount = Account::byTypeWithTitle($expense, 'Groceries');
-        $amount = MoneyFactory::amountInCurrency('500', 'RSD');
-        $date = TransactionDate::fromString('2017-03-12');
-        $description = 'supermarket';
-
         $transaction = Transaction::betweenAccounts(
             TransactionType::fromString('refund'),
-            $destinationAccount,
-            $sourceAccount,
-            $amount,
-            $date,
-            $description
+            $this->expenseAccount,
+            $this->assetAccount,
+            $this->amount,
+            $this->date,
+            $this->description
         );
 
         $command = new Refund($transaction);
