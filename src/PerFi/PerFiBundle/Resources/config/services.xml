@@ -69,6 +69,11 @@ xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/sc
             class="PerFi\Domain\Transaction\EventSubscriber\DebitAssetAccountWhenTransactionRefunded">
             <tag name="event_subscriber" subscribes_to="PerFi\Domain\Transaction\Event\TransactionRefunded"/>
         </service>
+        <service id="perfi.event_subscriber.debit_asset_account_when_transaction_refunded"
+            class="PerFi\Domain\Transaction\EventSubscriber\MarkRefundedTransactionAsRefundedWhenTransactionRefunded">
+            <argument type="service" id="perfi.repository.transaction"/>
+            <tag name="event_subscriber" subscribes_to="PerFi\Domain\Transaction\Event\TransactionRefunded"/>
+        </service>
         <!-- event subscribers -->
 
         <!-- forms -->
