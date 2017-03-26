@@ -10,6 +10,7 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use PerFi\Domain\Transaction\Transaction;
+use PerFi\Domain\Transaction\TransactionId;
 use PerFi\PerFiBundle\Factory\TransactionFactory;
 use PerFi\PerFiBundle\Repository\TransactionRepository;
 
@@ -38,6 +39,11 @@ class TransactionRepositoryTest extends TestCase
     private $entityManager;
 
     /**
+     * @var TransactionId
+     */
+    private $transactionId;
+
+    /**
      * @var Transaction
      */
     private $transaction;
@@ -55,8 +61,10 @@ class TransactionRepositoryTest extends TestCase
         $this->entityManager->shouldReceive('getConnection->createQueryBuilder')
             ->andReturn($this->queryBuilder);
 
+        $this->transactionId = TransactionId::fromString('fddf4716-6c0e-4f54-b539-d2d480a50d1c');
+
         $this->transaction = TransactionFactory::fromArray([
-            'transaction_id' => 'fddf4716-6c0e-4f54-b539-d2d480a50d1c',
+            'transaction_id' => (string) $this->transactionId,
             'type' => 'pay',
             'source_account_id' => 'fddf4716-6c0e-4f54-b539-d2d480a50d1a',
             'source_account_type' => 'asset',
@@ -135,6 +143,55 @@ class TransactionRepositoryTest extends TestCase
             ->andReturnSelf();
 
         $this->repository->add($this->transaction);
+    }
+
+    /**
+     * @test
+     * @dataProvider transactions
+     */
+    public function can_get_transaction_from_repository($transactions)
+    {
+        $this->queryBuilder->shouldReceive('select')
+            ->once()
+            ->with(
+                't.transaction_id', 't.type', 't.amount', 't.currency',
+                't.date', 't.record_date', 't.description',
+                'sa.account_id AS source_account_id',
+                'sa.title AS source_account_title',
+                'sa.type AS source_account_type',
+                'da.account_id AS destination_account_id',
+                'da.title AS destination_account_title',
+                'da.type AS destination_account_type'
+            )
+            ->andReturnSelf();
+        $this->queryBuilder->shouldReceive('from')
+            ->once()
+            ->with('transaction', 't')
+            ->andReturnSelf();
+        $this->queryBuilder->shouldReceive('innerJoin')
+            ->once()
+            ->with('t', 'account', 'sa', 't.source_account = sa.account_id')
+            ->andReturnSelf();
+        $this->queryBuilder->shouldReceive('innerJoin')
+            ->once()
+            ->with('t', 'account', 'da', 't.destination_account = da.account_id')
+            ->andReturnSelf();
+        $this->queryBuilder->shouldReceive('where')
+            ->once()
+            ->with('t.transaction_id = :transactionId')
+            ->andReturnSelf();
+        $this->queryBuilder->shouldReceive('setParameter')
+            ->once()
+            ->with('transactionId', $this->transactionId)
+            ->andReturnSelf();
+
+        $this->statement->shouldReceive('fetch')
+            ->once()
+            ->andReturn(array_pop($transactions));
+
+        $transaction = $this->repository->get($this->transactionId);
+
+        self::assertInstanceOf(Transaction::class, $transaction);
     }
 
     /**

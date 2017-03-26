@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace PerFi\Domain\Transaction;
 
 use PerFi\Domain\Transaction\Transaction;
+use PerFi\Domain\Transaction\TransactionId;
 
 interface TransactionRepository
 {
@@ -13,6 +14,14 @@ interface TransactionRepository
      * @param Transaction $transaction
      */
     public function add(Transaction $transaction);
+
+    /**
+     * Get an account from the repository
+     *
+     * @param TransactionId $transactionId
+     * @return Transaction
+     */
+    public function get(TransactionId $transactionId) : Transaction;
 
     /**
      * Get all transactions from the repository

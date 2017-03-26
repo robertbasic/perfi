@@ -5,6 +5,7 @@ namespace PerFi\PerFiBundle\Repository;
 
 use Doctrine\DBAL\Query\QueryBuilder;
 use PerFi\Domain\Transaction\Transaction;
+use PerFi\Domain\Transaction\TransactionId;
 use PerFi\Domain\Transaction\TransactionRepository as TransactionRepositoryInterface;
 use PerFi\PerFiBundle\Factory\TransactionFactory;
 use PerFi\PerFiBundle\Repository\Repository;
@@ -49,6 +50,20 @@ class TransactionRepository extends Repository
             ->setParameter(8, $transaction->description());
 
         $query->execute();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function get(TransactionId $transactionId) : Transaction
+    {
+        $query = $this->getQuery();
+
+        $statement = $query->where('t.transaction_id = :transactionId')
+            ->setParameter('transactionId', $transactionId)
+            ->execute();
+
+        return $this->mapToEntity($statement->fetch());
     }
 
     /**

@@ -26,6 +26,10 @@ xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/sc
         <service id="perfi.command.factory.pay" class="PerFi\Domain\Transaction\Command\PayFactory">
             <argument type="service" id="perfi.repository.account"/>
         </service>
+
+        <service id="perfi.command.factory.refund" class="PerFi\Domain\Transaction\Command\RefundFactory">
+            <argument type="service" id="perfi.repository.transaction"/>
+        </service>
         <!-- commands and command factories -->
 
         <!-- command handlers -->
@@ -38,6 +42,12 @@ xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/sc
             <argument type="service" id="perfi.repository.transaction"/>
             <argument type="service" id="event_bus"/>
             <tag name="command_handler" handles="PerFi\Domain\Transaction\Command\Pay"/>
+        </service>
+
+        <service id="perfi.command_handler.execute_refund" class="PerFi\Domain\Transaction\CommandHandler\ExecuteRefund">
+            <argument type="service" id="perfi.repository.transaction"/>
+            <argument type="service" id="event_bus"/>
+            <tag name="command_handler" handles="PerFi\Domain\Transaction\Command\Refund"/>
         </service>
         <!-- command handlers -->
 
