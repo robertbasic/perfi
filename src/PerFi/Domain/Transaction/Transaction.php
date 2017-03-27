@@ -5,8 +5,6 @@ namespace PerFi\Domain\Transaction;
 
 use Money\Money;
 use PerFi\Domain\Account\Account;
-use PerFi\Domain\Transaction\Exception\NotExecutableTransactionException;
-use PerFi\Domain\Transaction\Specification\ExecutableTransaction;
 use PerFi\Domain\Transaction\TransactionDate;
 use PerFi\Domain\Transaction\TransactionId;
 use PerFi\Domain\Transaction\TransactionRecordDate;
@@ -85,11 +83,6 @@ class Transaction implements \JsonSerializable
     )
     {
         Assert::stringNotEmpty($description, "The transaction description must be provided");
-
-        $specification = new ExecutableTransaction();
-        if (!$specification->isSatisfiedBy($type, $sourceAccount, $destinationAccount)) {
-            throw NotExecutableTransactionException::withTypeAndAccounts($type, $sourceAccount, $destinationAccount);
-        }
 
         $this->id = $id;
         $this->type = $type;

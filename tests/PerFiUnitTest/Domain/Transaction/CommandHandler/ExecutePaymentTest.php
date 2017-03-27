@@ -75,10 +75,16 @@ class ExecutePaymentTest extends TestCase
         $this->assetAccount->shouldReceive('type')
             ->andReturn(AccountType::fromString('asset'))
             ->byDefault();
+        $this->assetAccount->shouldReceive('__toString')
+            ->andReturn('Cash, asset')
+            ->byDefault();
 
         $this->expenseAccount = m::mock(Account::class);
         $this->expenseAccount->shouldReceive('type')
             ->andReturn(AccountType::fromString('expense'))
+            ->byDefault();
+        $this->expenseAccount->shouldReceive('__toString')
+            ->andReturn('Groceries, expense')
             ->byDefault();
 
         $this->amount = '500';
@@ -123,5 +129,24 @@ class ExecutePaymentTest extends TestCase
             ->with(m::type(PaymentMade::class));
 
         $this->commandHandler->__invoke($this->command);
+    }
+
+    /**
+     * @test
+     * @expectedException PerFi\Domain\Transaction\Exception\TransactionNotPayableException
+     * @expectedExceptionMessage A pay transaction between Groceries, expense and Cash, asset accounts is not payable
+     */
+    public function when_invoked_with_not_payable_transaction_throws_exception()
+    {
+        $command = new Pay(
+            $this->expenseAccount,
+            $this->assetAccount,
+            $this->amount,
+            $this->currency,
+            '2017-03-12',
+            'supermarket'
+        );
+
+        $this->commandHandler->__invoke($command);
     }
 }
