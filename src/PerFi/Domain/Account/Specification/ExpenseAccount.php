@@ -3,12 +3,19 @@ declare(strict_types=1);
 
 namespace PerFi\Domain\Account\Specification;
 
+use PerFi\Domain\Account\Account;
 use PerFi\Domain\Account\AccountType;
 
 class ExpenseAccount
 {
-    public function isSatisfiedBy(AccountType $type)
+    /**
+     * Check is an accout of expense type
+     *
+     * @param Account $account
+     * @return bool
+     */
+    public function isSatisfiedBy(Account $account) : bool
     {
-        return (string) $type === AccountType::ACCOUNT_TYPE_EXPENSE;
+        return (string) $account->type() === AccountType::ACCOUNT_TYPE_EXPENSE;
     }
 }

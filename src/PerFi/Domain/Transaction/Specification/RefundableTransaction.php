@@ -4,16 +4,22 @@ declare(strict_types=1);
 namespace PerFi\Domain\Transaction\Specification;
 
 use PerFi\Domain\Account\Account;
-use PerFi\Domain\Account\Specification\RefundableAccount;
+use PerFi\Domain\Account\Specification\AssetAccount;
+use PerFi\Domain\Account\Specification\ExpenseAccount;
 use PerFi\Domain\Transaction\Specification\RefundTransaction;
 use PerFi\Domain\Transaction\TransactionType;
 
 class RefundableTransaction
 {
     /**
-     * @var RefundableAccount
+     * @var AssetAccount
      */
-    private $refundableAccountSpecification;
+    private $assetAccountSpecification;
+
+    /**
+     * @var ExpenseAccount
+     */
+    private $expenseAccountSpecification;
 
     /**
      * @var RefundTransaction
@@ -22,10 +28,21 @@ class RefundableTransaction
 
     public function __construct()
     {
-        $this->refundableAccountSpecification = new RefundableAccount();
+        $this->assetAccountSpecification = new AssetAccount();
+        $this->expenseAccountSpecification = new ExpenseAccount();
         $this->refundTransactionSpecification = new RefundTransaction();
     }
 
+    /**
+     * A transaction is refundable if the transaction is of refund type,
+     * the source account is as an expense account,
+     * and the destination account is an asset account.
+     *
+     * @param TransactionType $transactionType
+     * @param Account $sourceAccount
+     * @param Account $destinationAccount
+     * @return bool
+     */
     public function isSatisfiedBy(
         TransactionType $transactionType,
         Account $sourceAccount,
@@ -33,6 +50,7 @@ class RefundableTransaction
     )
     {
         return $this->refundTransactionSpecification->isSatisfiedBy($transactionType)
-            && $this->refundableAccountSpecification->isSatisfiedBy($sourceAccount, $destinationAccount);
+            && $this->expenseAccountSpecification->isSatisfiedBy($sourceAccount)
+            && $this->assetAccountSpecification->isSatisfiedBy($destinationAccount);
     }
 }

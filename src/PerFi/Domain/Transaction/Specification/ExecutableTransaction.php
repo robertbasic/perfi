@@ -26,11 +26,22 @@ class ExecutableTransaction
         $this->refundableTransactionSpecification = new RefundableTransaction();
     }
 
+    /**
+     * Check if a transaction can be executed
+     *
+     * For a transaction to be executable, it either has to be a payable,
+     * or a refundable transaction.
+     *
+     * @param TransactionType $transactionType
+     * @param Account $sourceAccount
+     * @param Account $destinationAccount
+     * @return bool
+     */
     public function isSatisfiedBy(
         TransactionType $transactionType,
         Account $sourceAccount,
         Account $destinationAccount
-    )
+    ) : bool
     {
         return $this->payableTransactionSpecification->isSatisfiedBy($transactionType, $sourceAccount, $destinationAccount)
             || $this->refundableTransactionSpecification->isSatisfiedBy($transactionType, $sourceAccount, $destinationAccount);
