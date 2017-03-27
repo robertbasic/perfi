@@ -9,6 +9,7 @@ use Money\Money;
 use PHPUnit\Framework\TestCase;
 use PerFi\Application\Transaction\InMemoryTransactionRepository;
 use PerFi\Domain\Account\Account;
+use PerFi\Domain\Account\AccountType;
 use PerFi\Domain\Command;
 use PerFi\Domain\CommandHandler;
 use PerFi\Domain\MoneyFactory;
@@ -71,11 +72,14 @@ class ExecutePaymentTest extends TestCase
             ->byDefault();
 
         $this->assetAccount = m::mock(Account::class);
-        $this->assetAccount->shouldReceive('canPay')
-            ->andReturn(true)
+        $this->assetAccount->shouldReceive('type')
+            ->andReturn(AccountType::fromString('asset'))
             ->byDefault();
 
         $this->expenseAccount = m::mock(Account::class);
+        $this->expenseAccount->shouldReceive('type')
+            ->andReturn(AccountType::fromString('expense'))
+            ->byDefault();
 
         $this->amount = '500';
         $this->currency = 'RSD';

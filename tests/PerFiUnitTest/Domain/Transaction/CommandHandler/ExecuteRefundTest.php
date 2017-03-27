@@ -9,6 +9,7 @@ use Money\Money;
 use PHPUnit\Framework\TestCase;
 use PerFi\Application\Transaction\InMemoryTransactionRepository;
 use PerFi\Domain\Account\Account;
+use PerFi\Domain\Account\AccountType;
 use PerFi\Domain\Command;
 use PerFi\Domain\CommandHandler;
 use PerFi\Domain\MoneyFactory;
@@ -73,14 +74,14 @@ class ExecuteRefundTest extends TestCase
             ->byDefault();
 
         $this->assetAccount = m::mock(Account::class);
-        $this->assetAccount->shouldReceive('canPay')
-            ->andReturn(false)
-            ->byDefault();
-        $this->assetAccount->shouldReceive('canRefund')
-            ->andReturn(true)
+        $this->assetAccount->shouldReceive('type')
+            ->andReturn(AccountType::fromString('asset'))
             ->byDefault();
 
         $this->expenseAccount = m::mock(Account::class);
+        $this->expenseAccount->shouldReceive('type')
+            ->andReturn(AccountType::fromString('expense'))
+            ->byDefault();
 
         $amount = MoneyFactory::amountInCurrency('500', 'RSD');
 
@@ -89,10 +90,10 @@ class ExecuteRefundTest extends TestCase
             ->andReturn(true)
             ->byDefault();
         $transaction->shouldReceive('destinationAccount')
-            ->andReturn($this->assetAccount)
+            ->andReturn($this->expenseAccount)
             ->byDefault();
         $transaction->shouldReceive('sourceAccount')
-            ->andReturn($this->expenseAccount)
+            ->andReturn($this->assetAccount)
             ->byDefault();
         $transaction->shouldReceive('amount')
             ->andReturn($amount);
