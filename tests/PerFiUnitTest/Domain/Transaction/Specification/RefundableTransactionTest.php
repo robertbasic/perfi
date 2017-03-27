@@ -9,7 +9,6 @@ use PHPUnit\Framework\TestCase;
 use PerFi\Domain\Account\Account;
 use PerFi\Domain\Account\AccountType;
 use PerFi\Domain\Transaction\Specification\RefundableTransaction;
-use PerFi\Domain\Transaction\Transaction;
 use PerFi\Domain\Transaction\TransactionType;
 
 class RefundableTransactionTest extends TestCase
@@ -40,18 +39,9 @@ class RefundableTransactionTest extends TestCase
             ->once()
             ->andReturn(AccountType::fromString('asset'));
 
-        $transaction = m::mock(Transaction::class);
-        $transaction->shouldReceive('type')
-            ->once()
-            ->andReturn(TransactionType::fromString('refund'));
-        $transaction->shouldReceive('sourceAccount')
-            ->once()
-            ->andReturn($expenseAccount);
-        $transaction->shouldReceive('destinationAccount')
-            ->once()
-            ->andReturn($assetAccount);
+        $transactionType = TransactionType::fromString('refund');
 
-        $result = $this->specification->isSatisfiedBy($transaction);
+        $result = $this->specification->isSatisfiedBy($transactionType, $expenseAccount, $assetAccount);
 
         self::assertTrue($result);
     }
@@ -69,18 +59,9 @@ class RefundableTransactionTest extends TestCase
         $expenseAccount->shouldReceive('type')
             ->never();
 
-        $transaction = m::mock(Transaction::class);
-        $transaction->shouldReceive('type')
-            ->once()
-            ->andReturn(TransactionType::fromString('refund'));
-        $transaction->shouldReceive('sourceAccount')
-            ->once()
-            ->andReturn($assetAccount);
-        $transaction->shouldReceive('destinationAccount')
-            ->once()
-            ->andReturn($expenseAccount);
+        $transactionType = TransactionType::fromString('refund');
 
-        $result = $this->specification->isSatisfiedBy($transaction);
+        $result = $this->specification->isSatisfiedBy($transactionType, $assetAccount, $expenseAccount);
 
         self::assertFalse($result);
     }
@@ -90,12 +71,16 @@ class RefundableTransactionTest extends TestCase
      */
     public function pay_type_transaction_with_expense_and_asset_accounts_does_not_satisfy_specification()
     {
-        $transaction = m::mock(Transaction::class);
-        $transaction->shouldReceive('type')
-            ->once()
-            ->andReturn(TransactionType::fromString('pay'));
+        $assetAccount = m::mock(Account::class);
+        $assetAccount->shouldReceive('type')
+            ->never();
+        $expenseAccount = m::mock(Account::class);
+        $expenseAccount->shouldReceive('type')
+            ->never();
 
-        $result = $this->specification->isSatisfiedBy($transaction);
+        $transactionType = TransactionType::fromString('pay');
+
+        $result = $this->specification->isSatisfiedBy($transactionType, $assetAccount, $expenseAccount);
 
         self::assertFalse($result);
     }

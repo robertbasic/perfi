@@ -3,9 +3,10 @@ declare(strict_types=1);
 
 namespace PerFi\Domain\Transaction\Specification;
 
+use PerFi\Domain\Account\Account;
 use PerFi\Domain\Account\Specification\RefundableAccount;
 use PerFi\Domain\Transaction\Specification\RefundTransaction;
-use PerFi\Domain\Transaction\Transaction;
+use PerFi\Domain\Transaction\TransactionType;
 
 class RefundableTransaction
 {
@@ -25,9 +26,13 @@ class RefundableTransaction
         $this->refundTransactionSpecification = new RefundTransaction();
     }
 
-    public function isSatisfiedBy(Transaction $transaction)
+    public function isSatisfiedBy(
+        TransactionType $transactionType,
+        Account $sourceAccount,
+        Account $destinationAccount
+    )
     {
-        return $this->refundTransactionSpecification->isSatisfiedBy($transaction->type())
-            && $this->refundableAccountSpecification->isSatisfiedBy($transaction->sourceAccount(), $transaction->destinationAccount());
+        return $this->refundTransactionSpecification->isSatisfiedBy($transactionType)
+            && $this->refundableAccountSpecification->isSatisfiedBy($sourceAccount, $destinationAccount);
     }
 }

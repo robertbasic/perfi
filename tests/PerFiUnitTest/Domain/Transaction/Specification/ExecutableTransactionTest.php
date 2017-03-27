@@ -9,7 +9,6 @@ use PHPUnit\Framework\TestCase;
 use PerFi\Domain\Account\Account;
 use PerFi\Domain\Account\AccountType;
 use PerFi\Domain\Transaction\Specification\ExecutableTransaction;
-use PerFi\Domain\Transaction\Transaction;
 use PerFi\Domain\Transaction\TransactionType;
 
 class ExecutableTransactionTest extends TestCase
@@ -35,18 +34,9 @@ class ExecutableTransactionTest extends TestCase
             ->once()
             ->andReturn(AccountType::fromString('expense'));
 
-        $transaction = m::mock(Transaction::class);
-        $transaction->shouldReceive('type')
-            ->once()
-            ->andReturn(TransactionType::fromString('pay'));
-        $transaction->shouldReceive('sourceAccount')
-            ->once()
-            ->andReturn($assetAccount);
-        $transaction->shouldReceive('destinationAccount')
-            ->once()
-            ->andReturn($expenseAccount);
+        $transactionType = TransactionType::fromString('pay');
 
-        $result = $this->specification->isSatisfiedBy($transaction);
+        $result = $this->specification->isSatisfiedBy($transactionType, $assetAccount, $expenseAccount);
 
         self::assertTrue($result);
     }
@@ -65,18 +55,9 @@ class ExecutableTransactionTest extends TestCase
             ->once()
             ->andReturn(AccountType::fromString('asset'));
 
-        $transaction = m::mock(Transaction::class);
-        $transaction->shouldReceive('type')
-            ->twice()
-            ->andReturn(TransactionType::fromString('refund'));
-        $transaction->shouldReceive('sourceAccount')
-            ->once()
-            ->andReturn($expenseAccount);
-        $transaction->shouldReceive('destinationAccount')
-            ->once()
-            ->andReturn($assetAccount);
+        $transactionType = TransactionType::fromString('refund');
 
-        $result = $this->specification->isSatisfiedBy($transaction);
+        $result = $this->specification->isSatisfiedBy($transactionType, $expenseAccount, $assetAccount);
 
         self::assertTrue($result);
     }

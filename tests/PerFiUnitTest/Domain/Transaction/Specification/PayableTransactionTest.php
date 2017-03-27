@@ -9,7 +9,6 @@ use PHPUnit\Framework\TestCase;
 use PerFi\Domain\Account\Account;
 use PerFi\Domain\Account\AccountType;
 use PerFi\Domain\Transaction\Specification\PayableTransaction;
-use PerFi\Domain\Transaction\Transaction;
 use PerFi\Domain\Transaction\TransactionType;
 
 class PayableTransactionTest extends TestCase
@@ -40,18 +39,9 @@ class PayableTransactionTest extends TestCase
             ->once()
             ->andReturn(AccountType::fromString('expense'));
 
-        $transaction = m::mock(Transaction::class);
-        $transaction->shouldReceive('type')
-            ->once()
-            ->andReturn(TransactionType::fromString('pay'));
-        $transaction->shouldReceive('sourceAccount')
-            ->once()
-            ->andReturn($assetAccount);
-        $transaction->shouldReceive('destinationAccount')
-            ->once()
-            ->andReturn($expenseAccount);
+        $transactionType = TransactionType::fromString('pay');
 
-        $result = $this->specification->isSatisfiedBy($transaction);
+        $result = $this->specification->isSatisfiedBy($transactionType, $assetAccount, $expenseAccount);
 
         self::assertTrue($result);
     }
@@ -69,18 +59,9 @@ class PayableTransactionTest extends TestCase
         $assetAccount->shouldReceive('type')
             ->never();
 
-        $transaction = m::mock(Transaction::class);
-        $transaction->shouldReceive('type')
-            ->once()
-            ->andReturn(TransactionType::fromString('pay'));
-        $transaction->shouldReceive('sourceAccount')
-            ->once()
-            ->andReturn($expenseAccount);
-        $transaction->shouldReceive('destinationAccount')
-            ->once()
-            ->andReturn($assetAccount);
+        $transactionType = TransactionType::fromString('pay');
 
-        $result = $this->specification->isSatisfiedBy($transaction);
+        $result = $this->specification->isSatisfiedBy($transactionType, $expenseAccount, $assetAccount);
 
         self::assertFalse($result);
     }
@@ -90,16 +71,16 @@ class PayableTransactionTest extends TestCase
      */
     public function refund_type_transaction_with_asset_and_expense_accounts_does_not_satisfy_specification()
     {
-        $transaction = m::mock(Transaction::class);
-        $transaction->shouldReceive('type')
-            ->once()
-            ->andReturn(TransactionType::fromString('refund'));
-        $transaction->shouldReceive('sourceAccount')
+        $assetAccount = m::mock(Account::class);
+        $assetAccount->shouldReceive('type')
             ->never();
-        $transaction->shouldReceive('destinationAccount')
+        $expenseAccount = m::mock(Account::class);
+        $expenseAccount->shouldReceive('type')
             ->never();
 
-        $result = $this->specification->isSatisfiedBy($transaction);
+        $transactionType = TransactionType::fromString('refund');
+
+        $result = $this->specification->isSatisfiedBy($transactionType, $assetAccount, $expenseAccount);
 
         self::assertFalse($result);
     }

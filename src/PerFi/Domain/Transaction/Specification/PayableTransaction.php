@@ -3,9 +3,11 @@ declare(strict_types=1);
 
 namespace PerFi\Domain\Transaction\Specification;
 
+use PerFi\Domain\Account\Account;
 use PerFi\Domain\Account\Specification\PayableAccount;
 use PerFi\Domain\Transaction\Specification\PayTransaction;
 use PerFi\Domain\Transaction\Transaction;
+use PerFi\Domain\Transaction\TransactionType;
 
 class PayableTransaction
 {
@@ -25,9 +27,13 @@ class PayableTransaction
         $this->payTransactionSpecification = new PayTransaction();
     }
 
-    public function isSatisfiedBy(Transaction $transaction)
+    public function isSatisfiedBy(
+        TransactionType $transactionType,
+        Account $sourceAccount,
+        Account $destinationAccount
+    )
     {
-        return $this->payTransactionSpecification->isSatisfiedBy($transaction->type())
-            && $this->payableAccountSpecification->isSatisfiedBy($transaction->sourceAccount(), $transaction->destinationAccount());
+        return $this->payTransactionSpecification->isSatisfiedBy($transactionType)
+            && $this->payableAccountSpecification->isSatisfiedBy($sourceAccount, $destinationAccount);
     }
 }
