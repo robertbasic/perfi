@@ -23,16 +23,6 @@ class TransactionTypeTest extends TestCase
     /**
      * @test
      */
-    public function pay_type_is_pay()
-    {
-        $transactionType = TransactionType::fromString('pay');
-
-        self::assertTrue($transactionType->isPay());
-    }
-
-    /**
-     * @test
-     */
     public function refund_type_is_refund()
     {
         $transactionType = TransactionType::fromString('refund');

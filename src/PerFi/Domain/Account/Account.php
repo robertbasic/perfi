@@ -86,28 +86,6 @@ class Account implements \JsonSerializable
     }
 
     /**
-     * Can this source account pay the destination account?
-     *
-     * @param Account $destinationAccount
-     * @return bool
-     */
-    public function canPay(Account $destinationAccount) : bool
-    {
-        return $this->type()->isAsset() && $destinationAccount->type()->isExpense();
-    }
-
-    /**
-     * Can this source account refund the destination account?
-     *
-     * @param Account $destinationAccount
-     * @return bool
-     */
-    public function canRefund(Account $destinationAccount) : bool
-    {
-        return $this->type()->isExpense() && $destinationAccount->type()->isAsset();
-    }
-
-    /**
      * Calculate the balances for the account
      *
      * Calculates the balances for every currency separately.

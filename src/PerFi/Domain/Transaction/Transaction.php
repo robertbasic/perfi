@@ -311,27 +311,6 @@ class Transaction implements \JsonSerializable
     }
 
     /**
-     * Check can a transaction be executed
-     *
-     * @param TransactionType $type
-     * @param Account $sourceAccount
-     * @param Account $destinationAccount
-     * @return bool
-     */
-    private function canTransactionBeExecuted(TransactionType $type, Account $sourceAccount, Account $destinationAccount) : bool
-    {
-        if ($type->isPay() && $sourceAccount->canPay($destinationAccount)) {
-            return true;
-        }
-
-        if ($type->isRefund() && $sourceAccount->canRefund($destinationAccount)) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
      * JSON serializeable object
      *
      * @return array

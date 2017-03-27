@@ -52,16 +52,6 @@ class TransactionType
     }
 
     /**
-     * See if transaction type is pay
-     *
-     * @return bool
-     */
-    public function isPay() : bool
-    {
-        return $this->type === self::TRANSACTION_TYPE_PAY;
-    }
-
-    /**
      * See if transaction type is refund
      *
      * @return bool
