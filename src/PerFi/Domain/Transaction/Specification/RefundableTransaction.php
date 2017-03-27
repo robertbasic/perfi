@@ -47,7 +47,7 @@ class RefundableTransaction
         TransactionType $transactionType,
         Account $sourceAccount,
         Account $destinationAccount
-    )
+    ) : bool
     {
         return $this->refundTransactionSpecification->isSatisfiedBy($transactionType)
             && $this->expenseAccountSpecification->isSatisfiedBy($sourceAccount)
