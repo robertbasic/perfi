@@ -6,6 +6,8 @@ namespace PerFi\Domain\Transaction\CommandHandler;
 use PerFi\Domain\Transaction\Command\Pay;
 use PerFi\Domain\Transaction\Event\PaymentMade;
 use PerFi\Domain\Transaction\Event\TransactionExecuted;
+use PerFi\Domain\Transaction\Exception\TransactionNotPayableException;
+use PerFi\Domain\Transaction\Specification\PayableTransaction;
 use PerFi\Domain\Transaction\Transaction;
 use PerFi\Domain\Transaction\TransactionRepository;
 use SimpleBus\Message\Bus\MessageBus;
@@ -53,6 +55,11 @@ class ExecutePayment
             $command->date(),
             $command->description()
         );
+
+        $specification = new PayableTransaction();
+        if (!$specification->isSatisfiedBy($transaction)) {
+            throw TransactionNotPayableException::withTransaction($transaction);
+        }
 
         $this->transactions->add($transaction);
 

@@ -8,7 +8,6 @@ use PHPUnit\Framework\TestCase;
 use PerFi\Domain\Account\Account;
 use PerFi\Domain\Account\AccountType;
 use PerFi\Domain\MoneyFactory;
-use PerFi\Domain\Transaction\Exception\NotExecutableTransactionException;
 use PerFi\Domain\Transaction\Transaction;
 use PerFi\Domain\Transaction\TransactionDate;
 use PerFi\Domain\Transaction\TransactionId;
@@ -288,25 +287,6 @@ class TransactionTest extends TestCase
     /**
      * @test
      * @dataProvider assetAccountAndExpenseAccount
-     * @expectedException PerFi\Domain\Transaction\Exception\NotExecutableTransactionException
-     * @expectedExceptionMessage The pay transaction cannot be executed between Groceries, expense and Cash, asset accounts
-     */
-    public function pay_transaction_can_not_be_executed_between_expense_and_asset($asset, $expense)
-    {
-        $type = TransactionType::fromString('pay');
-        $transaction = Transaction::betweenAccounts(
-            $type,
-            $expense,
-            $asset,
-            $this->amount,
-            $this->date,
-            $this->description
-        );
-    }
-
-    /**
-     * @test
-     * @dataProvider assetAccountAndExpenseAccount
      */
     public function refund_transaction_can_be_executed_between_expense_and_asset($asset, $expense)
     {
@@ -321,25 +301,6 @@ class TransactionTest extends TestCase
         );
 
         self::assertInstanceOf(Transaction::class, $transaction);
-    }
-
-    /**
-     * @test
-     * @dataProvider assetAccountAndExpenseAccount
-     * @expectedException PerFi\Domain\Transaction\Exception\NotExecutableTransactionException
-     * @expectedExceptionMessage The refund transaction cannot be executed between Cash, asset and Groceries, expense accounts
-     */
-    public function refund_transaction_can_not_be_executed_between_asset_and_expense($asset, $expense)
-    {
-        $type = TransactionType::fromString('refund');
-        $transaction = Transaction::betweenAccounts(
-            $type,
-            $asset,
-            $expense,
-            $this->amount,
-            $this->date,
-            $this->description
-        );
     }
 
     public function assetAccountAndExpenseAccount()

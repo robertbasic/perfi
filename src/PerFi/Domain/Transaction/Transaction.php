@@ -5,7 +5,6 @@ namespace PerFi\Domain\Transaction;
 
 use Money\Money;
 use PerFi\Domain\Account\Account;
-use PerFi\Domain\Transaction\Exception\NotExecutableTransactionException;
 use PerFi\Domain\Transaction\TransactionDate;
 use PerFi\Domain\Transaction\TransactionId;
 use PerFi\Domain\Transaction\TransactionRecordDate;
@@ -84,10 +83,6 @@ class Transaction implements \JsonSerializable
     )
     {
         Assert::stringNotEmpty($description, "The transaction description must be provided");
-
-        if (!$this->canTransactionBeExecuted($type, $sourceAccount, $destinationAccount)) {
-            throw NotExecutableTransactionException::withTypeAndAccounts($type, $sourceAccount, $destinationAccount);
-        }
 
         $this->id = $id;
         $this->type = $type;
@@ -306,27 +301,6 @@ class Transaction implements \JsonSerializable
         }
 
         return true;
-    }
-
-    /**
-     * Check can a transaction be executed
-     *
-     * @param TransactionType $type
-     * @param Account $sourceAccount
-     * @param Account $destinationAccount
-     * @return bool
-     */
-    private function canTransactionBeExecuted(TransactionType $type, Account $sourceAccount, Account $destinationAccount) : bool
-    {
-        if ($type->isPay() && $sourceAccount->canPay($destinationAccount)) {
-            return true;
-        }
-
-        if ($type->isRefund() && $sourceAccount->canRefund($destinationAccount)) {
-            return true;
-        }
-
-        return false;
     }
 
     /**

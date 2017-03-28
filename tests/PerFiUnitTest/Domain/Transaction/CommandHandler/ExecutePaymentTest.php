@@ -9,6 +9,7 @@ use Money\Money;
 use PHPUnit\Framework\TestCase;
 use PerFi\Application\Transaction\InMemoryTransactionRepository;
 use PerFi\Domain\Account\Account;
+use PerFi\Domain\Account\AccountType;
 use PerFi\Domain\Command;
 use PerFi\Domain\CommandHandler;
 use PerFi\Domain\MoneyFactory;
@@ -71,11 +72,20 @@ class ExecutePaymentTest extends TestCase
             ->byDefault();
 
         $this->assetAccount = m::mock(Account::class);
-        $this->assetAccount->shouldReceive('canPay')
-            ->andReturn(true)
+        $this->assetAccount->shouldReceive('type')
+            ->andReturn(AccountType::fromString('asset'))
+            ->byDefault();
+        $this->assetAccount->shouldReceive('__toString')
+            ->andReturn('Cash, asset')
             ->byDefault();
 
         $this->expenseAccount = m::mock(Account::class);
+        $this->expenseAccount->shouldReceive('type')
+            ->andReturn(AccountType::fromString('expense'))
+            ->byDefault();
+        $this->expenseAccount->shouldReceive('__toString')
+            ->andReturn('Groceries, expense')
+            ->byDefault();
 
         $this->amount = '500';
         $this->currency = 'RSD';
@@ -119,5 +129,24 @@ class ExecutePaymentTest extends TestCase
             ->with(m::type(PaymentMade::class));
 
         $this->commandHandler->__invoke($this->command);
+    }
+
+    /**
+     * @test
+     * @expectedException PerFi\Domain\Transaction\Exception\TransactionNotPayableException
+     * @expectedExceptionMessage A pay transaction between Groceries, expense and Cash, asset accounts is not payable
+     */
+    public function when_invoked_with_not_payable_transaction_throws_exception()
+    {
+        $command = new Pay(
+            $this->expenseAccount,
+            $this->assetAccount,
+            $this->amount,
+            $this->currency,
+            '2017-03-12',
+            'supermarket'
+        );
+
+        $this->commandHandler->__invoke($command);
     }
 }

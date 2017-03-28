@@ -5,6 +5,8 @@ namespace PerFi\Domain\Transaction\CommandHandler;
 
 use PerFi\Domain\Transaction\Command\Refund;
 use PerFi\Domain\Transaction\Event\TransactionRefunded;
+use PerFi\Domain\Transaction\Exception\TransactionNotRefundableException;
+use PerFi\Domain\Transaction\Specification\RefundableTransaction;
 use PerFi\Domain\Transaction\Transaction;
 use PerFi\Domain\Transaction\TransactionRepository;
 use SimpleBus\Message\Bus\MessageBus;
@@ -53,6 +55,11 @@ class ExecuteRefund
             $command->date(),
             $command->description()
         );
+
+        $specification = new RefundableTransaction();
+        if (!$specification->isSatisfiedBy($refundTransaction)) {
+            throw TransactionNotRefundableException::withTransaction($refundTransaction);
+        }
 
         $this->transactions->add($refundTransaction);
 
