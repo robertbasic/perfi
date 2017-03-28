@@ -25,6 +25,7 @@ class ExecutableTransactionTest extends TestCase
      */
     public function payable_transaction_satisfies_specification()
     {
+        $this->markTestSkipped();
         $assetAccount = m::mock(Account::class);
         $assetAccount->shouldReceive('type')
             ->once()
@@ -46,6 +47,7 @@ class ExecutableTransactionTest extends TestCase
      */
     public function refundable_transaction_satisfies_specification()
     {
+        $this->markTestSkipped();
         $expenseAccount = m::mock(Account::class);
         $expenseAccount->shouldReceive('type')
             ->once()

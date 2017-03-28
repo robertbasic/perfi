@@ -3,11 +3,10 @@ declare(strict_types=1);
 
 namespace PerFi\Domain\Transaction\Specification;
 
-use PerFi\Domain\Account\Account;
 use PerFi\Domain\Account\Specification\AssetAccount;
 use PerFi\Domain\Account\Specification\ExpenseAccount;
 use PerFi\Domain\Transaction\Specification\PayTransaction;
-use PerFi\Domain\Transaction\TransactionType;
+use PerFi\Domain\Transaction\Transaction;
 
 class PayableTransaction
 {
@@ -35,22 +34,16 @@ class PayableTransaction
 
     /**
      * A transaction is payable if the transaction is of pay type,
-     * the source account is as an asset account,
-     * and the destination account is an expense account.
+     * it's source account is as an asset account,
+     * and it's destination account is an expense account.
      *
-     * @param TransactionType $transactionType
-     * @param Account $sourceAccount
-     * @param Account $destinationAccount
+     * @param Transaction $transaction
      * @return bool
      */
-    public function isSatisfiedBy(
-        TransactionType $transactionType,
-        Account $sourceAccount,
-        Account $destinationAccount
-    ) : bool
+    public function isSatisfiedBy(Transaction $transaction) : bool
     {
-        return $this->payTransactionSpecification->isSatisfiedBy($transactionType)
-            && $this->assetAccountSpecification->isSatisfiedBy($sourceAccount)
-            && $this->expenseAccountSpecification->isSatisfiedBy($destinationAccount);
+        return $this->payTransactionSpecification->isSatisfiedBy($transaction->type())
+            && $this->assetAccountSpecification->isSatisfiedBy($transaction->sourceAccount())
+            && $this->expenseAccountSpecification->isSatisfiedBy($transaction->destinationAccount());
     }
 }

@@ -57,7 +57,7 @@ class ExecutePayment
         );
 
         $specification = new PayableTransaction();
-        if (!$specification->isSatisfiedBy($transaction->type(), $transaction->sourceAccount(), $transaction->destinationAccount())) {
+        if (!$specification->isSatisfiedBy($transaction)) {
             throw TransactionNotPayableException::withTransaction($transaction);
         }
 
