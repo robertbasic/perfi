@@ -77,10 +77,16 @@ class ExecuteRefundTest extends TestCase
         $this->assetAccount->shouldReceive('type')
             ->andReturn(AccountType::fromString('asset'))
             ->byDefault();
+        $this->assetAccount->shouldReceive('__toString')
+            ->andReturn('Cash, asset')
+            ->byDefault();
 
         $this->expenseAccount = m::mock(Account::class);
         $this->expenseAccount->shouldReceive('type')
             ->andReturn(AccountType::fromString('expense'))
+            ->byDefault();
+        $this->expenseAccount->shouldReceive('__toString')
+            ->andReturn('Groceries, expense')
             ->byDefault();
 
         $amount = MoneyFactory::amountInCurrency('500', 'RSD');
@@ -133,5 +139,35 @@ class ExecuteRefundTest extends TestCase
             ->with(m::type(TransactionRefunded::class));
 
         $this->commandHandler->__invoke($this->command);
+    }
+
+    /**
+     * @test
+     * @expectedException PerFi\Domain\Transaction\Exception\TransactionNotRefundableException
+     * @expectedExceptionMessage A refund transaction between Cash, asset and Groceries, expense accounts is not refundable
+     */
+    public function when_invoked_with_not_refundable_transaction_throws_exception()
+    {
+        $amount = MoneyFactory::amountInCurrency('500', 'RSD');
+
+        $transaction = m::mock(Transaction::class);
+        $transaction->shouldReceive('canBeRefunded')
+            ->andReturn(true)
+            ->byDefault();
+        $transaction->shouldReceive('destinationAccount')
+            ->andReturn($this->assetAccount)
+            ->byDefault();
+        $transaction->shouldReceive('sourceAccount')
+            ->andReturn($this->expenseAccount)
+            ->byDefault();
+        $transaction->shouldReceive('amount')
+            ->andReturn($amount);
+        $transaction->shouldReceive('description')
+            ->andReturn('groceries')
+            ->byDefault();
+
+        $command = new Refund($transaction);
+
+        $this->commandHandler->__invoke($command);
     }
 }
