@@ -8,7 +8,13 @@ use PerFi\Domain\Transaction\TransactionType;
 
 class RefundTransaction
 {
-    public function isSatisfiedBy(Transaction $transaction)
+    /**
+     * Check is transaction of refund type
+     *
+     * @param Transaction $transaction
+     * @return bool
+     */
+    public function isSatisfiedBy(Transaction $transaction) : bool
     {
         return (string) $transaction->type() === TransactionType::TRANSACTION_TYPE_REFUND;
     }
