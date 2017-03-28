@@ -42,7 +42,7 @@ class PayableTransaction
      */
     public function isSatisfiedBy(Transaction $transaction) : bool
     {
-        return $this->payTransactionSpecification->isSatisfiedBy($transaction->type())
+        return $this->payTransactionSpecification->isSatisfiedBy($transaction)
             && $this->assetAccountSpecification->isSatisfiedBy($transaction->sourceAccount())
             && $this->expenseAccountSpecification->isSatisfiedBy($transaction->destinationAccount());
     }
