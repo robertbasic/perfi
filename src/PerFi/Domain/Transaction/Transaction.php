@@ -5,6 +5,8 @@ namespace PerFi\Domain\Transaction;
 
 use Money\Money;
 use PerFi\Domain\Account\Account;
+use PerFi\Domain\Transaction\Specification\NotRefundedTransaction;
+use PerFi\Domain\Transaction\Specification\PayTransaction;
 use PerFi\Domain\Transaction\TransactionDate;
 use PerFi\Domain\Transaction\TransactionId;
 use PerFi\Domain\Transaction\TransactionRecordDate;
@@ -286,17 +288,19 @@ class Transaction implements \JsonSerializable
     /**
      * Check can a transaction be refunded
      *
-     * Only a Pay transaction can be refunded.
+     * Only a not-refunded Pay transaction can be refunded.
      *
      * @return bool
      */
-    public function canBeRefunded() : bool
+    private function canBeRefunded() : bool
     {
-        if ($this->type->isRefund()) {
+        $payTransactionSpecification = new PayTransaction();
+        if (!$payTransactionSpecification->isSatisfiedBy($this)) {
             return false;
         }
 
-        if ($this->refunded) {
+        $notRefundedTransactionSpecification = new NotRefundedTransaction();
+        if (!$notRefundedTransactionSpecification->isSatisfiedBy($this)) {
             return false;
         }
 

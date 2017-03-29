@@ -5,7 +5,6 @@ namespace PerFi\Domain\Transaction\Command;
 
 use Money\Money;
 use PerFi\Domain\Account\Account;
-use PerFi\Domain\Transaction\Exception\NotRefundableTransactionException;
 use PerFi\Domain\Transaction\Transaction;
 use PerFi\Domain\Transaction\TransactionDate;
 use PerFi\Domain\Transaction\TransactionType;
@@ -57,10 +56,6 @@ class Refund
      */
     public function __construct(Transaction $transaction)
     {
-        if (!$transaction->canBeRefunded()) {
-            throw NotRefundableTransactionException::withTransactionId($transaction->id());
-        }
-
         $this->transaction = $transaction;
         $this->transactionType = TransactionType::fromString('refund');
         $this->sourceAccount = $transaction->destinationAccount();
