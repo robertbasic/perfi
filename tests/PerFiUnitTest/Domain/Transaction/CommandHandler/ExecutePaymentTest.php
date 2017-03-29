@@ -54,6 +54,16 @@ class ExecutePaymentTest extends TestCase
     private $currency;
 
     /**
+    * @var string
+    */
+    private $date;
+
+    /**
+    * @var string
+    */
+    private $description;
+
+    /**
      * @var Pay
      */
     private $command;
@@ -89,14 +99,16 @@ class ExecutePaymentTest extends TestCase
 
         $this->amount = '500';
         $this->currency = 'RSD';
+        $this->date = '2017-03-12';
+        $this->description = 'supermarket';
 
         $this->command = new Pay(
             $this->assetAccount,
             $this->expenseAccount,
             $this->amount,
             $this->currency,
-            '2017-03-12',
-            'supermarket'
+            $this->date,
+            $this->description
         );
 
         $this->commandHandler = new ExecutePayment(
@@ -143,8 +155,8 @@ class ExecutePaymentTest extends TestCase
             $this->assetAccount,
             $this->amount,
             $this->currency,
-            '2017-03-12',
-            'supermarket'
+            $this->date,
+            $this->description
         );
 
         $this->commandHandler->__invoke($command);

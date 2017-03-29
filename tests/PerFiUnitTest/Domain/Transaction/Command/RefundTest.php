@@ -41,6 +41,11 @@ class RefundTest extends TestCase
      */
     private $description;
 
+    /**
+     * @var Transaction
+     */
+    private $transaction;
+
     public function setup()
     {
         $asset = AccountType::fromString('asset');
@@ -50,14 +55,8 @@ class RefundTest extends TestCase
         $this->amount = MoneyFactory::amountInCurrency('500', 'RSD');
         $this->date = TransactionDate::fromString('2017-03-12');
         $this->description = 'supermarket';
-    }
 
-    /**
-     * @test
-     */
-    public function refund_transaction_command_is_created()
-    {
-        $transaction = Transaction::betweenAccounts(
+        $this->transaction = Transaction::betweenAccounts(
             TransactionType::fromString('pay'),
             $this->assetAccount,
             $this->expenseAccount,
@@ -65,8 +64,14 @@ class RefundTest extends TestCase
             $this->date,
             $this->description
         );
+    }
 
-        $command = new Refund($transaction);
+    /**
+     * @test
+     */
+    public function refund_transaction_command_is_created()
+    {
+        $command = new Refund($this->transaction);
 
         $transactionType = $command->transactionType();
         $sourceAccount = $command->sourceAccount();
@@ -77,7 +82,7 @@ class RefundTest extends TestCase
 
         $expectedAmount = MoneyFactory::amountInCurrency('500', 'RSD');
 
-        self::assertSame($transaction, $command->transaction());
+        self::assertSame($this->transaction, $command->transaction());
 
         self::assertInstanceOf(TransactionType::class, $transactionType);
         self::assertSame('refund', (string) $transactionType);

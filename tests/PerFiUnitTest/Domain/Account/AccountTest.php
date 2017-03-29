@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 namespace PerFiUnitTest\Domain\Account;
 
+use Money\Money;
 use PHPUnit\Framework\TestCase;
 use PerFi\Domain\Account\Account;
 use PerFi\Domain\Account\AccountId;
@@ -11,7 +12,6 @@ use PerFi\Domain\MoneyFactory;
 
 class AccountTest extends TestCase
 {
-
     /**
      * @var AccountType
      */
@@ -22,10 +22,22 @@ class AccountTest extends TestCase
      */
     private $title;
 
+    /**
+     * @var Money
+     */
+    private $amountFiveHundred;
+
+    /**
+     * @var Money
+     */
+    private $amountSixHundred;
+
     public function setup()
     {
         $this->type = AccountType::fromString('asset');
         $this->title = 'Cash';
+        $this->amountFiveHundred = MoneyFactory::amountInCurrency('500', 'RSD');
+        $this->amountSixHundred = MoneyFactory::amountInCurrency('600', 'RSD');
     }
 
     /**
@@ -99,13 +111,10 @@ class AccountTest extends TestCase
      */
     public function crediting_an_account_adds_negative_amount()
     {
-        $amountOne = MoneyFactory::amountInCurrency('500', 'RSD');
-        $amountTwo = MoneyFactory::amountInCurrency('600', 'RSD');
-
         $account = Account::byTypeWithTitle($this->type, 'Cash');
 
-        $account->credit($amountOne);
-        $account->credit($amountTwo);
+        $account->credit($this->amountFiveHundred);
+        $account->credit($this->amountSixHundred);
 
         $results = $account->balances();
 
@@ -125,13 +134,11 @@ class AccountTest extends TestCase
      */
     public function debiting_an_account_adds_positive_amount()
     {
-        $amountOne = MoneyFactory::amountInCurrency('500', 'RSD');
-        $amountTwo = MoneyFactory::amountInCurrency('600', 'RSD');
 
         $account = Account::byTypeWithTitle($this->type, 'Cash');
 
-        $account->debit($amountOne);
-        $account->debit($amountTwo);
+        $account->debit($this->amountFiveHundred);
+        $account->debit($this->amountSixHundred);
 
         $results = $account->balances();
 

@@ -16,6 +16,10 @@ use PerFi\Domain\Transaction\TransactionType;
 
 class TransactionTest extends TestCase
 {
+    /**
+     * @var TransactionId
+     */
+    private $id;
 
     /**
      * @var TransactionType
@@ -47,8 +51,15 @@ class TransactionTest extends TestCase
      */
     private $description;
 
+    /**
+     * @var TransactionRecordDate
+     */
+    private $recordDate;
+
     public function setup()
     {
+        $this->id = TransactionId::fromString('fddf4716-6c0e-4f54-b539-d2d480a50d1a');
+
         $asset = AccountType::fromString('asset');
         $expense = AccountType::fromString('expense');
 
@@ -58,6 +69,8 @@ class TransactionTest extends TestCase
         $this->amount = MoneyFactory::amountInCurrency('500', 'RSD');
         $this->date = TransactionDate::fromString('2017-03-12');
         $this->description = 'groceries for dinner';
+        $this->recordDate = TransactionRecordDate::fromString('2017-03-17 11:29:00');
+
     }
 
     /**
@@ -101,23 +114,19 @@ class TransactionTest extends TestCase
      */
     public function transaction_can_be_created_with_an_id()
     {
-        $id = TransactionId::fromString('fddf4716-6c0e-4f54-b539-d2d480a50d1a');
-
-        $recordDate = TransactionRecordDate::fromString('2017-03-17 11:29:00');
-
         $transaction = Transaction::withId(
-            $id,
+            $this->id,
             $this->type,
             $this->asset,
             $this->expense,
             $this->amount,
             $this->date,
-            $recordDate,
+            $this->recordDate,
             $this->description,
             false
         );
 
-        self::assertSame($id, $transaction->id());
+        self::assertSame($this->id, $transaction->id());
     }
 
     /**
@@ -125,18 +134,14 @@ class TransactionTest extends TestCase
      */
     public function transaction_can_be_serialized_to_json()
     {
-        $id = TransactionId::fromString('fddf4716-6c0e-4f54-b539-d2d480a50d1a');
-
-        $recordDate = TransactionRecordDate::fromString('2017-03-17 11:29:00');
-
         $transaction = Transaction::withId(
-            $id,
+            $this->id,
             $this->type,
             $this->asset,
             $this->expense,
             $this->amount,
             $this->date,
-            $recordDate,
+            $this->recordDate,
             $this->description,
             false
         );
@@ -160,18 +165,14 @@ class TransactionTest extends TestCase
      */
     public function not_refundable_already_refunded_transaction_can_be_serialized_to_json()
     {
-        $id = TransactionId::fromString('fddf4716-6c0e-4f54-b539-d2d480a50d1a');
-
-        $recordDate = TransactionRecordDate::fromString('2017-03-17 11:29:00');
-
         $transaction = Transaction::withId(
-            $id,
+            $this->id,
             $this->type,
             $this->asset,
             $this->expense,
             $this->amount,
             $this->date,
-            $recordDate,
+            $this->recordDate,
             $this->description,
             true
         );
@@ -195,20 +196,16 @@ class TransactionTest extends TestCase
      */
     public function not_refundable_refund_transaction_can_be_serialized_to_json()
     {
-        $id = TransactionId::fromString('fddf4716-6c0e-4f54-b539-d2d480a50d1a');
-
-        $recordDate = TransactionRecordDate::fromString('2017-03-17 11:29:00');
-
         $type = TransactionType::fromString('refund');
 
         $transaction = Transaction::withId(
-            $id,
+            $this->id,
             $type,
             $this->expense,
             $this->asset,
             $this->amount,
             $this->date,
-            $recordDate,
+            $this->recordDate,
             $this->description,
             false
         );

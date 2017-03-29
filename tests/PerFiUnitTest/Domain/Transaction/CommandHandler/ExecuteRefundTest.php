@@ -23,7 +23,6 @@ use PerFi\Domain\Transaction\TransactionRepository;
 use PerFi\Domain\Transaction\TransactionType;
 use SimpleBus\Message\Bus\Middleware\MessageBusSupportingMiddleware;
 
-// @todo Better mock for transaction in this test case
 class ExecuteRefundTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
@@ -49,14 +48,14 @@ class ExecuteRefundTest extends TestCase
     private $expenseAccount;
 
     /**
-     * @var string
+     * @var Money
      */
     private $amount;
 
     /**
-     * @var string
+     * @var Transaction
      */
-    private $currency;
+    private $transaction;
 
     /**
      * @var Pay
@@ -92,25 +91,26 @@ class ExecuteRefundTest extends TestCase
             ->andReturn('Groceries, expense')
             ->byDefault();
 
-        $amount = MoneyFactory::amountInCurrency('500', 'RSD');
+        $this->amount = MoneyFactory::amountInCurrency('500', 'RSD');
 
-        $transaction = m::mock(Transaction::class);
-        $transaction->shouldReceive('refunded')
+        $this->transaction = m::mock(Transaction::class);
+        $this->transaction->shouldReceive('refunded')
             ->andReturn(false)
             ->byDefault();
-        $transaction->shouldReceive('destinationAccount')
+        $this->transaction->shouldReceive('destinationAccount')
             ->andReturn($this->expenseAccount)
             ->byDefault();
-        $transaction->shouldReceive('sourceAccount')
+        $this->transaction->shouldReceive('sourceAccount')
             ->andReturn($this->assetAccount)
             ->byDefault();
-        $transaction->shouldReceive('amount')
-            ->andReturn($amount);
-        $transaction->shouldReceive('description')
+        $this->transaction->shouldReceive('amount')
+            ->andReturn($this->amount)
+            ->byDefault();
+        $this->transaction->shouldReceive('description')
             ->andReturn('groceries')
             ->byDefault();
 
-        $this->command = new Refund($transaction);
+        $this->command = new Refund($this->transaction);
 
         $this->commandHandler = new ExecuteRefund(
             $this->repository,
@@ -151,21 +151,14 @@ class ExecuteRefundTest extends TestCase
      */
     public function when_invoked_with_not_refundable_transaction_throws_exception()
     {
-        $amount = MoneyFactory::amountInCurrency('500', 'RSD');
-
-        $transaction = m::mock(Transaction::class);
-        $transaction->shouldReceive('refunded')
-            ->andReturn(false);
-        $transaction->shouldReceive('destinationAccount')
+        $this->transaction->shouldReceive('destinationAccount')
+            ->once()
             ->andReturn($this->assetAccount);
-        $transaction->shouldReceive('sourceAccount')
+        $this->transaction->shouldReceive('sourceAccount')
+            ->once()
             ->andReturn($this->expenseAccount);
-        $transaction->shouldReceive('amount')
-            ->andReturn($amount);
-        $transaction->shouldReceive('description')
-            ->andReturn('groceries');
 
-        $command = new Refund($transaction);
+        $command = new Refund($this->transaction);
 
         $this->commandHandler->__invoke($command);
     }
@@ -177,32 +170,22 @@ class ExecuteRefundTest extends TestCase
      */
     public function when_refunding_an_already_refunded_transaction_throws_exception()
     {
-        $amount = MoneyFactory::amountInCurrency('500', 'RSD');
         $transactionType = m::mock(TransactionType::class);
         $transactionType->shouldReceive('__toString')
             ->once()
             ->andReturn('pay');
 
-        $transaction = m::mock(Transaction::class);
-        $transaction->shouldReceive('refunded')
+        $this->transaction->shouldReceive('refunded')
             ->once()
             ->andReturn(true);
-        $transaction->shouldReceive('sourceAccount')
-            ->andReturn($this->assetAccount);
-        $transaction->shouldReceive('destinationAccount')
-            ->andReturn($this->expenseAccount);
-        $transaction->shouldReceive('amount')
-            ->andReturn($amount);
-        $transaction->shouldReceive('description')
-            ->andReturn('groceries');
-        $transaction->shouldReceive('type')
+        $this->transaction->shouldReceive('type')
             ->once()
             ->andReturn($transactionType);
-        $transaction->shouldReceive('id')
+        $this->transaction->shouldReceive('id')
             ->once()
             ->andReturn(TransactionId::fromString('fddf4716-6c0e-4f54-b539-d2d480a50d1a'));
 
-        $command = new Refund($transaction);
+        $command = new Refund($this->transaction);
 
         $this->commandHandler->__invoke($command);
     }
