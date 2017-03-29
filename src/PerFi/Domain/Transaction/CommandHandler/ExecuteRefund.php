@@ -47,11 +47,11 @@ class ExecuteRefund
      */
     public function __invoke(Refund $command)
     {
-        $refundedTransaction = $command->transaction();
+        $transaction = $command->transaction();
 
         $notRefundedSpecification = new NotRefundedTransaction();
-        if (!$notRefundedSpecification->isSatisfiedBy($refundedTransaction)) {
-            throw TransactionAlreadyRefundedException::withTransaction($refundedTransaction);
+        if (!$notRefundedSpecification->isSatisfiedBy($transaction)) {
+            throw TransactionAlreadyRefundedException::withTransaction($transaction);
         }
 
         $refundTransaction = Transaction::betweenAccounts(
@@ -70,7 +70,7 @@ class ExecuteRefund
 
         $this->transactions->add($refundTransaction);
 
-        $event = new TransactionRefunded($refundTransaction, $refundedTransaction);
+        $event = new TransactionRefunded($refundTransaction, $transaction);
 
         $this->eventBus->handle($event);
     }
