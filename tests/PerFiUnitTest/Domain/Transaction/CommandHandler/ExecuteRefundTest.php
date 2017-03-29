@@ -18,9 +18,12 @@ use PerFi\Domain\Transaction\Command\Pay;
 use PerFi\Domain\Transaction\Command\Refund;
 use PerFi\Domain\Transaction\Event\TransactionRefunded;
 use PerFi\Domain\Transaction\Transaction;
+use PerFi\Domain\Transaction\TransactionId;
 use PerFi\Domain\Transaction\TransactionRepository;
+use PerFi\Domain\Transaction\TransactionType;
 use SimpleBus\Message\Bus\Middleware\MessageBusSupportingMiddleware;
 
+// @todo Better mock for transaction in this test case
 class ExecuteRefundTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
@@ -95,6 +98,9 @@ class ExecuteRefundTest extends TestCase
         $transaction->shouldReceive('canBeRefunded')
             ->andReturn(true)
             ->byDefault();
+        $transaction->shouldReceive('refunded')
+            ->andReturn(false)
+            ->byDefault();
         $transaction->shouldReceive('destinationAccount')
             ->andReturn($this->expenseAccount)
             ->byDefault();
@@ -152,19 +158,57 @@ class ExecuteRefundTest extends TestCase
 
         $transaction = m::mock(Transaction::class);
         $transaction->shouldReceive('canBeRefunded')
-            ->andReturn(true)
-            ->byDefault();
+            ->andReturn(true);
+        $transaction->shouldReceive('refunded')
+            ->andReturn(false);
         $transaction->shouldReceive('destinationAccount')
-            ->andReturn($this->assetAccount)
-            ->byDefault();
+            ->andReturn($this->assetAccount);
         $transaction->shouldReceive('sourceAccount')
-            ->andReturn($this->expenseAccount)
-            ->byDefault();
+            ->andReturn($this->expenseAccount);
         $transaction->shouldReceive('amount')
             ->andReturn($amount);
         $transaction->shouldReceive('description')
-            ->andReturn('groceries')
-            ->byDefault();
+            ->andReturn('groceries');
+
+        $command = new Refund($transaction);
+
+        $this->commandHandler->__invoke($command);
+    }
+
+    /**
+     * @test
+     * @expectedException PerFi\Domain\Transaction\Exception\TransactionAlreadyRefundedException
+     * @expectedExceptionMessageRegEx #The pay transaction between Cash, asset and Groceries, expense accounts is already refunded. ID: .*#
+     */
+    public function when_refunding_an_already_refunded_transaction_throws_exception()
+    {
+        $amount = MoneyFactory::amountInCurrency('500', 'RSD');
+        $transactionType = m::mock(TransactionType::class);
+        $transactionType->shouldReceive('__toString')
+            ->once()
+            ->andReturn('pay');
+
+        $transaction = m::mock(Transaction::class);
+        $transaction->shouldReceive('canBeRefunded')
+            ->once()
+            ->andReturn(true);
+        $transaction->shouldReceive('refunded')
+            ->once()
+            ->andReturn(true);
+        $transaction->shouldReceive('sourceAccount')
+            ->andReturn($this->assetAccount);
+        $transaction->shouldReceive('destinationAccount')
+            ->andReturn($this->expenseAccount);
+        $transaction->shouldReceive('amount')
+            ->andReturn($amount);
+        $transaction->shouldReceive('description')
+            ->andReturn('groceries');
+        $transaction->shouldReceive('type')
+            ->once()
+            ->andReturn($transactionType);
+        $transaction->shouldReceive('id')
+            ->once()
+            ->andReturn(TransactionId::fromString('fddf4716-6c0e-4f54-b539-d2d480a50d1a'));
 
         $command = new Refund($transaction);
 

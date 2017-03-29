@@ -5,7 +5,9 @@ namespace PerFi\Domain\Transaction\CommandHandler;
 
 use PerFi\Domain\Transaction\Command\Refund;
 use PerFi\Domain\Transaction\Event\TransactionRefunded;
+use PerFi\Domain\Transaction\Exception\TransactionAlreadyRefundedException;
 use PerFi\Domain\Transaction\Exception\TransactionNotRefundableException;
+use PerFi\Domain\Transaction\Specification\NotRefundedTransaction;
 use PerFi\Domain\Transaction\Specification\RefundableTransaction;
 use PerFi\Domain\Transaction\Transaction;
 use PerFi\Domain\Transaction\TransactionRepository;
@@ -46,6 +48,11 @@ class ExecuteRefund
     public function __invoke(Refund $command)
     {
         $refundedTransaction = $command->transaction();
+
+        $notRefundedSpecification = new NotRefundedTransaction();
+        if (!$notRefundedSpecification->isSatisfiedBy($refundedTransaction)) {
+            throw TransactionAlreadyRefundedException::withTransaction($refundedTransaction);
+        }
 
         $refundTransaction = Transaction::betweenAccounts(
             $command->transactionType(),
