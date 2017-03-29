@@ -288,7 +288,7 @@ class Transaction implements \JsonSerializable
     /**
      * Check can a transaction be refunded
      *
-     * Only a Pay transaction can be refunded.
+     * Only a not-refunded Pay transaction can be refunded.
      *
      * @return bool
      */
