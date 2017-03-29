@@ -157,6 +157,78 @@ class TransactionTest extends TestCase
 
     /**
      * @test
+     */
+    public function not_refundable_already_refunded_transaction_can_be_serialized_to_json()
+    {
+        $id = TransactionId::fromString('fddf4716-6c0e-4f54-b539-d2d480a50d1a');
+
+        $recordDate = TransactionRecordDate::fromString('2017-03-17 11:29:00');
+
+        $transaction = Transaction::withId(
+            $id,
+            $this->type,
+            $this->asset,
+            $this->expense,
+            $this->amount,
+            $this->date,
+            $recordDate,
+            $this->description,
+            true
+        );
+
+        $expected = [
+            'id' => 'fddf4716-6c0e-4f54-b539-d2d480a50d1a',
+            'type' => 'pay',
+            'source_account' => 'Cash, asset',
+            'destination_account' => 'Groceries, expense',
+            'amount' => '500.00 RSD',
+            'date' => '2017-03-12',
+            'description' => 'groceries for dinner',
+            'refundable' => false,
+        ];
+
+        self::assertSame($expected, $transaction->jsonSerialize());
+    }
+
+    /**
+     * @test
+     */
+    public function not_refundable_refund_transaction_can_be_serialized_to_json()
+    {
+        $id = TransactionId::fromString('fddf4716-6c0e-4f54-b539-d2d480a50d1a');
+
+        $recordDate = TransactionRecordDate::fromString('2017-03-17 11:29:00');
+
+        $type = TransactionType::fromString('refund');
+
+        $transaction = Transaction::withId(
+            $id,
+            $type,
+            $this->expense,
+            $this->asset,
+            $this->amount,
+            $this->date,
+            $recordDate,
+            $this->description,
+            false
+        );
+
+        $expected = [
+            'id' => 'fddf4716-6c0e-4f54-b539-d2d480a50d1a',
+            'type' => 'refund',
+            'source_account' => 'Groceries, expense',
+            'destination_account' => 'Cash, asset',
+            'amount' => '500.00 RSD',
+            'date' => '2017-03-12',
+            'description' => 'groceries for dinner',
+            'refundable' => false,
+        ];
+
+        self::assertSame($expected, $transaction->jsonSerialize());
+    }
+
+    /**
+     * @test
      * @expectedException InvalidArgumentException
      * @expectedExceptionMessage The transaction description must be provided
      */
@@ -170,57 +242,6 @@ class TransactionTest extends TestCase
             $this->date,
             ''
         );
-    }
-
-    /**
-     * @test
-     */
-    public function pay_transaction_can_be_refunded()
-    {
-        $transaction = Transaction::betweenAccounts(
-            TransactionType::fromString('pay'),
-            $this->asset,
-            $this->expense,
-            $this->amount,
-            $this->date,
-            $this->description
-        );
-
-        self::assertTrue($transaction->canBeRefunded());
-    }
-
-    /**
-     * @test
-     */
-    public function refunded_pay_transaction_can_not_be_refunded()
-    {
-        $transaction = Transaction::betweenAccounts(
-            TransactionType::fromString('pay'),
-            $this->asset,
-            $this->expense,
-            $this->amount,
-            $this->date,
-            $this->description
-        );
-        $transaction->markAsRefunded();
-
-        self::assertFalse($transaction->canBeRefunded());
-    }
-    /**
-     * @test
-     */
-    public function refund_transaction_can_not_be_refunded()
-    {
-        $transaction = Transaction::betweenAccounts(
-            TransactionType::fromString('refund'),
-            $this->expense,
-            $this->asset,
-            $this->amount,
-            $this->date,
-            $this->description
-        );
-
-        self::assertFalse($transaction->canBeRefunded());
     }
 
     /**
