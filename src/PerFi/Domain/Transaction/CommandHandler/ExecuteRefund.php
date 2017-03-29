@@ -49,8 +49,8 @@ class ExecuteRefund
     {
         $transaction = $command->transaction();
 
-        $notRefundedSpecification = new NotRefundedTransaction();
-        if (!$notRefundedSpecification->isSatisfiedBy($transaction)) {
+        $notRefundedTransactionSpecification = new NotRefundedTransaction();
+        if (!$notRefundedTransactionSpecification->isSatisfiedBy($transaction)) {
             throw TransactionAlreadyRefundedException::withTransaction($transaction);
         }
 
