@@ -22,16 +22,6 @@ class TransactionTypeTest extends TestCase
 
     /**
      * @test
-     */
-    public function refund_type_is_refund()
-    {
-        $transactionType = TransactionType::fromString('refund');
-
-        self::assertTrue($transactionType->isRefund());
-    }
-
-    /**
-     * @test
      * @expectedException InvalidArgumentException
      * @expectedExceptionMessage The transaction type must be provided
      */
