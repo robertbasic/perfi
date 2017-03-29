@@ -14,26 +14,59 @@ use PerFi\Domain\Transaction\TransactionType;
 class PayTest extends TestCase
 {
     /**
+     * @var Account
+     */
+    private $assetAccount;
+
+    /**
+     * @var Account
+     */
+    private $expenseAccount;
+
+    /**
+     * @var string
+     */
+    private $amount;
+
+    /**
+     * @var string
+     */
+    private $currency;
+
+    /**
+     * @var string
+     */
+    private $date;
+
+    /**
+     * @var string
+     */
+    private $description;
+
+    public function setup()
+    {
+        $asset = AccountType::fromString('asset');
+        $expense = AccountType::fromString('expense');
+        $this->assetAccount = Account::byTypeWithTitle($asset, 'Cash');
+        $this->expenseAccount = Account::byTypeWithTitle($expense, 'Groceries');
+        $this->amount = '500';
+        $this->currency = 'RSD';
+        $this->date = '2017-03-12';
+        $this->description = 'supermarket';
+    }
+
+    /**
      * @test
      */
     public function pay_transaction_command_is_created()
     {
-        $asset = AccountType::fromString('asset');
-        $expense = AccountType::fromString('expense');
-        $assetAccount = Account::byTypeWithTitle($asset, 'Cash');
-        $expenseAccount = Account::byTypeWithTitle($expense, 'Groceries');
-        $amount = '500';
-        $currency = 'RSD';
-        $date = '2017-03-12';
-        $description = 'supermarket';
-
         $command = new Pay(
-            $assetAccount,
-            $expenseAccount,
-            $amount,
-            $currency,
-            $date,
-            $description
+            $this->assetAccount,
+            $this->expenseAccount,
+            $this->amount,
+            $this->currency,
+            $this->date,
+            $this->description
         );
 
         $transactionType = $command->transactionType();

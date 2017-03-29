@@ -14,12 +14,19 @@ class NotRefundedTransactionTest extends TestCase
     use MockeryPHPUnitIntegration;
 
     /**
+     * @var Transaction
+     */
+    private $transaction;
+
+    /**
      * @var NotRefundedTransaction
      */
     private $specification;
 
     public function setup()
     {
+        $this->transaction = m::mock(Transaction::class);
+
         $this->specification = new NotRefundedTransaction();
     }
 
@@ -28,12 +35,11 @@ class NotRefundedTransactionTest extends TestCase
      */
     public function not_refunded_transaction()
     {
-        $transaction = m::mock(Transaction::class);
-        $transaction->shouldReceive('refunded')
+        $this->transaction->shouldReceive('refunded')
             ->once()
             ->andReturn(false);
 
-        $result = $this->specification->isSatisfiedBy($transaction);
+        $result = $this->specification->isSatisfiedBy($this->transaction);
 
         self::assertTrue($result);
     }
@@ -43,12 +49,11 @@ class NotRefundedTransactionTest extends TestCase
      */
     public function refunded_transaction()
     {
-        $transaction = m::mock(Transaction::class);
-        $transaction->shouldReceive('refunded')
+        $this->transaction->shouldReceive('refunded')
             ->once()
             ->andReturn(true);
 
-        $result = $this->specification->isSatisfiedBy($transaction);
+        $result = $this->specification->isSatisfiedBy($this->transaction);
 
         self::assertFalse($result);
     }

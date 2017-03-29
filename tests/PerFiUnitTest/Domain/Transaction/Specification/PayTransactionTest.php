@@ -15,12 +15,19 @@ class PayTransactionTest extends TestCase
     use MockeryPHPUnitIntegration;
 
     /**
+     * @var Transaction
+     */
+    private $transaction;
+
+    /**
      * @var PayTransaction
      */
     private $specification;
 
     public function setup()
     {
+        $this->transaction = m::mock(Transaction::class);
+
         $this->specification = new PayTransaction();
     }
 
@@ -29,12 +36,11 @@ class PayTransactionTest extends TestCase
      */
     public function pay_type_transaction_satisfies_specification()
     {
-        $transaction = m::mock(Transaction::class);
-        $transaction->shouldReceive('type')
+        $this->transaction->shouldReceive('type')
             ->once()
             ->andReturn(TransactionType::fromString('pay'));
 
-        $result = $this->specification->isSatisfiedBy($transaction);
+        $result = $this->specification->isSatisfiedBy($this->transaction);
 
         self::assertTrue($result);
     }
@@ -44,12 +50,11 @@ class PayTransactionTest extends TestCase
      */
     public function refund_type_transaction_does_not_satisfy_specification()
     {
-        $transaction = m::mock(Transaction::class);
-        $transaction->shouldReceive('type')
+        $this->transaction->shouldReceive('type')
             ->once()
             ->andReturn(TransactionType::fromString('refund'));
 
-        $result = $this->specification->isSatisfiedBy($transaction);
+        $result = $this->specification->isSatisfiedBy($this->transaction);
 
         self::assertFalse($result);
     }

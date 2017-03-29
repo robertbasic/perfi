@@ -19,8 +19,15 @@ class AssetAccountTest extends TestCase
      */
     private $specification;
 
+    /**
+     * @var Account
+     */
+    private $account;
+
     public function setup()
     {
+        $this->account = m::mock(Account::class);
+
         $this->specification = new AssetAccount();
     }
 
@@ -29,12 +36,11 @@ class AssetAccountTest extends TestCase
      */
     public function asset_account_type_satisfies_specification()
     {
-        $account = m::mock(Account::class);
-        $account->shouldReceive('type')
+        $this->account->shouldReceive('type')
             ->once()
             ->andReturn(AccountType::fromString('asset'));
 
-        $result = $this->specification->isSatisfiedBy($account);
+        $result = $this->specification->isSatisfiedBy($this->account);
 
         self::assertTrue($result);
     }
@@ -44,12 +50,11 @@ class AssetAccountTest extends TestCase
      */
     public function expense_account_type_does_not_satisfy_specification()
     {
-        $account = m::mock(Account::class);
-        $account->shouldReceive('type')
+        $this->account->shouldReceive('type')
             ->once()
             ->andReturn(AccountType::fromString('expense'));
 
-        $result = $this->specification->isSatisfiedBy($account);
+        $result = $this->specification->isSatisfiedBy($this->account);
 
         self::assertFalse($result);
     }
