@@ -5,6 +5,8 @@ namespace PerFiUnitTest\Domain\Account;
 
 use Money\Money;
 use PHPUnit\Framework\TestCase;
+use PerFiUnitTest\Traits\AccountTypeTrait;
+use PerFiUnitTest\Traits\AmountTrait;
 use PerFi\Domain\Account\Account;
 use PerFi\Domain\Account\AccountId;
 use PerFi\Domain\Account\AccountType;
@@ -12,6 +14,9 @@ use PerFi\Domain\MoneyFactory;
 
 class AccountTest extends TestCase
 {
+    use AccountTypeTrait;
+    use AmountTrait;
+
     /**
      * @var AccountType
      */
@@ -34,10 +39,11 @@ class AccountTest extends TestCase
 
     public function setup()
     {
-        $this->type = AccountType::fromString('asset');
+        $this->type = $this->asset();
+
         $this->title = 'Cash';
-        $this->amountFiveHundred = MoneyFactory::amountInCurrency('500', 'RSD');
-        $this->amountSixHundred = MoneyFactory::amountInCurrency('600', 'RSD');
+        $this->amountFiveHundred = $this->amount('500', 'RSD');
+        $this->amountSixHundred = $this->amount('600', 'RSD');
     }
 
     /**
@@ -134,7 +140,6 @@ class AccountTest extends TestCase
      */
     public function debiting_an_account_adds_positive_amount()
     {
-
         $account = Account::byTypeWithTitle($this->type, 'Cash');
 
         $account->debit($this->amountFiveHundred);

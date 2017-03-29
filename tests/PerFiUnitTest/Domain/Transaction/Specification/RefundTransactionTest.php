@@ -3,21 +3,15 @@ declare(strict_types=1);
 
 namespace PerFiUnitTest\Domain\Transaction\Specification;
 
-use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use PerFiUnitTest\Traits\TransactionTrait;
 use PerFi\Domain\Transaction\Specification\RefundTransaction;
-use PerFi\Domain\Transaction\Transaction;
-use PerFi\Domain\Transaction\TransactionType;
 
 class RefundTransactionTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
-
-    /**
-     * @var Transaction
-     */
-    private $transaction;
+    use TransactionTrait;
 
     /**
      * @var RefundTransaction
@@ -26,8 +20,6 @@ class RefundTransactionTest extends TestCase
 
     public function setup()
     {
-        $this->transaction = m::mock(Transaction::class);
-
         $this->specification = new RefundTransaction();
     }
 
@@ -36,11 +28,9 @@ class RefundTransactionTest extends TestCase
      */
     public function refund_type_transaction_satisfies_specification()
     {
-        $this->transaction->shouldReceive('type')
-            ->once()
-            ->andReturn(TransactionType::fromString('refund'));
+        $transaction = $this->refundTransaction();
 
-        $result = $this->specification->isSatisfiedBy($this->transaction);
+        $result = $this->specification->isSatisfiedBy($transaction);
 
         self::assertTrue($result);
     }
@@ -50,11 +40,9 @@ class RefundTransactionTest extends TestCase
      */
     public function pay_type_transaction_does_not_satisfy_specification()
     {
-        $this->transaction->shouldReceive('type')
-            ->once()
-            ->andReturn(TransactionType::fromString('pay'));
+        $transaction = $this->payTransaction();
 
-        $result = $this->specification->isSatisfiedBy($this->transaction);
+        $result = $this->specification->isSatisfiedBy($transaction);
 
         self::assertFalse($result);
     }

@@ -3,17 +3,16 @@ declare(strict_types=1);
 
 namespace PerFiUnitTest\Domain\Transaction\Command;
 
-use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use PerFi\Domain\Account\Account;
-use PerFi\Domain\Account\AccountRepository;
+use PerFiUnitTest\Traits\AccountTrait;
 use PerFi\Domain\Transaction\Command\Pay;
 use PerFi\Domain\Transaction\Command\PayFactory;
 
 class PayFactoryTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+    use AccountTrait;
 
     /**
      * @test
@@ -27,13 +26,10 @@ class PayFactoryTest extends TestCase
         $date = '2017-03-12';
         $description = 'supermarket';
 
-        $sourceAccount = m::mock(Account::class);
-        $destinationAccount = m::mock(Account::class);
+        $sourceAccount = $this->mockAccount();
+        $destinationAccount = $this->mockAccount();
 
-        $accountRepository = m::mock(AccountRepository::class);
-        $accountRepository->shouldReceive('get')
-            ->twice()
-            ->andReturn($sourceAccount, $destinationAccount);
+        $accountRepository = $this->mockAccountRepository($sourceAccount, $destinationAccount);
 
         $factory = new PayFactory($accountRepository);
         $command = $factory($source, $destination, $amount, $currency, $date, $description);
