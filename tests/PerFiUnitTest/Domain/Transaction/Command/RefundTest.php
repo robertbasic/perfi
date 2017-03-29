@@ -94,23 +94,4 @@ class RefundTest extends TestCase
 
         self::assertSame('Refund supermarket', $description);
     }
-
-    /**
-     * @test
-     * @expectedException PerFi\Domain\Transaction\Exception\NotRefundableTransactionException
-     * @expectedExceptionMessageRegExp ~The transaction cannot be refunded, transaction ID: .*~
-     */
-    public function refund_command_for_refunding_a_refund_transaction_can_not_be_created()
-    {
-        $transaction = Transaction::betweenAccounts(
-            TransactionType::fromString('refund'),
-            $this->expenseAccount,
-            $this->assetAccount,
-            $this->amount,
-            $this->date,
-            $this->description
-        );
-
-        $command = new Refund($transaction);
-    }
 }

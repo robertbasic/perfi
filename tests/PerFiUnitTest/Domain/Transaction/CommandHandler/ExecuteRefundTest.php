@@ -95,9 +95,6 @@ class ExecuteRefundTest extends TestCase
         $amount = MoneyFactory::amountInCurrency('500', 'RSD');
 
         $transaction = m::mock(Transaction::class);
-        $transaction->shouldReceive('canBeRefunded')
-            ->andReturn(true)
-            ->byDefault();
         $transaction->shouldReceive('refunded')
             ->andReturn(false)
             ->byDefault();
@@ -157,8 +154,6 @@ class ExecuteRefundTest extends TestCase
         $amount = MoneyFactory::amountInCurrency('500', 'RSD');
 
         $transaction = m::mock(Transaction::class);
-        $transaction->shouldReceive('canBeRefunded')
-            ->andReturn(true);
         $transaction->shouldReceive('refunded')
             ->andReturn(false);
         $transaction->shouldReceive('destinationAccount')
@@ -189,9 +184,6 @@ class ExecuteRefundTest extends TestCase
             ->andReturn('pay');
 
         $transaction = m::mock(Transaction::class);
-        $transaction->shouldReceive('canBeRefunded')
-            ->once()
-            ->andReturn(true);
         $transaction->shouldReceive('refunded')
             ->once()
             ->andReturn(true);
