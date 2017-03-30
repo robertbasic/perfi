@@ -3,9 +3,9 @@ declare(strict_types=1);
 
 namespace PerFiUnitTest\PerFiBundle\Repository;
 
+use Doctrine\DBAL\Driver\Connection;
 use Doctrine\DBAL\Driver\PDOStatement;
 use Doctrine\DBAL\Query\QueryBuilder;
-use Doctrine\ORM\EntityManagerInterface;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
@@ -35,9 +35,9 @@ class AccountRepositoryTest extends TestCase
     private $queryBuilder;
 
     /**
-     * @var EntityManagerInterface
+     * @var Connection
      */
-    private $entityManager;
+    private $connection;
 
     /**
      * @var AccountId
@@ -68,8 +68,8 @@ class AccountRepositoryTest extends TestCase
             ->andReturn($this->statement)
             ->byDefault();
 
-        $this->entityManager = m::mock(EntityManagerInterface::class);
-        $this->entityManager->shouldReceive('getConnection->createQueryBuilder')
+        $this->connection = m::mock(Connection::class);
+        $this->connection->shouldReceive('createQueryBuilder')
             ->andReturn($this->queryBuilder);
 
         $this->accountId = AccountId::fromString('fddf4716-6c0e-4f54-b539-d2d480a50d1a');
@@ -82,7 +82,7 @@ class AccountRepositoryTest extends TestCase
             'title' => $this->accountTitle,
         ]);
 
-        $this->repository = new AccountRepository($this->entityManager);
+        $this->repository = new AccountRepository($this->connection);
     }
 
     /**

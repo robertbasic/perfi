@@ -3,28 +3,28 @@ declare(strict_types=1);
 
 namespace PerFi\PerFiBundle\Repository;
 
+use Doctrine\DBAL\Driver\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
-use Doctrine\ORM\EntityManagerInterface;
 
 abstract class Repository
 {
     /**
-     * @var EntityManagerInterface
+     * @var Connection
      */
-    private $entityManager;
+    private $connection;
 
-    public function __construct(EntityManagerInterface $entityManager)
+    public function __construct(Connection $connection)
     {
-        $this->entityManager = $entityManager;
+        $this->connection = $connection;
     }
 
-    protected function getEntityManager() : EntityManagerInterface
+    protected function getConnection()
     {
-        return $this->entityManager;
+        return $this->connection;
     }
 
     protected function getQueryBuilder() : QueryBuilder
     {
-        return $this->getEntityManager()->getConnection()->createQueryBuilder();
+        return $this->getConnection()->createQueryBuilder();
     }
 }
