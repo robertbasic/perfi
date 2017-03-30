@@ -3,16 +3,16 @@ declare(strict_types=1);
 
 namespace PerFiUnitTest\Domain\Account\Specification;
 
-use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use PerFiUnitTest\Traits\AccountTrait;
 use PerFi\Domain\Account\Account;
-use PerFi\Domain\Account\AccountType;
 use PerFi\Domain\Account\Specification\ExpenseAccount;
 
 class ExpenseAccountTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+    use AccountTrait;
 
     /**
      * @var ExpenseAccount
@@ -26,7 +26,7 @@ class ExpenseAccountTest extends TestCase
 
     public function setup()
     {
-        $this->account = m::mock(Account::class);
+        $this->account = $this->mockAccount();
         $this->specification = new ExpenseAccount();
     }
 
@@ -37,7 +37,7 @@ class ExpenseAccountTest extends TestCase
     {
         $this->account->shouldReceive('type')
             ->once()
-            ->andReturn(AccountType::fromString('expense'));
+            ->andReturn($this->expense());
 
         $result = $this->specification->isSatisfiedBy($this->account);
 
@@ -51,7 +51,7 @@ class ExpenseAccountTest extends TestCase
     {
         $this->account->shouldReceive('type')
             ->once()
-            ->andReturn(AccountType::fromString('asset'));
+            ->andReturn($this->asset());
 
         $result = $this->specification->isSatisfiedBy($this->account);
 

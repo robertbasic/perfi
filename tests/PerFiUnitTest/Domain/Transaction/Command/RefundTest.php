@@ -5,8 +5,10 @@ namespace PerFiUnitTest\Domain\Transaction\Command;
 
 use Money\Money;
 use PHPUnit\Framework\TestCase;
+use PerFiUnitTest\Traits\AccountTrait;
+use PerFiUnitTest\Traits\AmountTrait;
+use PerFiUnitTest\Traits\TransactionTypeTrait;
 use PerFi\Domain\Account\Account;
-use PerFi\Domain\Account\AccountType;
 use PerFi\Domain\MoneyFactory;
 use PerFi\Domain\Transaction\Command\Refund;
 use PerFi\Domain\Transaction\Transaction;
@@ -15,6 +17,9 @@ use PerFi\Domain\Transaction\TransactionType;
 
 class RefundTest extends TestCase
 {
+    use AccountTrait;
+    use AmountTrait;
+    use TransactionTypeTrait;
 
     /**
      * @var Account
@@ -48,16 +53,14 @@ class RefundTest extends TestCase
 
     public function setup()
     {
-        $asset = AccountType::fromString('asset');
-        $expense = AccountType::fromString('expense');
-        $this->assetAccount = Account::byTypeWithTitle($asset, 'Cash');
-        $this->expenseAccount = Account::byTypeWithTitle($expense, 'Groceries');
-        $this->amount = MoneyFactory::amountInCurrency('500', 'RSD');
+        $this->assetAccount = $this->assetAccount();
+        $this->expenseAccount = $this->expenseAccount();
+        $this->amount = $this->amount('500', 'RSD');
         $this->date = TransactionDate::fromString('2017-03-12');
         $this->description = 'supermarket';
 
         $this->transaction = Transaction::betweenAccounts(
-            TransactionType::fromString('pay'),
+            $this->pay(),
             $this->assetAccount,
             $this->expenseAccount,
             $this->amount,

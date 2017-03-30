@@ -5,9 +5,10 @@ namespace PerFiUnitTest\Domain\Transaction;
 
 use Money\Money;
 use PHPUnit\Framework\TestCase;
+use PerFiUnitTest\Traits\AccountTrait;
+use PerFiUnitTest\Traits\AmountTrait;
+use PerFiUnitTest\Traits\TransactionTypeTrait;
 use PerFi\Domain\Account\Account;
-use PerFi\Domain\Account\AccountType;
-use PerFi\Domain\MoneyFactory;
 use PerFi\Domain\Transaction\Transaction;
 use PerFi\Domain\Transaction\TransactionDate;
 use PerFi\Domain\Transaction\TransactionId;
@@ -16,6 +17,10 @@ use PerFi\Domain\Transaction\TransactionType;
 
 class TransactionTest extends TestCase
 {
+    use AccountTrait;
+    use AmountTrait;
+    use TransactionTypeTrait;
+
     /**
      * @var TransactionId
      */
@@ -60,17 +65,13 @@ class TransactionTest extends TestCase
     {
         $this->id = TransactionId::fromString('fddf4716-6c0e-4f54-b539-d2d480a50d1a');
 
-        $asset = AccountType::fromString('asset');
-        $expense = AccountType::fromString('expense');
-
-        $this->type = TransactionType::fromString('pay');
-        $this->asset = Account::byTypeWithTitle($asset, 'Cash');
-        $this->expense = Account::byTypeWithTitle($expense, 'Groceries');
-        $this->amount = MoneyFactory::amountInCurrency('500', 'RSD');
+        $this->type = $this->pay();
+        $this->asset = $this->assetAccount();
+        $this->expense = $this->expenseAccount();
+        $this->amount = $this->amount('500', 'RSD');
         $this->date = TransactionDate::fromString('2017-03-12');
         $this->description = 'groceries for dinner';
         $this->recordDate = TransactionRecordDate::fromString('2017-03-17 11:29:00');
-
     }
 
     /**
@@ -196,7 +197,7 @@ class TransactionTest extends TestCase
      */
     public function not_refundable_refund_transaction_can_be_serialized_to_json()
     {
-        $type = TransactionType::fromString('refund');
+        $type = $this->refund();
 
         $transaction = Transaction::withId(
             $this->id,
@@ -289,7 +290,7 @@ class TransactionTest extends TestCase
      */
     public function pay_transaction_can_be_executed_between_asset_and_expense($asset, $expense)
     {
-        $type = TransactionType::fromString('pay');
+        $type = $this->pay();
         $transaction = Transaction::betweenAccounts(
             $type,
             $asset,
@@ -308,7 +309,7 @@ class TransactionTest extends TestCase
      */
     public function refund_transaction_can_be_executed_between_expense_and_asset($asset, $expense)
     {
-        $type = TransactionType::fromString('refund');
+        $type = $this->refund();
         $transaction = Transaction::betweenAccounts(
             $type,
             $expense,
@@ -323,16 +324,10 @@ class TransactionTest extends TestCase
 
     public function assetAccountAndExpenseAccount()
     {
-        $assetType = AccountType::fromString('asset');
-        $asset = Account::byTypeWithTitle($assetType, 'Cash');
-
-        $expenseType = AccountType::fromString('expense');
-        $expense = Account::byTypeWithTitle($expenseType, 'Groceries');
-
         return [
             [
-                $asset,
-                $expense,
+                $this->assetAccount(),
+                $this->expenseAccount(),
             ],
         ];
     }

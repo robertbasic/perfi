@@ -3,15 +3,16 @@ declare(strict_types=1);
 
 namespace PerFiUnitTest\Domain\Transaction\Specification;
 
-use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use PerFiUnitTest\Traits\TransactionTrait;
 use PerFi\Domain\Transaction\Specification\NotRefundedTransaction;
 use PerFi\Domain\Transaction\Transaction;
 
 class NotRefundedTransactionTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+    use TransactionTrait;
 
     /**
      * @var Transaction
@@ -25,7 +26,7 @@ class NotRefundedTransactionTest extends TestCase
 
     public function setup()
     {
-        $this->transaction = m::mock(Transaction::class);
+        $this->transaction = $this->mockTransaction();
 
         $this->specification = new NotRefundedTransaction();
     }

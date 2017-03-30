@@ -3,11 +3,10 @@ declare(strict_types=1);
 
 namespace PerFiUnitTest\Domain\Transaction\Specification;
 
-use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use PerFiUnitTest\Traits\TransactionTrait;
 use PerFi\Domain\Account\Account;
-use PerFi\Domain\Account\AccountType;
 use PerFi\Domain\Transaction\Specification\PayableTransaction;
 use PerFi\Domain\Transaction\Transaction;
 use PerFi\Domain\Transaction\TransactionType;
@@ -15,6 +14,7 @@ use PerFi\Domain\Transaction\TransactionType;
 class PayableTransactionTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+    use TransactionTrait;
 
     /**
      * @var Account
@@ -25,6 +25,16 @@ class PayableTransactionTest extends TestCase
      * @var Account
      */
     private $expenseAccount;
+
+    /**
+     * @var TransactionType
+     */
+    private $payTransactionType;
+
+    /**
+     * @var Transaction
+     */
+    private $refundTransactionType;
 
     /**
      * @var Transaction
@@ -38,11 +48,14 @@ class PayableTransactionTest extends TestCase
 
     public function setup()
     {
-        $this->assetAccount = m::mock(Account::class);
+        $this->payTransactionType = $this->pay();
+        $this->refundTransactionType = $this->refund();
 
-        $this->expenseAccount = m::mock(Account::class);
+        $this->assetAccount = $this->mockAccount('asset');
 
-        $this->transaction = m::mock(Transaction::class);
+        $this->expenseAccount = $this->mockAccount('expense');
+
+        $this->transaction = $this->mockTransaction();
 
         $this->specification = new PayableTransaction();
     }
@@ -52,18 +65,9 @@ class PayableTransactionTest extends TestCase
      */
     public function pay_type_transaction_with_asset_and_expense_accounts_satisfies_specification()
     {
-        $this->assetAccount->shouldReceive('type')
-            ->once()
-            ->andReturn(AccountType::fromString('asset'));
-        $this->expenseAccount->shouldReceive('type')
-            ->once()
-            ->andReturn(AccountType::fromString('expense'));
-
-        $transactionType = TransactionType::fromString('pay');
-
         $this->transaction->shouldReceive('type')
             ->once()
-            ->andReturn($transactionType);
+            ->andReturn($this->payTransactionType);
         $this->transaction->shouldReceive('sourceAccount')
             ->once()
             ->andReturn($this->assetAccount);
@@ -81,18 +85,9 @@ class PayableTransactionTest extends TestCase
      */
     public function pay_type_transaction_with_expense_and_asset_accounts_does_not_satisfy_specification()
     {
-        $this->expenseAccount->shouldReceive('type')
-            ->once()
-            ->andReturn(AccountType::fromString('expense'));
-        $this->assetAccount->shouldReceive('type')
-            ->never();
-
-        $transactionType = TransactionType::fromString('pay');
-
-        $this->transaction = m::mock(Transaction::class);
         $this->transaction->shouldReceive('type')
             ->once()
-            ->andReturn($transactionType);
+            ->andReturn($this->payTransactionType);
         $this->transaction->shouldReceive('sourceAccount')
             ->once()
             ->andReturn($this->expenseAccount);
@@ -109,16 +104,9 @@ class PayableTransactionTest extends TestCase
      */
     public function refund_type_transaction_with_asset_and_expense_accounts_does_not_satisfy_specification()
     {
-        $this->assetAccount->shouldReceive('type')
-            ->never();
-        $this->expenseAccount->shouldReceive('type')
-            ->never();
-
-        $transactionType = TransactionType::fromString('refund');
-
         $this->transaction->shouldReceive('type')
             ->once()
-            ->andReturn($transactionType);
+            ->andReturn($this->refundTransactionType);
         $this->transaction->shouldReceive('sourceAccount')
             ->never();
         $this->transaction->shouldReceive('destinationAccount')

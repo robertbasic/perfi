@@ -4,15 +4,18 @@ declare(strict_types=1);
 namespace PerFiUnitTest\Domain\Transaction\Command;
 
 use PHPUnit\Framework\TestCase;
+use PerFiUnitTest\Traits\AccountTrait;
+use PerFiUnitTest\Traits\AmountTrait;
 use PerFi\Domain\Account\Account;
-use PerFi\Domain\Account\AccountType;
-use PerFi\Domain\MoneyFactory;
 use PerFi\Domain\Transaction\Command\Pay;
 use PerFi\Domain\Transaction\TransactionDate;
 use PerFi\Domain\Transaction\TransactionType;
 
 class PayTest extends TestCase
 {
+    use AccountTrait;
+    use AmountTrait;
+
     /**
      * @var Account
      */
@@ -45,10 +48,8 @@ class PayTest extends TestCase
 
     public function setup()
     {
-        $asset = AccountType::fromString('asset');
-        $expense = AccountType::fromString('expense');
-        $this->assetAccount = Account::byTypeWithTitle($asset, 'Cash');
-        $this->expenseAccount = Account::byTypeWithTitle($expense, 'Groceries');
+        $this->assetAccount = $this->assetAccount();
+        $this->expenseAccount = $this->expenseAccount();
         $this->amount = '500';
         $this->currency = 'RSD';
         $this->date = '2017-03-12';
@@ -76,7 +77,7 @@ class PayTest extends TestCase
         $date = $command->date();
         $description = $command->description();
 
-        $expectedAmount = MoneyFactory::amountInCurrency('500', 'RSD');
+        $expectedAmount = $this->amount('500', 'RSD');
 
         self::assertInstanceOf(TransactionType::class, $transactionType);
         self::assertSame('pay', (string) $transactionType);

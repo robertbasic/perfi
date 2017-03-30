@@ -7,25 +7,23 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use Money\Money;
 use PHPUnit\Framework\TestCase;
+use PerFiUnitTest\Traits\AccountTrait;
+use PerFiUnitTest\Traits\AmountTrait;
+use PerFiUnitTest\Traits\TransactionTrait;
 use PerFi\Application\Transaction\InMemoryTransactionRepository;
 use PerFi\Domain\Account\Account;
-use PerFi\Domain\Account\AccountType;
-use PerFi\Domain\Command;
-use PerFi\Domain\CommandHandler;
-use PerFi\Domain\MoneyFactory;
 use PerFi\Domain\Transaction\CommandHandler\ExecuteRefund;
-use PerFi\Domain\Transaction\Command\Pay;
 use PerFi\Domain\Transaction\Command\Refund;
 use PerFi\Domain\Transaction\Event\TransactionRefunded;
 use PerFi\Domain\Transaction\Transaction;
 use PerFi\Domain\Transaction\TransactionId;
 use PerFi\Domain\Transaction\TransactionRepository;
-use PerFi\Domain\Transaction\TransactionType;
 use SimpleBus\Message\Bus\Middleware\MessageBusSupportingMiddleware;
 
 class ExecuteRefundTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+    use TransactionTrait;
 
     /**
      * @var TransactionRepository
@@ -58,7 +56,7 @@ class ExecuteRefundTest extends TestCase
     private $transaction;
 
     /**
-     * @var Pay
+     * @var Refund
      */
     private $command;
 
@@ -75,25 +73,13 @@ class ExecuteRefundTest extends TestCase
         $this->eventBus->shouldReceive('handle')
             ->byDefault();
 
-        $this->assetAccount = m::mock(Account::class);
-        $this->assetAccount->shouldReceive('type')
-            ->andReturn(AccountType::fromString('asset'))
-            ->byDefault();
-        $this->assetAccount->shouldReceive('__toString')
-            ->andReturn('Cash, asset')
-            ->byDefault();
+        $this->assetAccount = $this->mockAccount('asset');
 
-        $this->expenseAccount = m::mock(Account::class);
-        $this->expenseAccount->shouldReceive('type')
-            ->andReturn(AccountType::fromString('expense'))
-            ->byDefault();
-        $this->expenseAccount->shouldReceive('__toString')
-            ->andReturn('Groceries, expense')
-            ->byDefault();
+        $this->expenseAccount = $this->mockAccount('expense');
 
-        $this->amount = MoneyFactory::amountInCurrency('500', 'RSD');
+        $this->amount = $this->amount('500', 'RSD');
 
-        $this->transaction = m::mock(Transaction::class);
+        $this->transaction = $this->mockTransaction();
         $this->transaction->shouldReceive('refunded')
             ->andReturn(false)
             ->byDefault();
@@ -170,10 +156,7 @@ class ExecuteRefundTest extends TestCase
      */
     public function when_refunding_an_already_refunded_transaction_throws_exception()
     {
-        $transactionType = m::mock(TransactionType::class);
-        $transactionType->shouldReceive('__toString')
-            ->once()
-            ->andReturn('pay');
+        $transactionType = $this->pay();
 
         $this->transaction->shouldReceive('refunded')
             ->once()

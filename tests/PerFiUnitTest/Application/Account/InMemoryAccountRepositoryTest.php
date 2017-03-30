@@ -4,21 +4,19 @@ declare(strict_types=1);
 namespace PerFiUnitTest\Application\Account;
 
 use PHPUnit\Framework\TestCase;
+use PerFiUnitTest\Traits\AccountTrait;
 use PerFi\Application\Account\InMemoryAccountRepository;
-use PerFi\Domain\Account\Account;
-use PerFi\Domain\Account\AccountType;
 
 class InMemoryAccountRepositoryTest extends TestCase
 {
+    use AccountTrait;
+
     /**
      * @test
      */
     public function can_add_account_to_repository()
     {
-        $type = AccountType::fromString('asset');
-        $title = 'Cash';
-
-        $account = Account::byTypeWithTitle($type, $title);
+        $account = $this->assetAccount();
 
         $repository = new InMemoryAccountRepository();
 
