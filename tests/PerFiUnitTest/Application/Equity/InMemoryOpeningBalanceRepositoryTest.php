@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace PerFiUnitTest\Application\Equity;
 
 use PHPUnit\Framework\TestCase;
-use PerFi\Application\Equity\InMemoryOpeningBalanceRepository;
+use PerFi\Application\Repository\InMemoryOpeningBalanceRepository;
 use PerFi\Domain\Equity\OpeningBalance;
 use PerFi\Domain\MoneyFactory;
 

@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace PerFiFeatureTest\Domain\Equity;
 
 use Behat\Behat\Context\Context;
-use PerFi\Application\Equity\InMemoryOpeningBalanceRepository;
+use PerFi\Application\Repository\InMemoryOpeningBalanceRepository;
 use PerFi\Domain\Command;
 use PerFi\Domain\CommandHandler;
 use PerFi\Domain\Equity\CommandHandler\StartOpeningBalance as StartOpeningBalanceCommandHandler;

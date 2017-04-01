@@ -5,7 +5,7 @@ namespace PerFiUnitTest\Application\Account;
 
 use PHPUnit\Framework\TestCase;
 use PerFiUnitTest\Traits\AccountTrait;
-use PerFi\Application\Account\InMemoryAccountRepository;
+use PerFi\Application\Repository\InMemoryAccountRepository;
 
 class InMemoryAccountRepositoryTest extends TestCase
 {

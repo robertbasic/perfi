@@ -5,7 +5,7 @@ namespace PerFiUnitTest\Application\Transaction;
 
 use PHPUnit\Framework\TestCase;
 use PerFiUnitTest\Traits\TransactionTrait;
-use PerFi\Application\Transaction\InMemoryTransactionRepository;
+use PerFi\Application\Repository\InMemoryTransactionRepository;
 
 class InMemoryTransactionRepositoryTest extends TestCase
 {

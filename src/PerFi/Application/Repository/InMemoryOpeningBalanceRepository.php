@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace PerFi\Application\Equity;
+namespace PerFi\Application\Repository;
 
 use PerFi\Domain\Equity\OpeningBalance;
 use PerFi\Domain\Equity\OpeningBalanceRepository;

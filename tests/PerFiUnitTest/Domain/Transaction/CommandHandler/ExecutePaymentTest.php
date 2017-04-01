@@ -7,7 +7,7 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use PerFiUnitTest\Traits\AccountTrait;
-use PerFi\Application\Transaction\InMemoryTransactionRepository;
+use PerFi\Application\Repository\InMemoryTransactionRepository;
 use PerFi\Domain\Account\Account;
 use PerFi\Domain\Transaction\CommandHandler\ExecutePayment;
 use PerFi\Domain\Transaction\Command\Pay;

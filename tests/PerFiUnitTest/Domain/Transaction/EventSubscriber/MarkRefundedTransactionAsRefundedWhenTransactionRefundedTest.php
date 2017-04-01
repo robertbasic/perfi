@@ -5,7 +5,7 @@ namespace PerFiUnitTest\Domain\Transaction\EventSubscriber;
 
 use PHPUnit\Framework\TestCase;
 use PerFiUnitTest\Traits\TransactionTrait;
-use PerFi\Application\Transaction\InMemoryTransactionRepository;
+use PerFi\Application\Repository\InMemoryTransactionRepository;
 use PerFi\Domain\Transaction\EventSubscriber\MarkRefundedTransactionAsRefundedWhenTransactionRefunded;
 use PerFi\Domain\Transaction\Event\TransactionRefunded;
 
