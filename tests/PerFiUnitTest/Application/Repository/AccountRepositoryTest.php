@@ -124,10 +124,8 @@ class AccountRepositoryTest extends TestCase
             ->once()
             ->with('a.account_id = :accountId')
             ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('setParameter')
-            ->once()
-            ->with('accountId', $this->accountId)
-            ->andReturnSelf();
+
+        $this->mockSetNamedParameter('accountId', $this->accountId);
 
         $this->statement->shouldReceive('fetch')
             ->once()
@@ -166,10 +164,8 @@ class AccountRepositoryTest extends TestCase
             ->once()
             ->with('a.type = :type')
             ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('setParameter')
-            ->once()
-            ->with('type', $this->accountType)
-            ->andReturnSelf();
+
+        $this->mockSetNamedParameter('type', $this->accountType);
 
         $this->statement->shouldReceive('fetch')
             ->andReturnUsing(function() use (&$accounts) { return array_pop($accounts); });

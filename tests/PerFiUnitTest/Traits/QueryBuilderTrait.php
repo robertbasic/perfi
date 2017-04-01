@@ -12,4 +12,12 @@ trait QueryBuilderTrait
             ->with($position, $value)
             ->andReturnSelf();
     }
+
+    public function mockSetNamedParameter(string $parameterName, $value)
+    {
+        $this->queryBuilder->shouldReceive('setParameter')
+            ->once()
+            ->with($parameterName, $value)
+            ->andReturnSelf();
+    }
 }

@@ -187,10 +187,8 @@ class TransactionRepositoryTest extends TestCase
             ->once()
             ->with('t.transaction_id = :transactionId')
             ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('setParameter')
-            ->once()
-            ->with('transactionId', $this->transactionId)
-            ->andReturnSelf();
+
+        $this->mockSetNamedParameter('transactionId', $this->transactionId);
 
         $this->statement->shouldReceive('fetch')
             ->once()
@@ -255,10 +253,8 @@ class TransactionRepositoryTest extends TestCase
             ->once()
             ->with('t.transaction_id = :transactionId')
             ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('setParameter')
-            ->once()
-            ->with('transactionId', 'fddf4716-6c0e-4f54-b539-d2d480a50d1c')
-            ->andReturnSelf();
+
+        $this->mockSetNamedParameter('transactionId', 'fddf4716-6c0e-4f54-b539-d2d480a50d1c');
     }
 
     private function mockSelectFromInnerJoins()
