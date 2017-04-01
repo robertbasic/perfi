@@ -1,14 +1,14 @@
 <?php
 declare(strict_types=1);
 
-namespace PerFi\PerFiBundle\Repository;
+namespace PerFi\Application\Repository;
 
 use Doctrine\DBAL\Query\QueryBuilder;
 use PerFi\Domain\Transaction\Transaction;
 use PerFi\Domain\Transaction\TransactionId;
 use PerFi\Domain\Transaction\TransactionRepository as TransactionRepositoryInterface;
-use PerFi\PerFiBundle\Factory\TransactionFactory;
-use PerFi\PerFiBundle\Repository\Repository;
+use PerFi\Application\Factory\TransactionFactory;
+use PerFi\Application\Repository\Repository;
 
 /**
  * TransactionRepository

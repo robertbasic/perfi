@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace PerFi\PerFiBundle\Factory;
+namespace PerFi\Application\Factory;
 
 use PerFi\Domain\MoneyFactory;
 use PerFi\Domain\Transaction\Transaction;
@@ -9,7 +9,7 @@ use PerFi\Domain\Transaction\TransactionDate;
 use PerFi\Domain\Transaction\TransactionId;
 use PerFi\Domain\Transaction\TransactionRecordDate;
 use PerFi\Domain\Transaction\TransactionType;
-use PerFi\PerFiBundle\Factory\AccountFactory;
+use PerFi\Application\Factory\AccountFactory;
 
 class TransactionFactory
 {

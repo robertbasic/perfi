@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace PerFiUnitTest\PerFiBundle\Repository;
+namespace PerFiUnitTest\Application\Repository;
 
 use Doctrine\DBAL\Driver\Connection;
 use Doctrine\DBAL\Driver\PDOStatement;
@@ -12,8 +12,8 @@ use PHPUnit\Framework\TestCase;
 use PerFi\Domain\Account\Account;
 use PerFi\Domain\Account\AccountId;
 use PerFi\Domain\Account\AccountType;
-use PerFi\PerFiBundle\Factory\AccountFactory;
-use PerFi\PerFiBundle\Repository\AccountRepository;
+use PerFi\Application\Factory\AccountFactory;
+use PerFi\Application\Repository\AccountRepository;
 
 class AccountRepositoryTest extends TestCase
 {

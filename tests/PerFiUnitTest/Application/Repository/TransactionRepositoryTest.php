@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace PerFiUnitTest\PerFiBundle\Repository;
+namespace PerFiUnitTest\Application\Repository;
 
 use Doctrine\DBAL\Driver\Connection;
 use Doctrine\DBAL\Driver\PDOStatement;
@@ -11,8 +11,8 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use PerFi\Domain\Transaction\Transaction;
 use PerFi\Domain\Transaction\TransactionId;
-use PerFi\PerFiBundle\Factory\TransactionFactory;
-use PerFi\PerFiBundle\Repository\TransactionRepository;
+use PerFi\Application\Factory\TransactionFactory;
+use PerFi\Application\Repository\TransactionRepository;
 
 class TransactionRepositoryTest extends TestCase
 {

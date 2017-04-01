@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace PerFi\PerFiBundle\Factory;
+namespace PerFi\Application\Factory;
 
 use PerFi\Domain\Account\Account;
 use PerFi\Domain\Account\AccountId;

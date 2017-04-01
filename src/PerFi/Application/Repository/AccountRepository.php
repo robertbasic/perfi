@@ -1,15 +1,15 @@
 <?php
 declare(strict_types=1);
 
-namespace PerFi\PerFiBundle\Repository;
+namespace PerFi\Application\Repository;
 
 use Doctrine\DBAL\Query\QueryBuilder;
 use PerFi\Domain\Account\Account;
 use PerFi\Domain\Account\AccountId;
 use PerFi\Domain\Account\AccountRepository as AccountRepositoryInterface;
 use PerFi\Domain\Account\AccountType;
-use PerFi\PerFiBundle\Factory\AccountFactory;
-use PerFi\PerFiBundle\Repository\Repository;
+use PerFi\Application\Factory\AccountFactory;
+use PerFi\Application\Repository\Repository;
 
 /**
  * AccountRepository
