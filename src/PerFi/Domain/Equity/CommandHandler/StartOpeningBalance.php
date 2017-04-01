@@ -27,7 +27,7 @@ class StartOpeningBalance
     /**
      * Handle the start opening balance command
      *
-     * Start the opening balance and add it to the repository.
+     * Start the opening balance and save it to the repository.
      *
      * @param StartOpeningBalanceCommand $command
      */
@@ -37,6 +37,6 @@ class StartOpeningBalance
 
         $openingBalance = OpeningBalance::forStarting($amount);
 
-        $this->openingBalances->add($openingBalance);
+        $this->openingBalances->save($openingBalance);
     }
 }

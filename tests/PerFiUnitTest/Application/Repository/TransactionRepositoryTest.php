@@ -86,8 +86,14 @@ class TransactionRepositoryTest extends TestCase
     /**
      * @test
      */
-    public function can_add_transaction_to_repository()
+    public function can_insert_new_transaction_into_repository()
     {
+        $this->mockExistsQuery();
+
+        $this->statement->shouldReceive('fetch')
+            ->once()
+            ->andReturn(false);
+
         $this->queryBuilder->shouldReceive('insert')
             ->once()
             ->with('transaction')
@@ -148,14 +154,20 @@ class TransactionRepositoryTest extends TestCase
             ->with(9, 0)
             ->andReturnSelf();
 
-        $this->repository->add($this->transaction);
+        $this->repository->save($this->transaction);
     }
 
     /**
      * @test
      */
-    public function can_save_transaction_to_repository()
+    public function can_update_existing_transaction_in_repository()
     {
+        $this->mockExistsQuery();
+
+        $this->statement->shouldReceive('fetch')
+            ->once()
+            ->andReturn(true);
+
         $this->queryBuilder->shouldReceive('update')
             ->once()
             ->with('transaction')
@@ -355,5 +367,25 @@ class TransactionRepositoryTest extends TestCase
                 ]]
             ]
         ];
+    }
+
+    private function mockExistsQuery()
+    {
+        $this->queryBuilder->shouldReceive('select')
+            ->once()
+            ->with('t.transaction_id')
+            ->andReturnSelf();
+        $this->queryBuilder->shouldReceive('from')
+            ->once()
+            ->with('transaction', 't')
+            ->andReturnSelf();
+        $this->queryBuilder->shouldReceive('where')
+            ->once()
+            ->with('t.transaction_id = :transactionId')
+            ->andReturnSelf();
+        $this->queryBuilder->shouldReceive('setParameter')
+            ->once()
+            ->with('transactionId', 'fddf4716-6c0e-4f54-b539-d2d480a50d1c')
+            ->andReturnSelf();
     }
 }

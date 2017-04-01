@@ -17,7 +17,7 @@ class InMemoryOpeningBalanceRepository implements OpeningBalanceRepository
     /**
      * {@inheritdoc}
      */
-    public function add(OpeningBalance $openingBalance)
+    public function save(OpeningBalance $openingBalance)
     {
         $currency = $openingBalance->currency();
 

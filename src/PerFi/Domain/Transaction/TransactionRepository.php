@@ -9,11 +9,11 @@ use PerFi\Domain\Transaction\TransactionId;
 interface TransactionRepository
 {
     /**
-     * Add a transaction to the repository
+     * Save a transaction to the repository
      *
      * @param Transaction $transaction
      */
-    public function add(Transaction $transaction);
+    public function save(Transaction $transaction);
 
     /**
      * Get an account from the repository

@@ -19,75 +19,13 @@ class TransactionRepository extends Repository
     /**
      * {@inheritdoc}
      */
-    public function add(Transaction $transaction)
-    {
-        $qb = $this->getQueryBuilder();
-
-        $amount = $transaction->amount();
-
-        $query = $qb->insert('transaction')
-            ->values(
-                [
-                    'transaction_id' => '?',
-                    'type' => '?',
-                    'source_account' => '?',
-                    'destination_account' => '?',
-                    'amount' => '?',
-                    'currency' => '?',
-                    'date' => '?',
-                    'record_date' => '?',
-                    'description' => '?',
-                    'refunded' => '?',
-                ]
-            )
-            ->setParameter(0, (string) $transaction->id())
-            ->setParameter(1, (string) $transaction->type())
-            ->setParameter(2, (string) $transaction->sourceAccount()->id())
-            ->setParameter(3, (string) $transaction->destinationAccount()->id())
-            ->setParameter(4, $amount->getAmount())
-            ->setParameter(5, (string) $amount->getCurrency())
-            ->setParameter(6, $transaction->date()->format('Y-m-d H:i:s'))
-            ->setParameter(7, $transaction->recordDate()->format('Y-m-d H:i:s'))
-            ->setParameter(8, $transaction->description())
-            ->setParameter(9, (int) $transaction->refunded());
-
-        $query->execute();
-    }
-
-    /**
-     * Save a transaction
-     *
-     * @param Transaction $transaction
-     */
     public function save(Transaction $transaction)
     {
-        $qb = $this->getQueryBuilder();
+        if ($this->exists($transaction)) {
+            return $this->update($transaction);
+        }
 
-        $amount = $transaction->amount();
-
-        $query = $qb->update('transaction')
-            ->set('type', '?')
-            ->set('source_account', '?')
-            ->set('destination_account', '?')
-            ->set('amount', '?')
-            ->set('currency', '?')
-            ->set('date', '?')
-            ->set('record_date', '?')
-            ->set('description', '?')
-            ->set('refunded', '?')
-            ->where('transaction_id = ?')
-            ->setParameter(0, (string) $transaction->type())
-            ->setParameter(1, (string) $transaction->sourceAccount()->id())
-            ->setParameter(2, (string) $transaction->destinationAccount()->id())
-            ->setParameter(3, $amount->getAmount())
-            ->setParameter(4, (string) $amount->getCurrency())
-            ->setParameter(5, $transaction->date()->format('Y-m-d H:i:s'))
-            ->setParameter(6, $transaction->recordDate()->format('Y-m-d H:i:s'))
-            ->setParameter(7, $transaction->description())
-            ->setParameter(8, (int) $transaction->refunded())
-            ->setParameter(9, (string) $transaction->id());
-
-        $query->execute();
+        return $this->insert($transaction);
     }
 
     /**
@@ -135,6 +73,85 @@ class TransactionRepository extends Repository
             ->innerJoin('t', 'account', 'da', 't.destination_account = da.account_id');
 
         return $query;
+    }
+
+    private function exists(Transaction $transaction) : bool
+    {
+        $qb = $this->getQueryBuilder();
+
+        $statement = $qb->select('t.transaction_id')
+            ->from('transaction', 't')
+            ->where('t.transaction_id = :transactionId')
+            ->setParameter('transactionId', (string) $transaction->id())
+            ->execute();
+
+        return (bool) $statement->fetch();
+    }
+
+    private function insert(Transaction $transaction)
+    {
+        $qb = $this->getQueryBuilder();
+
+        $amount = $transaction->amount();
+
+        $query = $qb->insert('transaction')
+            ->values(
+                [
+                    'transaction_id' => '?',
+                    'type' => '?',
+                    'source_account' => '?',
+                    'destination_account' => '?',
+                    'amount' => '?',
+                    'currency' => '?',
+                    'date' => '?',
+                    'record_date' => '?',
+                    'description' => '?',
+                    'refunded' => '?',
+                ]
+            )
+            ->setParameter(0, (string) $transaction->id())
+            ->setParameter(1, (string) $transaction->type())
+            ->setParameter(2, (string) $transaction->sourceAccount()->id())
+            ->setParameter(3, (string) $transaction->destinationAccount()->id())
+            ->setParameter(4, $amount->getAmount())
+            ->setParameter(5, (string) $amount->getCurrency())
+            ->setParameter(6, $transaction->date()->format('Y-m-d H:i:s'))
+            ->setParameter(7, $transaction->recordDate()->format('Y-m-d H:i:s'))
+            ->setParameter(8, $transaction->description())
+            ->setParameter(9, (int) $transaction->refunded());
+
+        $query->execute();
+    }
+
+    private function update(Transaction $transaction)
+    {
+        $qb = $this->getQueryBuilder();
+
+        $amount = $transaction->amount();
+
+        $query = $qb->update('transaction')
+            ->set('type', '?')
+            ->set('source_account', '?')
+            ->set('destination_account', '?')
+            ->set('amount', '?')
+            ->set('currency', '?')
+            ->set('date', '?')
+            ->set('record_date', '?')
+            ->set('description', '?')
+            ->set('refunded', '?')
+            ->where('transaction_id = ?')
+            ->setParameter(0, (string) $transaction->type())
+            ->setParameter(1, (string) $transaction->sourceAccount()->id())
+            ->setParameter(2, (string) $transaction->destinationAccount()->id())
+            ->setParameter(3, $amount->getAmount())
+            ->setParameter(4, (string) $amount->getCurrency())
+            ->setParameter(5, $transaction->date()->format('Y-m-d H:i:s'))
+            ->setParameter(6, $transaction->recordDate()->format('Y-m-d H:i:s'))
+            ->setParameter(7, $transaction->description())
+            ->setParameter(8, (int) $transaction->refunded())
+            ->setParameter(9, (string) $transaction->id());
+
+        $query->execute();
     }
 
     private function mapToEntities($statement) : array

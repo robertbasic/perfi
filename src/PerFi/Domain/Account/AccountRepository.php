@@ -9,11 +9,11 @@ use PerFi\Domain\Account\AccountId;
 interface AccountRepository
 {
     /**
-     * Add an account to the repository
+     * Save an account to the repository
      *
      * @param Account $account
      */
-    public function add(Account $account);
+    public function save(Account $account);
 
     /**
      * Get an account from the repository

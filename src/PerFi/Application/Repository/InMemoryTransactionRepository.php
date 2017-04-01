@@ -9,7 +9,6 @@ use PerFi\Domain\Transaction\TransactionRepository;
 
 class InMemoryTransactionRepository implements TransactionRepository
 {
-
     /**
      * @var Transaction[]
      */
@@ -18,14 +17,9 @@ class InMemoryTransactionRepository implements TransactionRepository
     /**
      * {@inheritdoc}
      */
-    public function add(Transaction $transaction)
-    {
-        $this->transactions[(string) $transaction->id()] = $transaction;
-    }
-
     public function save(Transaction $transaction)
     {
-        $this->add($transaction);
+        $this->transactions[(string) $transaction->id()] = $transaction;
     }
 
     /**

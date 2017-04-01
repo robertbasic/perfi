@@ -14,13 +14,13 @@ class InMemoryAccountRepositoryTest extends TestCase
     /**
      * @test
      */
-    public function can_add_account_to_repository()
+    public function can_save_account_to_repository()
     {
         $account = $this->assetAccount();
 
         $repository = new InMemoryAccountRepository();
 
-        $repository->add($account);
+        $repository->save($account);
 
         $accounts = $repository->getAll();
 

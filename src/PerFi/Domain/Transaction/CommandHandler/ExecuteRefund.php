@@ -40,7 +40,7 @@ class ExecuteRefund
     /**
      * Handle the refund command
      *
-     * Add the refund transaction to the repository.
+     * Save the refund transaction to the repository.
      * Tell the event bus to handle the transaction refunded event.
      *
      * @param Refund $command
@@ -68,7 +68,7 @@ class ExecuteRefund
             throw TransactionNotRefundableException::withTransaction($refundTransaction);
         }
 
-        $this->transactions->add($refundTransaction);
+        $this->transactions->save($refundTransaction);
 
         $event = new TransactionRefunded($refundTransaction, $transaction);
 

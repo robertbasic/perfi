@@ -9,14 +9,14 @@ use PerFi\Domain\Repository;
 interface OpeningBalanceRepository
 {
     /**
-     * Get all opening balances from the repository
+     * Save an opening balance to the repository
      *
      * @return array
      */
-    public function add(OpeningBalance $openingBalance);
+    public function save(OpeningBalance $openingBalance);
 
     /**
-     * Add an opening balance to the repository
+     * Get all opening balances from the repository
      *
      * @param OpeningBalance $openingBalance
      */

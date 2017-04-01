@@ -27,7 +27,7 @@ class CreateAccount
     /**
      * Handle the create account command
      *
-     * Create the account and add it to the repository.
+     * Create the account and save it to the repository.
      *
      * @param CreateAccountCommand $command
      */
@@ -38,6 +38,6 @@ class CreateAccount
 
         $account = Account::byTypeWithTitle($accountType, $title);
 
-        $this->accounts->add($account);
+        $this->accounts->save($account);
     }
 }
