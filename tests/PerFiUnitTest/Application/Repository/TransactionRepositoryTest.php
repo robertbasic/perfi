@@ -145,42 +145,17 @@ class TransactionRepositoryTest extends TestCase
             ->once()
             ->with('transaction')
             ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('set')
-            ->once()
-            ->with('type', '?')
-            ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('set')
-            ->once()
-            ->with('source_account', '?')
-            ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('set')
-            ->once()
-            ->with('destination_account', '?')
-            ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('set')
-            ->once()
-            ->with('amount', '?')
-            ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('set')
-            ->once()
-            ->with('currency', '?')
-            ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('set')
-            ->once()
-            ->with('date', '?')
-            ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('set')
-            ->once()
-            ->with('record_date', '?')
-            ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('set')
-            ->once()
-            ->with('description', '?')
-            ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('set')
-            ->once()
-            ->with('refunded', '?')
-            ->andReturnSelf();
+
+        $this->mockSetValue('type');
+        $this->mockSetValue('source_account');
+        $this->mockSetValue('destination_account');
+        $this->mockSetValue('amount');
+        $this->mockSetValue('currency');
+        $this->mockSetValue('date');
+        $this->mockSetValue('record_date');
+        $this->mockSetValue('description');
+        $this->mockSetValue('refunded');
+
         $this->queryBuilder->shouldReceive('where')
             ->once()
             ->with('transaction_id = ?')
@@ -314,4 +289,13 @@ class TransactionRepositoryTest extends TestCase
             ->with('t', 'account', 'da', 't.destination_account = da.account_id')
             ->andReturnSelf();
     }
+
+    private function mockSetValue(string $field)
+    {
+        $this->queryBuilder->shouldReceive('set')
+            ->once()
+            ->with($field, '?')
+            ->andReturnSelf();
+    }
+
 }
