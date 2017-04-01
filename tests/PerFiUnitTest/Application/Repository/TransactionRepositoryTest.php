@@ -206,31 +206,8 @@ class TransactionRepositoryTest extends TestCase
      */
     public function can_get_transaction_from_repository($transactions)
     {
-        $this->queryBuilder->shouldReceive('select')
-            ->once()
-            ->with(
-                't.transaction_id', 't.type', 't.amount', 't.currency',
-                't.date', 't.record_date', 't.description', 't.refunded',
-                'sa.account_id AS source_account_id',
-                'sa.title AS source_account_title',
-                'sa.type AS source_account_type',
-                'da.account_id AS destination_account_id',
-                'da.title AS destination_account_title',
-                'da.type AS destination_account_type'
-            )
-            ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('from')
-            ->once()
-            ->with('transaction', 't')
-            ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('innerJoin')
-            ->once()
-            ->with('t', 'account', 'sa', 't.source_account = sa.account_id')
-            ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('innerJoin')
-            ->once()
-            ->with('t', 'account', 'da', 't.destination_account = da.account_id')
-            ->andReturnSelf();
+        $this->mockSelectFromInnerJoins();
+
         $this->queryBuilder->shouldReceive('where')
             ->once()
             ->with('t.transaction_id = :transactionId')
@@ -255,31 +232,7 @@ class TransactionRepositoryTest extends TestCase
      */
     public function can_get_all_transactions_from_repository($transactions)
     {
-        $this->queryBuilder->shouldReceive('select')
-            ->once()
-            ->with(
-                't.transaction_id', 't.type', 't.amount', 't.currency',
-                't.date', 't.record_date', 't.description', 't.refunded',
-                'sa.account_id AS source_account_id',
-                'sa.title AS source_account_title',
-                'sa.type AS source_account_type',
-                'da.account_id AS destination_account_id',
-                'da.title AS destination_account_title',
-                'da.type AS destination_account_type'
-            )
-            ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('from')
-            ->once()
-            ->with('transaction', 't')
-            ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('innerJoin')
-            ->once()
-            ->with('t', 'account', 'sa', 't.source_account = sa.account_id')
-            ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('innerJoin')
-            ->once()
-            ->with('t', 'account', 'da', 't.destination_account = da.account_id')
-            ->andReturnSelf();
+        $this->mockSelectFromInnerJoins();
 
         $this->statement->shouldReceive('fetch')
             ->andReturnUsing(function() use (&$transactions) { return array_pop($transactions); });
@@ -330,6 +283,35 @@ class TransactionRepositoryTest extends TestCase
         $this->queryBuilder->shouldReceive('setParameter')
             ->once()
             ->with('transactionId', 'fddf4716-6c0e-4f54-b539-d2d480a50d1c')
+            ->andReturnSelf();
+    }
+
+    private function mockSelectFromInnerJoins()
+    {
+        $this->queryBuilder->shouldReceive('select')
+            ->once()
+            ->with(
+                't.transaction_id', 't.type', 't.amount', 't.currency',
+                't.date', 't.record_date', 't.description', 't.refunded',
+                'sa.account_id AS source_account_id',
+                'sa.title AS source_account_title',
+                'sa.type AS source_account_type',
+                'da.account_id AS destination_account_id',
+                'da.title AS destination_account_title',
+                'da.type AS destination_account_type'
+            )
+            ->andReturnSelf();
+        $this->queryBuilder->shouldReceive('from')
+            ->once()
+            ->with('transaction', 't')
+            ->andReturnSelf();
+        $this->queryBuilder->shouldReceive('innerJoin')
+            ->once()
+            ->with('t', 'account', 'sa', 't.source_account = sa.account_id')
+            ->andReturnSelf();
+        $this->queryBuilder->shouldReceive('innerJoin')
+            ->once()
+            ->with('t', 'account', 'da', 't.destination_account = da.account_id')
             ->andReturnSelf();
     }
 }
