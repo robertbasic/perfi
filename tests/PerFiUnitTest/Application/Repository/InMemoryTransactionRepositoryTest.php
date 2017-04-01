@@ -14,13 +14,13 @@ class InMemoryTransactionRepositoryTest extends TestCase
     /**
      * @test
      */
-    public function can_add_transaction_to_repository()
+    public function can_save_transaction_to_repository()
     {
         $transaction = $this->payTransaction();
 
         $repository = new InMemoryTransactionRepository();
 
-        $repository->add($transaction);
+        $repository->save($transaction);
 
         $transactions = $repository->getAll();
 

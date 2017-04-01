@@ -40,7 +40,7 @@ class ExecutePayment
     /**
      * Handle the pay command
      *
-     * Add the payment transaction to the repository.
+     * Save the payment transaction to the repository.
      * Tell the event bus to handle the payment made event.
      *
      * @param Pay $command
@@ -61,7 +61,7 @@ class ExecutePayment
             throw TransactionNotPayableException::withTransaction($transaction);
         }
 
-        $this->transactions->add($transaction);
+        $this->transactions->save($transaction);
 
         $event = new PaymentMade($transaction);
 
