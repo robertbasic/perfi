@@ -88,7 +88,7 @@ class AccountRepositoryTest extends TestCase
     /**
      * @test
      */
-    public function can_add_account_to_repository()
+    public function can_save_account_to_repository()
     {
         $this->queryBuilder->shouldReceive('insert')
             ->once()
@@ -115,7 +115,7 @@ class AccountRepositoryTest extends TestCase
             ->with(2, (string) $this->accountType)
             ->andReturnSelf();
 
-        $this->repository->add($this->account);
+        $this->repository->save($this->account);
     }
 
     /**

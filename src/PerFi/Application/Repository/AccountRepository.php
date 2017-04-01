@@ -20,7 +20,7 @@ class AccountRepository extends Repository
     /**
      * {@inheritdoc}
      */
-    public function add(Account $account)
+    public function save(Account $account)
     {
         $qb = $this->getQueryBuilder();
 

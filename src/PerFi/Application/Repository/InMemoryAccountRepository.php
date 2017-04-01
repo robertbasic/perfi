@@ -17,7 +17,7 @@ class InMemoryAccountRepository implements AccountRepository
     /**
      * {@inheritdoc}
      */
-    public function add(Account $account)
+    public function save(Account $account)
     {
         $this->accounts[(string) $account->id()] = $account;
     }
