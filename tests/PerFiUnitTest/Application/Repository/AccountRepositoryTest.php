@@ -9,15 +9,17 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use PerFiUnitTest\Traits\QueryBuilderTrait;
+use PerFi\Application\Factory\AccountFactory;
+use PerFi\Application\Repository\AccountRepository;
 use PerFi\Domain\Account\Account;
 use PerFi\Domain\Account\AccountId;
 use PerFi\Domain\Account\AccountType;
-use PerFi\Application\Factory\AccountFactory;
-use PerFi\Application\Repository\AccountRepository;
 
 class AccountRepositoryTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+    use QueryBuilderTrait;
 
     /**
      * @var AccountRepository
@@ -102,18 +104,10 @@ class AccountRepositoryTest extends TestCase
                 'type' => '?',
             ])
             ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('setParameter')
-            ->once()
-            ->with(0, (string) $this->accountId)
-            ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('setParameter')
-            ->once()
-            ->with(1, $this->accountTitle)
-            ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('setParameter')
-            ->once()
-            ->with(2, (string) $this->accountType)
-            ->andReturnSelf();
+
+        $this->mockSetPositionalParameter(0, (string) $this->accountId);
+        $this->mockSetPositionalParameter(1, $this->accountTitle);
+        $this->mockSetPositionalParameter(2, (string) $this->accountType);
 
         $this->repository->save($this->account);
     }
@@ -216,4 +210,5 @@ class AccountRepositoryTest extends TestCase
             ]
         ];
     }
+
 }
