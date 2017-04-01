@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace PerFiUnitTest\Application\Equity;
+namespace PerFiUnitTest\Application\Repository;
 
 use PHPUnit\Framework\TestCase;
 use PerFi\Application\Repository\InMemoryOpeningBalanceRepository;
