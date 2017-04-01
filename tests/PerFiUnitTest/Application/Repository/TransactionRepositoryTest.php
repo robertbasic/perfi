@@ -9,14 +9,16 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
-use PerFi\Domain\Transaction\Transaction;
-use PerFi\Domain\Transaction\TransactionId;
+use PerFiUnitTest\Traits\QueryBuilderTrait;
 use PerFi\Application\Factory\TransactionFactory;
 use PerFi\Application\Repository\TransactionRepository;
+use PerFi\Domain\Transaction\Transaction;
+use PerFi\Domain\Transaction\TransactionId;
 
 class TransactionRepositoryTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+    use QueryBuilderTrait;
 
     /**
      * @var TransactionRepository
@@ -113,46 +115,17 @@ class TransactionRepositoryTest extends TestCase
                 'refunded' => '?',
             ])
             ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('setParameter')
-            ->once()
-            ->with(0, 'fddf4716-6c0e-4f54-b539-d2d480a50d1c')
-            ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('setParameter')
-            ->once()
-            ->with(1, 'pay')
-            ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('setParameter')
-            ->once()
-            ->with(2, 'fddf4716-6c0e-4f54-b539-d2d480a50d1a')
-            ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('setParameter')
-            ->once()
-            ->with(3, 'fddf4716-6c0e-4f54-b539-d2d480a50d1b')
-            ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('setParameter')
-            ->once()
-            ->with(4, 50000)
-            ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('setParameter')
-            ->once()
-            ->with(5, 'RSD')
-            ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('setParameter')
-            ->once()
-            ->with(6, '2017-03-12 00:00:00')
-            ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('setParameter')
-            ->once()
-            ->with(7, '2017-03-20 06:55:00')
-            ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('setParameter')
-            ->once()
-            ->with(8, 'supermarket')
-            ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('setParameter')
-            ->once()
-            ->with(9, 0)
-            ->andReturnSelf();
+
+        $this->mockSetPositionalParameter(0, 'fddf4716-6c0e-4f54-b539-d2d480a50d1c');
+        $this->mockSetPositionalParameter(1, 'pay');
+        $this->mockSetPositionalParameter(2, 'fddf4716-6c0e-4f54-b539-d2d480a50d1a');
+        $this->mockSetPositionalParameter(3, 'fddf4716-6c0e-4f54-b539-d2d480a50d1b');
+        $this->mockSetPositionalParameter(4, 50000);
+        $this->mockSetPositionalParameter(5, 'RSD');
+        $this->mockSetPositionalParameter(6, '2017-03-12 00:00:00');
+        $this->mockSetPositionalParameter(7, '2017-03-20 06:55:00');
+        $this->mockSetPositionalParameter(8, 'supermarket');
+        $this->mockSetPositionalParameter(9, 0);
 
         $this->repository->save($this->transaction);
     }
@@ -172,86 +145,32 @@ class TransactionRepositoryTest extends TestCase
             ->once()
             ->with('transaction')
             ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('set')
-            ->once()
-            ->with('type', '?')
-            ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('set')
-            ->once()
-            ->with('source_account', '?')
-            ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('set')
-            ->once()
-            ->with('destination_account', '?')
-            ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('set')
-            ->once()
-            ->with('amount', '?')
-            ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('set')
-            ->once()
-            ->with('currency', '?')
-            ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('set')
-            ->once()
-            ->with('date', '?')
-            ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('set')
-            ->once()
-            ->with('record_date', '?')
-            ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('set')
-            ->once()
-            ->with('description', '?')
-            ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('set')
-            ->once()
-            ->with('refunded', '?')
-            ->andReturnSelf();
+
+        $this->mockSetValue('type');
+        $this->mockSetValue('source_account');
+        $this->mockSetValue('destination_account');
+        $this->mockSetValue('amount');
+        $this->mockSetValue('currency');
+        $this->mockSetValue('date');
+        $this->mockSetValue('record_date');
+        $this->mockSetValue('description');
+        $this->mockSetValue('refunded');
+
         $this->queryBuilder->shouldReceive('where')
             ->once()
             ->with('transaction_id = ?')
             ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('setParameter')
-            ->once()
-            ->with(0, 'pay')
-            ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('setParameter')
-            ->once()
-            ->with(1, 'fddf4716-6c0e-4f54-b539-d2d480a50d1a')
-            ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('setParameter')
-            ->once()
-            ->with(2, 'fddf4716-6c0e-4f54-b539-d2d480a50d1b')
-            ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('setParameter')
-            ->once()
-            ->with(3, 50000)
-            ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('setParameter')
-            ->once()
-            ->with(4, 'RSD')
-            ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('setParameter')
-            ->once()
-            ->with(5, '2017-03-12 00:00:00')
-            ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('setParameter')
-            ->once()
-            ->with(6, '2017-03-20 06:55:00')
-            ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('setParameter')
-            ->once()
-            ->with(7, 'supermarket')
-            ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('setParameter')
-            ->once()
-            ->with(8, 0)
-            ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('setParameter')
-            ->once()
-            ->with(9, 'fddf4716-6c0e-4f54-b539-d2d480a50d1c')
-            ->andReturnSelf();
+
+        $this->mockSetPositionalParameter(0, 'pay');
+        $this->mockSetPositionalParameter(1, 'fddf4716-6c0e-4f54-b539-d2d480a50d1a');
+        $this->mockSetPositionalParameter(2, 'fddf4716-6c0e-4f54-b539-d2d480a50d1b');
+        $this->mockSetPositionalParameter(3, 50000);
+        $this->mockSetPositionalParameter(4, 'RSD');
+        $this->mockSetPositionalParameter(5, '2017-03-12 00:00:00');
+        $this->mockSetPositionalParameter(6, '2017-03-20 06:55:00');
+        $this->mockSetPositionalParameter(7, 'supermarket');
+        $this->mockSetPositionalParameter(8, 0);
+        $this->mockSetPositionalParameter(9, 'fddf4716-6c0e-4f54-b539-d2d480a50d1c');
 
         $this->repository->save($this->transaction);
     }
@@ -262,39 +181,14 @@ class TransactionRepositoryTest extends TestCase
      */
     public function can_get_transaction_from_repository($transactions)
     {
-        $this->queryBuilder->shouldReceive('select')
-            ->once()
-            ->with(
-                't.transaction_id', 't.type', 't.amount', 't.currency',
-                't.date', 't.record_date', 't.description', 't.refunded',
-                'sa.account_id AS source_account_id',
-                'sa.title AS source_account_title',
-                'sa.type AS source_account_type',
-                'da.account_id AS destination_account_id',
-                'da.title AS destination_account_title',
-                'da.type AS destination_account_type'
-            )
-            ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('from')
-            ->once()
-            ->with('transaction', 't')
-            ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('innerJoin')
-            ->once()
-            ->with('t', 'account', 'sa', 't.source_account = sa.account_id')
-            ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('innerJoin')
-            ->once()
-            ->with('t', 'account', 'da', 't.destination_account = da.account_id')
-            ->andReturnSelf();
+        $this->mockSelectFromInnerJoins();
+
         $this->queryBuilder->shouldReceive('where')
             ->once()
             ->with('t.transaction_id = :transactionId')
             ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('setParameter')
-            ->once()
-            ->with('transactionId', $this->transactionId)
-            ->andReturnSelf();
+
+        $this->mockSetNamedParameter('transactionId', $this->transactionId);
 
         $this->statement->shouldReceive('fetch')
             ->once()
@@ -311,31 +205,7 @@ class TransactionRepositoryTest extends TestCase
      */
     public function can_get_all_transactions_from_repository($transactions)
     {
-        $this->queryBuilder->shouldReceive('select')
-            ->once()
-            ->with(
-                't.transaction_id', 't.type', 't.amount', 't.currency',
-                't.date', 't.record_date', 't.description', 't.refunded',
-                'sa.account_id AS source_account_id',
-                'sa.title AS source_account_title',
-                'sa.type AS source_account_type',
-                'da.account_id AS destination_account_id',
-                'da.title AS destination_account_title',
-                'da.type AS destination_account_type'
-            )
-            ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('from')
-            ->once()
-            ->with('transaction', 't')
-            ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('innerJoin')
-            ->once()
-            ->with('t', 'account', 'sa', 't.source_account = sa.account_id')
-            ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('innerJoin')
-            ->once()
-            ->with('t', 'account', 'da', 't.destination_account = da.account_id')
-            ->andReturnSelf();
+        $this->mockSelectFromInnerJoins();
 
         $this->statement->shouldReceive('fetch')
             ->andReturnUsing(function() use (&$transactions) { return array_pop($transactions); });
@@ -383,9 +253,45 @@ class TransactionRepositoryTest extends TestCase
             ->once()
             ->with('t.transaction_id = :transactionId')
             ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('setParameter')
+
+        $this->mockSetNamedParameter('transactionId', 'fddf4716-6c0e-4f54-b539-d2d480a50d1c');
+    }
+
+    private function mockSelectFromInnerJoins()
+    {
+        $this->queryBuilder->shouldReceive('select')
             ->once()
-            ->with('transactionId', 'fddf4716-6c0e-4f54-b539-d2d480a50d1c')
+            ->with(
+                't.transaction_id', 't.type', 't.amount', 't.currency',
+                't.date', 't.record_date', 't.description', 't.refunded',
+                'sa.account_id AS source_account_id',
+                'sa.title AS source_account_title',
+                'sa.type AS source_account_type',
+                'da.account_id AS destination_account_id',
+                'da.title AS destination_account_title',
+                'da.type AS destination_account_type'
+            )
+            ->andReturnSelf();
+        $this->queryBuilder->shouldReceive('from')
+            ->once()
+            ->with('transaction', 't')
+            ->andReturnSelf();
+        $this->queryBuilder->shouldReceive('innerJoin')
+            ->once()
+            ->with('t', 'account', 'sa', 't.source_account = sa.account_id')
+            ->andReturnSelf();
+        $this->queryBuilder->shouldReceive('innerJoin')
+            ->once()
+            ->with('t', 'account', 'da', 't.destination_account = da.account_id')
             ->andReturnSelf();
     }
+
+    private function mockSetValue(string $field)
+    {
+        $this->queryBuilder->shouldReceive('set')
+            ->once()
+            ->with($field, '?')
+            ->andReturnSelf();
+    }
+
 }

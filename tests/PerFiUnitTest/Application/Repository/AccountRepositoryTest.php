@@ -9,15 +9,17 @@ use Doctrine\DBAL\Query\QueryBuilder;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use PerFiUnitTest\Traits\QueryBuilderTrait;
+use PerFi\Application\Factory\AccountFactory;
+use PerFi\Application\Repository\AccountRepository;
 use PerFi\Domain\Account\Account;
 use PerFi\Domain\Account\AccountId;
 use PerFi\Domain\Account\AccountType;
-use PerFi\Application\Factory\AccountFactory;
-use PerFi\Application\Repository\AccountRepository;
 
 class AccountRepositoryTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+    use QueryBuilderTrait;
 
     /**
      * @var AccountRepository
@@ -102,18 +104,10 @@ class AccountRepositoryTest extends TestCase
                 'type' => '?',
             ])
             ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('setParameter')
-            ->once()
-            ->with(0, (string) $this->accountId)
-            ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('setParameter')
-            ->once()
-            ->with(1, $this->accountTitle)
-            ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('setParameter')
-            ->once()
-            ->with(2, (string) $this->accountType)
-            ->andReturnSelf();
+
+        $this->mockSetPositionalParameter(0, (string) $this->accountId);
+        $this->mockSetPositionalParameter(1, $this->accountTitle);
+        $this->mockSetPositionalParameter(2, (string) $this->accountType);
 
         $this->repository->save($this->account);
     }
@@ -124,22 +118,14 @@ class AccountRepositoryTest extends TestCase
      */
     public function can_get_account_from_repository($accounts)
     {
-        $this->queryBuilder->shouldReceive('select')
-            ->once()
-            ->with('a.account_id AS id', 'a.title', 'a.type')
-            ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('from')
-            ->once()
-            ->with('account', 'a')
-            ->andReturnSelf();
+        $this->mockSelectFrom();
+
         $this->queryBuilder->shouldReceive('where')
             ->once()
             ->with('a.account_id = :accountId')
             ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('setParameter')
-            ->once()
-            ->with('accountId', $this->accountId)
-            ->andReturnSelf();
+
+        $this->mockSetNamedParameter('accountId', $this->accountId);
 
         $this->statement->shouldReceive('fetch')
             ->once()
@@ -156,14 +142,7 @@ class AccountRepositoryTest extends TestCase
      */
     public function can_get_all_accounts_from_repository($accounts)
     {
-        $this->queryBuilder->shouldReceive('select')
-            ->once()
-            ->with('a.account_id AS id', 'a.title', 'a.type')
-            ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('from')
-            ->once()
-            ->with('account', 'a')
-            ->andReturnSelf();
+        $this->mockSelectFrom();
 
         $this->statement->shouldReceive('fetch')
             ->andReturnUsing(function() use (&$accounts) { return array_pop($accounts); });
@@ -179,22 +158,14 @@ class AccountRepositoryTest extends TestCase
      */
     public function can_get_all_accounts_from_repository_by_type($accounts)
     {
-        $this->queryBuilder->shouldReceive('select')
-            ->once()
-            ->with('a.account_id AS id', 'a.title', 'a.type')
-            ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('from')
-            ->once()
-            ->with('account', 'a')
-            ->andReturnSelf();
+        $this->mockSelectFrom();
+
         $this->queryBuilder->shouldReceive('where')
             ->once()
             ->with('a.type = :type')
             ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('setParameter')
-            ->once()
-            ->with('type', $this->accountType)
-            ->andReturnSelf();
+
+        $this->mockSetNamedParameter('type', $this->accountType);
 
         $this->statement->shouldReceive('fetch')
             ->andReturnUsing(function() use (&$accounts) { return array_pop($accounts); });
@@ -215,5 +186,17 @@ class AccountRepositoryTest extends TestCase
                 ]]
             ]
         ];
+    }
+
+    private function mockSelectFrom()
+    {
+        $this->queryBuilder->shouldReceive('select')
+            ->once()
+            ->with('a.account_id AS id', 'a.title', 'a.type')
+            ->andReturnSelf();
+        $this->queryBuilder->shouldReceive('from')
+            ->once()
+            ->with('account', 'a')
+            ->andReturnSelf();
     }
 }
