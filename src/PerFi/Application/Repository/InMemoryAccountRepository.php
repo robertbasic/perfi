@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace PerFi\Application\Account;
+namespace PerFi\Application\Repository;
 
 use PerFi\Domain\Account\Account;
 use PerFi\Domain\Account\AccountId;

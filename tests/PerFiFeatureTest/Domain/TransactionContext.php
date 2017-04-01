@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace PerFiFeatureTest\Domain;
 
 use Behat\Behat\Context\Context;
-use PerFi\Application\Transaction\InMemoryTransactionRepository;
+use PerFi\Application\Repository\InMemoryTransactionRepository;
 use PerFi\Domain\Account\Account;
 use PerFi\Domain\Account\AccountType;
 use PerFi\Domain\MoneyFactory;

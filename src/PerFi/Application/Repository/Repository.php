@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace PerFi\PerFiBundle\Repository;
+namespace PerFi\Application\Repository;
 
 use Doctrine\DBAL\Driver\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;

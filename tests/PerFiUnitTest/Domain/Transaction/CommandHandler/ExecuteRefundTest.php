@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 use PerFiUnitTest\Traits\AccountTrait;
 use PerFiUnitTest\Traits\AmountTrait;
 use PerFiUnitTest\Traits\TransactionTrait;
-use PerFi\Application\Transaction\InMemoryTransactionRepository;
+use PerFi\Application\Repository\InMemoryTransactionRepository;
 use PerFi\Domain\Account\Account;
 use PerFi\Domain\Transaction\CommandHandler\ExecuteRefund;
 use PerFi\Domain\Transaction\Command\Refund;

@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace PerFiUnitTest\Domain\Account\CommandHandler;
 
 use PHPUnit\Framework\TestCase;
-use PerFi\Application\Account\InMemoryAccountRepository;
+use PerFi\Application\Repository\InMemoryAccountRepository;
 use PerFi\Domain\Account\CommandHandler\CreateAccount;
 use PerFi\Domain\Account\Command\CreateAccount as CreateAccountCommand;
 

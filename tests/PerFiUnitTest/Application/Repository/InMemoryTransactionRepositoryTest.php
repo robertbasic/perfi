@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace PerFiUnitTest\Application\Transaction;
+namespace PerFiUnitTest\Application\Repository;
 
 use PHPUnit\Framework\TestCase;
 use PerFiUnitTest\Traits\TransactionTrait;
-use PerFi\Application\Transaction\InMemoryTransactionRepository;
+use PerFi\Application\Repository\InMemoryTransactionRepository;
 
 class InMemoryTransactionRepositoryTest extends TestCase
 {

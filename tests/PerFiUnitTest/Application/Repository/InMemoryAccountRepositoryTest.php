@@ -1,11 +1,11 @@
 <?php
 declare(strict_types=1);
 
-namespace PerFiUnitTest\Application\Account;
+namespace PerFiUnitTest\Application\Repository;
 
 use PHPUnit\Framework\TestCase;
 use PerFiUnitTest\Traits\AccountTrait;
-use PerFi\Application\Account\InMemoryAccountRepository;
+use PerFi\Application\Repository\InMemoryAccountRepository;
 
 class InMemoryAccountRepositoryTest extends TestCase
 {

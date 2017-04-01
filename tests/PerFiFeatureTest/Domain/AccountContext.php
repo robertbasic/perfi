@@ -4,7 +4,7 @@ declare(strict_types=1);
 namespace PerFiFeatureTest\Domain;
 
 use Behat\Behat\Context\Context;
-use PerFi\Application\Account\InMemoryAccountRepository;
+use PerFi\Application\Repository\InMemoryAccountRepository;
 use PerFi\Domain\Account\Account;
 use PerFi\Domain\Account\AccountRepository;
 use PerFi\Domain\Account\CommandHandler\CreateAccount as CreateAccountCommandHandler;
