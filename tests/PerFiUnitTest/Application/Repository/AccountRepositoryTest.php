@@ -118,14 +118,8 @@ class AccountRepositoryTest extends TestCase
      */
     public function can_get_account_from_repository($accounts)
     {
-        $this->queryBuilder->shouldReceive('select')
-            ->once()
-            ->with('a.account_id AS id', 'a.title', 'a.type')
-            ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('from')
-            ->once()
-            ->with('account', 'a')
-            ->andReturnSelf();
+        $this->mockSelectFrom();
+
         $this->queryBuilder->shouldReceive('where')
             ->once()
             ->with('a.account_id = :accountId')
@@ -150,14 +144,7 @@ class AccountRepositoryTest extends TestCase
      */
     public function can_get_all_accounts_from_repository($accounts)
     {
-        $this->queryBuilder->shouldReceive('select')
-            ->once()
-            ->with('a.account_id AS id', 'a.title', 'a.type')
-            ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('from')
-            ->once()
-            ->with('account', 'a')
-            ->andReturnSelf();
+        $this->mockSelectFrom();
 
         $this->statement->shouldReceive('fetch')
             ->andReturnUsing(function() use (&$accounts) { return array_pop($accounts); });
@@ -173,14 +160,8 @@ class AccountRepositoryTest extends TestCase
      */
     public function can_get_all_accounts_from_repository_by_type($accounts)
     {
-        $this->queryBuilder->shouldReceive('select')
-            ->once()
-            ->with('a.account_id AS id', 'a.title', 'a.type')
-            ->andReturnSelf();
-        $this->queryBuilder->shouldReceive('from')
-            ->once()
-            ->with('account', 'a')
-            ->andReturnSelf();
+        $this->mockSelectFrom();
+
         $this->queryBuilder->shouldReceive('where')
             ->once()
             ->with('a.type = :type')
@@ -211,4 +192,15 @@ class AccountRepositoryTest extends TestCase
         ];
     }
 
+    private function mockSelectFrom()
+    {
+        $this->queryBuilder->shouldReceive('select')
+            ->once()
+            ->with('a.account_id AS id', 'a.title', 'a.type')
+            ->andReturnSelf();
+        $this->queryBuilder->shouldReceive('from')
+            ->once()
+            ->with('account', 'a')
+            ->andReturnSelf();
+    }
 }
