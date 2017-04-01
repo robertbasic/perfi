@@ -13,7 +13,7 @@ class InMemoryOpeningBalanceRepositoryTest extends TestCase
     /**
      * @test
      */
-    public function adding_opening_balance_added_per_currency()
+    public function save_opening_balance_added_per_currency()
     {
         $repository = new InMemoryOpeningBalanceRepository();
 
@@ -22,7 +22,7 @@ class InMemoryOpeningBalanceRepositoryTest extends TestCase
         $money = MoneyFactory::amountInCurrency($amount, $currency);
         $openingBalance = OpeningBalance::forStarting($money);
 
-        $repository->add($openingBalance);
+        $repository->save($openingBalance);
 
         $balances = $repository->getAll();
 
@@ -48,21 +48,21 @@ class InMemoryOpeningBalanceRepositoryTest extends TestCase
         $money = MoneyFactory::amountInCurrency($amount, $currency);
         $openingBalance = OpeningBalance::forStarting($money);
 
-        $repository->add($openingBalance);
+        $repository->save($openingBalance);
 
         $amount = '600';
         $currency = 'RSD';
         $money = MoneyFactory::amountInCurrency($amount, $currency);
         $openingBalance = OpeningBalance::forStarting($money);
 
-        $repository->add($openingBalance);
+        $repository->save($openingBalance);
 
         $amount = '60';
         $currency = 'EUR';
         $money = MoneyFactory::amountInCurrency($amount, $currency);
         $openingBalance = OpeningBalance::forStarting($money);
 
-        $repository->add($openingBalance);
+        $repository->save($openingBalance);
 
         $totals = $repository->getTotals();
 
