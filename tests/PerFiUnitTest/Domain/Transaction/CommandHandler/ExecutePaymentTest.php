@@ -7,18 +7,20 @@ use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use PerFiUnitTest\Traits\AccountTrait;
+use PerFiUnitTest\Traits\EventBusTrait;
 use PerFi\Application\Repository\InMemoryTransactionRepository;
 use PerFi\Domain\Account\Account;
 use PerFi\Domain\Transaction\CommandHandler\ExecutePayment;
 use PerFi\Domain\Transaction\Command\Pay;
 use PerFi\Domain\Transaction\Event\PaymentMade;
 use PerFi\Domain\Transaction\TransactionRepository;
-use SimpleBus\Message\Bus\Middleware\MessageBusSupportingMiddleware;
+use SimpleBus\Message\Bus\MessageBus;
 
 class ExecutePaymentTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
     use AccountTrait;
+    use EventBusTrait;
 
     /**
      * @var TransactionRepository
@@ -26,7 +28,7 @@ class ExecutePaymentTest extends TestCase
     private $repository;
 
     /**
-     * @var MessageBusSupportingMiddleware
+     * @var MessageBus
      */
     private $eventBus;
 
@@ -74,9 +76,7 @@ class ExecutePaymentTest extends TestCase
     {
         $this->repository = new InMemoryTransactionRepository();
 
-        $this->eventBus = m::mock(MessageBusSupportingMiddleware::class);
-        $this->eventBus->shouldReceive('handle')
-            ->byDefault();
+        $this->eventBus = $this->mockEventBus();
 
         $this->assetAccount = $this->mockAccount('asset');
 

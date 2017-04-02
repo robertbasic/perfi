@@ -226,6 +226,12 @@ class TransactionContext implements Context
             if ($serviceId === MarkRefundedTransactionAsRefundedWhenTransactionRefunded::class) {
                 return new $serviceId($this->repository);
             }
+            if ($serviceId === CreditAssetAccountWhenPaymentMade::class
+                || $serviceId === CreditExpenseAccountWhenTransactionRefunded::class
+                || $serviceId === DebitExpenseAccountWhenPaymentMade::class
+                || $serviceId === DebitAssetAccountWhenTransactionRefunded::class) {
+                return new $serviceId($this->eventBus);
+            }
             return new $serviceId();
         };
 
