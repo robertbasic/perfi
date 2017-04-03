@@ -53,23 +53,23 @@ xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/sc
 
         <!-- event subscribers -->
         <service id="perfi.event_subscriber.credit_asset_account_when_payment_made"
-            class="PerFi\Domain\Transaction\EventSubscriber\CreditAssetAccountWhenPaymentMade">
+            class="PerFi\Domain\Account\EventSubscriber\CreditAssetAccountWhenPaymentMade">
             <argument type="service" id="event_bus"/>
             <tag name="event_subscriber" subscribes_to="PerFi\Domain\Transaction\Event\PaymentMade"/>
         </service>
         <service id="perfi.event_subscriber.debit_expense_account_when_payment_made"
-            class="PerFi\Domain\Transaction\EventSubscriber\DebitExpenseAccountWhenPaymentMade">
+            class="PerFi\Domain\Account\EventSubscriber\DebitExpenseAccountWhenPaymentMade">
             <argument type="service" id="event_bus"/>
             <tag name="event_subscriber" subscribes_to="PerFi\Domain\Transaction\Event\PaymentMade"/>
         </service>
 
         <service id="perfi.event_subscriber.credit_expense_account_when_transaction_refunded"
-            class="PerFi\Domain\Transaction\EventSubscriber\CreditExpenseAccountWhenTransactionRefunded">
+            class="PerFi\Domain\Account\EventSubscriber\CreditExpenseAccountWhenTransactionRefunded">
             <argument type="service" id="event_bus"/>
             <tag name="event_subscriber" subscribes_to="PerFi\Domain\Transaction\Event\TransactionRefunded"/>
         </service>
         <service id="perfi.event_subscriber.debit_asset_account_when_transaction_refunded"
-            class="PerFi\Domain\Transaction\EventSubscriber\DebitAssetAccountWhenTransactionRefunded">
+            class="PerFi\Domain\Account\EventSubscriber\DebitAssetAccountWhenTransactionRefunded">
             <argument type="service" id="event_bus"/>
             <tag name="event_subscriber" subscribes_to="PerFi\Domain\Transaction\Event\TransactionRefunded"/>
         </service>
