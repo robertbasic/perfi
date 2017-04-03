@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace PerFiUnitTest\Domain\Transaction\EventSubscriber;
+namespace PerFiUnitTest\Domain\Account\EventSubscriber;
 
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -9,11 +9,10 @@ use PHPUnit\Framework\TestCase;
 use PerFiUnitTest\Traits\EventBusTrait;
 use PerFiUnitTest\Traits\TransactionTrait;
 use PerFi\Domain\Account\Event\SourceAccountCredited;
-use PerFi\Domain\Transaction\EventSubscriber\CreditAssetAccountWhenPaymentMade;
-use PerFi\Domain\Transaction\Event\PaymentMade;
-use PerFi\Domain\Transaction\Transaction;
+use PerFi\Domain\Account\EventSubscriber\CreditExpenseAccountWhenTransactionRefunded;
+use PerFi\Domain\Transaction\Event\TransactionRefunded;
 
-class CreditAssetAccountWhenPaymentMadeTest extends TestCase
+class CreditExpenseAccountWhenTransactionRefundedTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
     use TransactionTrait;
@@ -27,15 +26,20 @@ class CreditAssetAccountWhenPaymentMadeTest extends TestCase
     /**
      * @var Transaction
      */
+    private $refundedTransaction;
+
+    /**
+     * @var Transaction
+     */
     private $transaction;
 
     /**
-     * @var PaymentMade
+     * @var TransactionRefunded
      */
     private $event;
 
     /**
-     * @var CreditAssetAccountWhenPaymentMade
+     * @var CreditExpenseAccountWhenTransactionRefunded
      */
     private $eventSubscriber;
 
@@ -43,23 +47,25 @@ class CreditAssetAccountWhenPaymentMadeTest extends TestCase
     {
         $this->eventBus = $this->mockEventBus();
 
-        $this->transaction = $this->payTransaction();
+        $this->refundedTransaction = $this->payTransaction();
 
-        $this->event = new PaymentMade($this->transaction);
+        $this->transaction = $this->refundTransaction();
 
-        $this->eventSubscriber = new CreditAssetAccountWhenPaymentMade($this->eventBus);
+        $this->event = new TransactionRefunded($this->transaction, $this->refundedTransaction);
+
+        $this->eventSubscriber = new CreditExpenseAccountWhenTransactionRefunded($this->eventBus);
     }
 
     /**
      * @test
      */
-    public function asset_account_is_credited()
+    public function expense_account_is_credited()
     {
-        $asset = $this->transaction->sourceAccount();
+        $expense = $this->transaction->sourceAccount();
 
         $this->eventSubscriber->__invoke($this->event);
 
-        $balances = $asset->balances();
+        $balances = $expense->balances();
 
         self::assertNotEmpty($balances);
     }
@@ -67,7 +73,7 @@ class CreditAssetAccountWhenPaymentMadeTest extends TestCase
     /**
      * @test
      */
-    public function source_account_credited_event_is_handled_when_asset_account_is_credited()
+    public function source_account_credited_event_is_handled_when_expense_account_is_credited()
     {
         $this->eventBus->shouldReceive('handle')
             ->once()

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace PerFiUnitTest\Domain\Transaction\EventSubscriber;
+namespace PerFiUnitTest\Domain\Account\EventSubscriber;
 
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
@@ -9,7 +9,7 @@ use PHPUnit\Framework\TestCase;
 use PerFiUnitTest\Traits\EventBusTrait;
 use PerFiUnitTest\Traits\TransactionTrait;
 use PerFi\Domain\Account\Event\DestinationAccountDebited;
-use PerFi\Domain\Transaction\EventSubscriber\DebitExpenseAccountWhenPaymentMade;
+use PerFi\Domain\Account\EventSubscriber\DebitExpenseAccountWhenPaymentMade;
 use PerFi\Domain\Transaction\Event\PaymentMade;
 use SimpleBus\Message\Bus\MessageBus;
 

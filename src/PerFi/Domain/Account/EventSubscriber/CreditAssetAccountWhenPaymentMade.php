@@ -1,13 +1,13 @@
 <?php
 declare(strict_types=1);
 
-namespace PerFi\Domain\Transaction\EventSubscriber;
+namespace PerFi\Domain\Account\EventSubscriber;
 
 use PerFi\Domain\Account\Event\SourceAccountCredited;
-use PerFi\Domain\Transaction\Event\TransactionRefunded;
+use PerFi\Domain\Transaction\Event\PaymentMade;
 use SimpleBus\Message\Bus\MessageBus;
 
-class CreditExpenseAccountWhenTransactionRefunded
+class CreditAssetAccountWhenPaymentMade
 {
     /**
      * @var MessageBus
@@ -15,7 +15,7 @@ class CreditExpenseAccountWhenTransactionRefunded
     private $eventBus;
 
     /**
-     * Create the event subscribe for when the transaction was refunded
+     * Create the event subscribe for when the payment was made
      *
      * @param MessageBus $eventBus
      */
@@ -25,15 +25,15 @@ class CreditExpenseAccountWhenTransactionRefunded
     }
 
     /**
-     * Handle the transaction refunded event
+     * Handle the payment made event
      *
-     * Credit the expense/source account of the transaction.
+     * Credit the asset/source account of the transaction.
      *
-     * @param TransactionRefunded $event
+     * @param PaymentMade $event
      */
-    public function __invoke(TransactionRefunded $event)
+    public function __invoke(PaymentMade $event)
     {
-        $transaction = $event->refundTransaction();
+        $transaction = $event->transaction();
 
         $transaction->creditSourceAccount();
 
