@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace PerFi\Domain\Account\EventSubscriber;
 
-use PerFi\Domain\Account\Event\SourceAccountCredited;
+use PerFi\Domain\Account\Event\AccountBalanceChanged;
 use PerFi\Domain\Transaction\Transaction;
 use SimpleBus\Message\Bus\MessageBus;
 
@@ -35,7 +35,7 @@ abstract class CreditSourceAccount
 
         $sourceAccount = $transaction->sourceAccount();
 
-        $event = new SourceAccountCredited($sourceAccount);
+        $event = new AccountBalanceChanged($sourceAccount);
 
         $this->eventBus->handle($event);
     }

@@ -8,9 +8,11 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use PerFiUnitTest\Traits\EventBusTrait;
 use PerFiUnitTest\Traits\TransactionTrait;
-use PerFi\Domain\Account\Event\SourceAccountCredited;
 use PerFi\Domain\Account\EventSubscriber\CreditExpenseAccountWhenTransactionRefunded;
+use PerFi\Domain\Account\Event\AccountBalanceChanged;
 use PerFi\Domain\Transaction\Event\TransactionRefunded;
+use PerFi\Domain\Transaction\Transaction;
+use SimpleBus\Message\Bus\MessageBus;
 
 class CreditExpenseAccountWhenTransactionRefundedTest extends TestCase
 {
@@ -77,7 +79,7 @@ class CreditExpenseAccountWhenTransactionRefundedTest extends TestCase
     {
         $this->eventBus->shouldReceive('handle')
             ->once()
-            ->with(m::type(SourceAccountCredited::class));
+            ->with(m::type(AccountBalanceChanged::class));
 
         $this->eventSubscriber->__invoke($this->event);
     }
