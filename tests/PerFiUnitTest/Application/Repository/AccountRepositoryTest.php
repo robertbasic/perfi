@@ -92,6 +92,12 @@ class AccountRepositoryTest extends TestCase
      */
     public function can_save_account_to_repository()
     {
+        $this->mockExistsQuery();
+
+        $this->statement->shouldReceive('fetch')
+            ->once()
+            ->andReturn(false);
+
         $this->queryBuilder->shouldReceive('insert')
             ->once()
             ->with('account')
@@ -186,6 +192,24 @@ class AccountRepositoryTest extends TestCase
                 ]]
             ]
         ];
+    }
+
+    private function mockExistsQuery()
+    {
+        $this->queryBuilder->shouldReceive('select')
+            ->once()
+            ->with('a.account_id')
+            ->andReturnSelf();
+        $this->queryBuilder->shouldReceive('from')
+            ->once()
+            ->with('account', 'a')
+            ->andReturnSelf();
+        $this->queryBuilder->shouldReceive('where')
+            ->once()
+            ->with('a.account_id = :accountId')
+            ->andReturnSelf();
+
+        $this->mockSetNamedParameter('accountId', 'fddf4716-6c0e-4f54-b539-d2d480a50d1a');
     }
 
     private function mockSelectFrom()

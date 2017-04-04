@@ -22,21 +22,11 @@ class AccountRepository extends Repository
      */
     public function save(Account $account)
     {
-        $qb = $this->getQueryBuilder();
+        if ($this->exists($account)) {
+            return $this->update($account);
+        }
 
-        $query = $qb->insert('account')
-            ->values(
-                [
-                    'account_id' => '?',
-                    'title' => '?',
-                    'type' => '?',
-                ]
-            )
-            ->setParameter(0, (string) $account->id())
-            ->setParameter(1, $account->title())
-            ->setParameter(2, (string) $account->type());
-
-        $query->execute();
+        return $this->insert($account);
     }
 
     /**
@@ -92,6 +82,43 @@ class AccountRepository extends Repository
             ->from('account', 'a');
 
         return $query;
+    }
+
+    private function exists(Account $account) : bool
+    {
+        $qb = $this->getQueryBuilder();
+
+        $statement = $qb->select('a.account_id')
+            ->from('account', 'a')
+            ->where('a.account_id = :accountId')
+            ->setParameter('accountId', (string) $account->id())
+            ->execute();
+
+        return (bool) $statement->fetch();
+    }
+
+    private function insert(Account $account)
+    {
+        $qb = $this->getQueryBuilder();
+
+        $query = $qb->insert('account')
+            ->values(
+                [
+                    'account_id' => '?',
+                    'title' => '?',
+                    'type' => '?',
+                ]
+            )
+            ->setParameter(0, (string) $account->id())
+            ->setParameter(1, $account->title())
+            ->setParameter(2, (string) $account->type());
+
+        $query->execute();
+    }
+
+    private function update(Account $account)
+    {
+        // @todo implement method
     }
 
     private function mapToEntities($statement)
