@@ -74,6 +74,13 @@ xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/sc
             <argument type="service" id="event_bus"/>
             <tag name="event_subscriber" subscribes_to="PerFi\Domain\Transaction\Event\TransactionRefunded"/>
         </service>
+
+        <service id="perfi.event_subscriber.save_account_when_account_balance_changed"
+            class="PerFi\Domain\Account\EventSubscriber\SaveAccountWhenAccountBalanceChanged">
+            <argument type="service" id="perfi.repository.account"/>
+            <tag name="event_subscriber" subscribes_to="PerFi\Domain\Account\Event\AccountBalanceChanged"/>
+        </service>
+
         <service id="perfi.event_subscriber.debit_asset_account_when_transaction_refunded"
             class="PerFi\Domain\Transaction\EventSubscriber\MarkRefundedTransactionAsRefundedWhenTransactionRefunded">
             <argument type="service" id="perfi.repository.transaction"/>
