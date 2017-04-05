@@ -6,6 +6,7 @@ namespace PerFi\Application\Factory;
 use PerFi\Domain\Account\Account;
 use PerFi\Domain\Account\AccountId;
 use PerFi\Domain\Account\AccountType;
+use PerFi\Domain\MoneyFactory;
 
 class AccountFactory
 {
@@ -18,11 +19,17 @@ class AccountFactory
      */
     public static function fromArray(array $account, array $balances) : Account
     {
+        $balanceAmounts = [];
+
+        foreach ($balances as $balance) {
+            $balanceAmounts[$balance['currency']][] = MoneyFactory::centsInCurrency($balance['amount'], $balance['currency']);
+        }
+
         return Account::withId(
             AccountId::fromString($account['id']),
             AccountType::fromString($account['type']),
             $account['title'],
-            $balances
+            $balanceAmounts
         );
     }
 }
