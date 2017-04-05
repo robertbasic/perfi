@@ -126,6 +126,19 @@ class AccountRepository extends Repository
         $this->saveBalances($accountId, $balances);
     }
 
+    private function getBalances(AccountId $accountId)
+    {
+        $qb = $this->getQueryBuilder();
+
+        $statement = $qb->select('b.amount', 'b.currency')
+            ->from('balance', 'b')
+            ->where('account_id = ?')
+            ->setParameter(0, (string) $accountId)
+            ->execute();
+
+        return $statement->fetchAll();
+    }
+
     private function saveBalances(AccountId $accountId, array $balances)
     {
         foreach ($balances as $amount) {
@@ -211,6 +224,8 @@ class AccountRepository extends Repository
 
     private function mapToEntity(array $row) : Account
     {
-        return AccountFactory::fromArray($row);
+        $balances = $this->getBalances(AccountId::fromString($row['id']));
+
+        return AccountFactory::fromArray($row, $balances);
     }
 }

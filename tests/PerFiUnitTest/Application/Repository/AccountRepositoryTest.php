@@ -84,11 +84,14 @@ class AccountRepositoryTest extends TestCase
         $this->accountType = $this->asset();
         $this->accountTitle = 'Cash';
 
-        $this->account = AccountFactory::fromArray([
+        $account = [
             'id' => (string) $this->accountId,
             'type' => (string) $this->accountType,
             'title' => $this->accountTitle,
-        ]);
+        ];
+        $balances = [];
+
+        $this->account = AccountFactory::fromArray($account, $balances);
 
         $this->repository = new AccountRepository($this->connection);
     }
@@ -240,6 +243,8 @@ class AccountRepositoryTest extends TestCase
             ->once()
             ->andReturn(array_pop($accounts));
 
+        $this->mockGetBalances();
+
         $account = $this->repository->get($this->accountId);
 
         self::assertInstanceOf(Account::class, $account);
@@ -255,6 +260,8 @@ class AccountRepositoryTest extends TestCase
 
         $this->statement->shouldReceive('fetch')
             ->andReturnUsing(function() use (&$accounts) { return array_pop($accounts); });
+
+        $this->mockGetBalances();
 
         $result = $this->repository->getAll();
 
@@ -278,6 +285,8 @@ class AccountRepositoryTest extends TestCase
 
         $this->statement->shouldReceive('fetch')
             ->andReturnUsing(function() use (&$accounts) { return array_pop($accounts); });
+
+        $this->mockGetBalances();
 
         $result = $this->repository->getAllByType($this->accountType);
 
@@ -363,5 +372,37 @@ class AccountRepositoryTest extends TestCase
             ->once()
             ->with('account', 'a')
             ->andReturnSelf();
+    }
+
+    private function mockGetBalances()
+    {
+        $balances = [
+            [
+                'amount' => '50000',
+                'currency' => 'RSD',
+            ],
+            [
+                'amount' => '500',
+                'currency' => 'EUR',
+            ],
+        ];
+
+        $this->queryBuilder->shouldReceive('select')
+            ->once()
+            ->with('b.amount', 'b.currency')
+            ->andReturnSelf();
+        $this->queryBuilder->shouldReceive('from')
+            ->once()
+            ->with('balance', 'b')
+            ->andReturnSelf();
+        $this->queryBuilder->shouldReceive('where')
+            ->once()
+            ->with('account_id = ?')
+            ->andReturnSelf();
+        $this->mockSetPositionalParameter(0, (string) $this->accountId);
+
+        $this->statement->shouldReceive('fetchAll')
+            ->once()
+            ->andReturn($balances);
     }
 }
