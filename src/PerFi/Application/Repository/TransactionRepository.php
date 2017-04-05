@@ -3,12 +3,15 @@ declare(strict_types=1);
 
 namespace PerFi\Application\Repository;
 
+use Doctrine\DBAL\Driver\Connection;
 use Doctrine\DBAL\Query\QueryBuilder;
+use PerFi\Application\Factory\TransactionFactory;
+use PerFi\Application\Repository\Repository;
+use PerFi\Domain\Account\AccountId;
+use PerFi\Domain\Account\AccountRepository;
 use PerFi\Domain\Transaction\Transaction;
 use PerFi\Domain\Transaction\TransactionId;
 use PerFi\Domain\Transaction\TransactionRepository as TransactionRepositoryInterface;
-use PerFi\Application\Factory\TransactionFactory;
-use PerFi\Application\Repository\Repository;
 
 /**
  * TransactionRepository
@@ -16,6 +19,18 @@ use PerFi\Application\Repository\Repository;
 class TransactionRepository extends Repository
     implements TransactionRepositoryInterface
 {
+    /**
+     * @var AccountRepository
+     */
+    private $accountRepository;
+
+    public function __construct(Connection $connection, AccountRepository $accountRepository)
+    {
+        parent::__construct($connection);
+
+        $this->accountRepository = $accountRepository;
+    }
+
     /**
      * {@inheritdoc}
      */
@@ -61,16 +76,9 @@ class TransactionRepository extends Repository
         $query = $qb->select(
                 't.transaction_id', 't.type', 't.amount', 't.currency',
                 't.date', 't.record_date', 't.description', 't.refunded',
-                'sa.account_id AS source_account_id',
-                'sa.title AS source_account_title',
-                'sa.type AS source_account_type',
-                'da.account_id AS destination_account_id',
-                'da.title AS destination_account_title',
-                'da.type AS destination_account_type'
+                't.source_account', 't.destination_account'
             )
-            ->from('transaction', 't')
-            ->innerJoin('t', 'account', 'sa', 't.source_account = sa.account_id')
-            ->innerJoin('t', 'account', 'da', 't.destination_account = da.account_id');
+            ->from('transaction', 't');
 
         return $query;
     }
@@ -167,6 +175,12 @@ class TransactionRepository extends Repository
 
     private function mapToEntity(array $row) : Transaction
     {
-        return TransactionFactory::fromArray($row);
+        $sourceAccountId = AccountId::fromString($row['source_account']);
+        $destinationAccountId = AccountId::fromString($row['destination_account']);
+
+        $sourceAccount = $this->accountRepository->get($sourceAccountId);
+        $destinationAccount = $this->accountRepository->get($destinationAccountId);
+
+        return TransactionFactory::fromArray($row, $sourceAccount, $destinationAccount);
     }
 }
