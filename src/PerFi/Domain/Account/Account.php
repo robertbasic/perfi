@@ -39,7 +39,7 @@ class Account implements \JsonSerializable
      * @param AccountType $type
      * @param string $title
      */
-    private function __construct(AccountId $id, AccountType $type, string $title)
+    private function __construct(AccountId $id, AccountType $type, string $title, array $amounts)
     {
         Assert::stringNotEmpty($title, "The account title must be provided");
 
@@ -47,7 +47,7 @@ class Account implements \JsonSerializable
         $this->type = $type;
         $this->title = $title;
 
-        $this->amounts = [];
+        $this->amounts = $amounts;
     }
 
     /**
@@ -64,7 +64,8 @@ class Account implements \JsonSerializable
         return new self(
             $id,
             $type,
-            $title
+            $title,
+            []
         );
     }
 
@@ -74,14 +75,21 @@ class Account implements \JsonSerializable
      * @param AccountId $id
      * @param AccountType $type
      * @param string $title
+     * @param array $amounts
      * @return Account
      */
-    public static function withId(AccountId $id, AccountType $type, string $title) : self
+    public static function withId(
+        AccountId $id,
+        AccountType $type,
+        string $title,
+        array $amounts
+    ) : self
     {
         return new self(
             $id,
             $type,
-            $title
+            $title,
+            $amounts
         );
     }
 

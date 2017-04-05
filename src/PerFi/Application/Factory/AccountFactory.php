@@ -20,7 +20,8 @@ class AccountFactory
         return Account::withId(
             AccountId::fromString($account['id']),
             AccountType::fromString($account['type']),
-            $account['title']
+            $account['title'],
+            []
         );
     }
 }

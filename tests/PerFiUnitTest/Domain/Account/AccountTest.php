@@ -64,7 +64,7 @@ class AccountTest extends TestCase
     {
         $id = AccountId::fromString('fddf4716-6c0e-4f54-b539-d2d480a50d1a');
 
-        $account = Account::withId($id, $this->type, $this->title);
+        $account = Account::withId($id, $this->type, $this->title, []);
 
         self::assertSame('Cash, asset', (string) $account);
         self::assertSame($id, $account->id());
@@ -77,7 +77,7 @@ class AccountTest extends TestCase
     {
         $id = AccountId::fromString('fddf4716-6c0e-4f54-b539-d2d480a50d1a');
 
-        $account = Account::withId($id, $this->type, $this->title);
+        $account = Account::withId($id, $this->type, $this->title, []);
 
         $expected = [
             'id' => 'fddf4716-6c0e-4f54-b539-d2d480a50d1a',
