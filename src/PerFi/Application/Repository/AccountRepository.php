@@ -4,12 +4,13 @@ declare(strict_types=1);
 namespace PerFi\Application\Repository;
 
 use Doctrine\DBAL\Query\QueryBuilder;
+use Money\Money;
+use PerFi\Application\Factory\AccountFactory;
+use PerFi\Application\Repository\Repository;
 use PerFi\Domain\Account\Account;
 use PerFi\Domain\Account\AccountId;
 use PerFi\Domain\Account\AccountRepository as AccountRepositoryInterface;
 use PerFi\Domain\Account\AccountType;
-use PerFi\Application\Factory\AccountFactory;
-use PerFi\Application\Repository\Repository;
 
 /**
  * AccountRepository
@@ -118,7 +119,83 @@ class AccountRepository extends Repository
 
     private function update(Account $account)
     {
-        // @todo implement method
+        $accountId = $account->id();
+
+        $balances = $account->balances();
+
+        $this->saveBalances($accountId, $balances);
+    }
+
+    private function saveBalances(AccountId $accountId, array $balances)
+    {
+        foreach ($balances as $amount) {
+            if (!$this->balanceExists($accountId, $amount)) {
+                $this->insertBalance($accountId, $amount);
+            } else {
+                $this->updateBalance($accountId, $amount);
+            }
+        }
+    }
+
+    private function balanceExists(AccountId $accountId, Money $amount)
+    {
+        $qb = $this->getQueryBuilder();
+
+        $eb = $qb->expr();
+
+        $statement = $qb->select('b.id')
+            ->from('balance', 'b')
+            ->where(
+                $eb->andX(
+                    $eb->eq('account_id', '?'),
+                    $eb->eq('currency', '?')
+                )
+            )
+            ->setParameter(0, (string) $accountId)
+            ->setParameter(1, (string) $amount->getCurrency())
+            ->execute();
+
+        return (bool) $statement->fetch();
+    }
+
+    private function insertBalance(AccountId $accountId, Money $amount)
+    {
+        $qb = $this->getQueryBuilder();
+
+        $query = $qb->insert('balance')
+            ->values(
+                [
+                    'account_id' => '?',
+                    'amount' => '?',
+                    'currency' => '?',
+                ]
+            )
+            ->setParameter(0, (string) $accountId)
+            ->setParameter(1, (int) $amount->getAmount())
+            ->setParameter(2, (string) $amount->getCurrency());
+
+        $query->execute();
+    }
+
+    private function updateBalance(AccountId $accountId, Money $amount)
+    {
+        $qb = $this->getQueryBuilder();
+
+        $eb = $qb->expr();
+
+        $query = $qb->update('balance')
+            ->set('amount', '?')
+            ->where(
+                $eb->andX(
+                    $eb->eq('account_id', '?'),
+                    $eb->eq('currency', '?')
+                )
+            )
+            ->setParameter(0, (int) $amount->getAmount())
+            ->setParameter(1, (string) $accountId)
+            ->setParameter(2, (string) $amount->getCurrency());
+
+        $query->execute();
     }
 
     private function mapToEntities($statement)

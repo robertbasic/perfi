@@ -5,10 +5,14 @@ namespace PerFiUnitTest\Application\Repository;
 
 use Doctrine\DBAL\Driver\Connection;
 use Doctrine\DBAL\Driver\PDOStatement;
+use Doctrine\DBAL\Query\Expression\CompositeExpression;
+use Doctrine\DBAL\Query\Expression\ExpressionBuilder;
 use Doctrine\DBAL\Query\QueryBuilder;
 use Mockery as m;
 use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
+use PerFiUnitTest\Traits\AccountTypeTrait;
+use PerFiUnitTest\Traits\AmountTrait;
 use PerFiUnitTest\Traits\QueryBuilderTrait;
 use PerFi\Application\Factory\AccountFactory;
 use PerFi\Application\Repository\AccountRepository;
@@ -19,6 +23,8 @@ use PerFi\Domain\Account\AccountType;
 class AccountRepositoryTest extends TestCase
 {
     use MockeryPHPUnitIntegration;
+    use AccountTypeTrait;
+    use AmountTrait;
     use QueryBuilderTrait;
 
     /**
@@ -75,7 +81,7 @@ class AccountRepositoryTest extends TestCase
             ->andReturn($this->queryBuilder);
 
         $this->accountId = AccountId::fromString('fddf4716-6c0e-4f54-b539-d2d480a50d1a');
-        $this->accountType = AccountType::fromString('asset');
+        $this->accountType = $this->asset();
         $this->accountTitle = 'Cash';
 
         $this->account = AccountFactory::fromArray([
@@ -90,9 +96,9 @@ class AccountRepositoryTest extends TestCase
     /**
      * @test
      */
-    public function can_save_account_to_repository()
+    public function can_insert_new_account_to_repository()
     {
-        $this->mockExistsQuery();
+        $this->mockAccountExistsQuery();
 
         $this->statement->shouldReceive('fetch')
             ->once()
@@ -114,6 +120,103 @@ class AccountRepositoryTest extends TestCase
         $this->mockSetPositionalParameter(0, (string) $this->accountId);
         $this->mockSetPositionalParameter(1, $this->accountTitle);
         $this->mockSetPositionalParameter(2, (string) $this->accountType);
+
+        $this->repository->save($this->account);
+    }
+
+    /**
+     * @test
+     */
+    public function can_insert_new_balances_for_existing_account()
+    {
+        $amount = $this->amount('500', 'RSD');
+        $this->account->credit($amount);
+
+        $this->mockAccountExistsQuery();
+
+        $this->statement->shouldReceive('fetch')
+            ->once()
+            ->andReturn(true);
+
+        $this->mockBalanceExistsQuery();
+
+        $this->statement->shouldReceive('fetch')
+            ->once()
+            ->andReturn(false);
+
+        $this->queryBuilder->shouldReceive('insert')
+            ->once()
+            ->with('balance')
+            ->andReturnSelf();
+        $this->queryBuilder->shouldReceive('values')
+            ->once()
+            ->with([
+                'account_id' => '?',
+                'amount' => '?',
+                'currency' => '?',
+            ])
+            ->andReturnSelf();
+
+        $this->mockSetPositionalParameter(0, (string) $this->accountId);
+        $this->mockSetPositionalParameter(1, -50000);
+        $this->mockSetPositionalParameter(2, 'RSD');
+
+        $this->repository->save($this->account);
+    }
+
+    /**
+     * @test
+     */
+    public function can_update_existing_balances_for_existing_account()
+    {
+        $amount = $this->amount('500', 'RSD');
+        $this->account->credit($amount);
+
+        $this->mockAccountExistsQuery();
+
+        $this->statement->shouldReceive('fetch')
+            ->once()
+            ->andReturn(true);
+
+        $this->mockBalanceExistsQuery();
+
+        $this->statement->shouldReceive('fetch')
+            ->once()
+            ->andReturn(true);
+
+        $this->queryBuilder->shouldReceive('update')
+            ->once()
+            ->with('balance')
+            ->andReturnSelf();
+
+        $this->mockSetValue('amount');
+
+        $expressionBuilder = m::mock(ExpressionBuilder::class);
+        $expression = m::mock(CompositeExpression::class);
+        $expressionBuilder->shouldReceive('eq')
+            ->once()
+            ->with('account_id', '?')
+            ->andReturn('account_id = ?');
+        $expressionBuilder->shouldReceive('eq')
+            ->once()
+            ->with('currency', '?')
+            ->andReturn('currency = ?');
+        $expressionBuilder->shouldReceive('andX')
+            ->with('account_id = ?', 'currency = ?')
+            ->andReturn($expression);
+
+        $this->queryBuilder->shouldReceive('expr')
+            ->once()
+            ->andReturn($expressionBuilder);
+
+        $this->queryBuilder->shouldReceive('where')
+            ->once()
+            ->with($expression)
+            ->andReturnSelf();
+
+        $this->mockSetPositionalParameter(0, -50000);
+        $this->mockSetPositionalParameter(1, (string) $this->accountId);
+        $this->mockSetPositionalParameter(2, 'RSD');
 
         $this->repository->save($this->account);
     }
@@ -194,7 +297,7 @@ class AccountRepositoryTest extends TestCase
         ];
     }
 
-    private function mockExistsQuery()
+    private function mockAccountExistsQuery()
     {
         $this->queryBuilder->shouldReceive('select')
             ->once()
@@ -210,6 +313,44 @@ class AccountRepositoryTest extends TestCase
             ->andReturnSelf();
 
         $this->mockSetNamedParameter('accountId', 'fddf4716-6c0e-4f54-b539-d2d480a50d1a');
+    }
+
+    private function mockBalanceExistsQuery()
+    {
+        $this->queryBuilder->shouldReceive('select')
+            ->once()
+            ->with('b.id')
+            ->andReturnSelf();
+        $this->queryBuilder->shouldReceive('from')
+            ->once()
+            ->with('balance', 'b')
+            ->andReturnSelf();
+
+        $expressionBuilder = m::mock(ExpressionBuilder::class);
+        $expression = m::mock(CompositeExpression::class);
+        $expressionBuilder->shouldReceive('eq')
+            ->once()
+            ->with('account_id', '?')
+            ->andReturn('account_id = ?');
+        $expressionBuilder->shouldReceive('eq')
+            ->once()
+            ->with('currency', '?')
+            ->andReturn('currency = ?');
+        $expressionBuilder->shouldReceive('andX')
+            ->with('account_id = ?', 'currency = ?')
+            ->andReturn($expression);
+
+        $this->queryBuilder->shouldReceive('expr')
+            ->once()
+            ->andReturn($expressionBuilder);
+
+        $this->queryBuilder->shouldReceive('where')
+            ->once()
+            ->with($expression)
+            ->andReturnSelf();
+
+        $this->mockSetPositionalParameter(0, 'fddf4716-6c0e-4f54-b539-d2d480a50d1a');
+        $this->mockSetPositionalParameter(1, 'RSD');
     }
 
     private function mockSelectFrom()
