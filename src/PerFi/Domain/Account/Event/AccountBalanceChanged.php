@@ -5,10 +5,15 @@ namespace PerFi\Domain\Account\Event;
 
 use PerFi\Domain\Account\Account;
 
-class DestinationAccountDebited
+class AccountBalanceChanged
 {
     /**
-     * Create a destination account debited event
+     * @var Account
+     */
+    private $account;
+
+    /**
+     * Create an account balance changed event
      *
      * @param Account $account
      */
@@ -18,7 +23,7 @@ class DestinationAccountDebited
     }
 
     /**
-     * The account that was debited
+     * The account for which the balance was changed
      *
      * @return Account
      */

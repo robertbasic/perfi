@@ -8,9 +8,10 @@ use Mockery\Adapter\Phpunit\MockeryPHPUnitIntegration;
 use PHPUnit\Framework\TestCase;
 use PerFiUnitTest\Traits\EventBusTrait;
 use PerFiUnitTest\Traits\TransactionTrait;
-use PerFi\Domain\Account\Event\DestinationAccountDebited;
 use PerFi\Domain\Account\EventSubscriber\DebitAssetAccountWhenTransactionRefunded;
+use PerFi\Domain\Account\Event\AccountBalanceChanged;
 use PerFi\Domain\Transaction\Event\TransactionRefunded;
+use PerFi\Domain\Transaction\Transaction;
 use SimpleBus\Message\Bus\MessageBus;
 
 class DebitAssetAccountWhenTransactionRefundedTest extends TestCase
@@ -80,7 +81,7 @@ class DebitAssetAccountWhenTransactionRefundedTest extends TestCase
     {
         $this->eventBus->shouldReceive('handle')
             ->once()
-            ->with(m::type(DestinationAccountDebited::class));
+            ->with(m::type(AccountBalanceChanged::class));
 
         $this->eventSubscriber->__invoke($this->event);
     }}

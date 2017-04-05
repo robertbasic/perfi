@@ -5,9 +5,9 @@ namespace PerFiUnitTest\Domain\Account\Event;
 
 use PHPUnit\Framework\TestCase;
 use PerFiUnitTest\Traits\AccountTrait;
-use PerFi\Domain\Account\Event\DestinationAccountDebited;
+use PerFi\Domain\Account\Event\AccountBalanceChanged;
 
-class DestinationAccountDebitedTest extends TestCase
+class AccountBalanceChangedTest extends TestCase
 {
     use AccountTrait;
 
@@ -18,7 +18,7 @@ class DestinationAccountDebitedTest extends TestCase
     {
         $assetAccount = $this->assetAccount();
 
-        $event = new DestinationAccountDebited($assetAccount);
+        $event = new AccountBalanceChanged($assetAccount);
 
         $result = $event->account();
 

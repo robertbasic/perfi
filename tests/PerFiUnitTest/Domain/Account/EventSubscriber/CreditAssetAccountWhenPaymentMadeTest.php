@@ -9,9 +9,10 @@ use PHPUnit\Framework\TestCase;
 use PerFiUnitTest\Traits\EventBusTrait;
 use PerFiUnitTest\Traits\TransactionTrait;
 use PerFi\Domain\Account\EventSubscriber\CreditAssetAccountWhenPaymentMade;
-use PerFi\Domain\Account\Event\SourceAccountCredited;
+use PerFi\Domain\Account\Event\AccountBalanceChanged;
 use PerFi\Domain\Transaction\Event\PaymentMade;
 use PerFi\Domain\Transaction\Transaction;
+use SimpleBus\Message\Bus\MessageBus;
 
 class CreditAssetAccountWhenPaymentMadeTest extends TestCase
 {
@@ -71,7 +72,7 @@ class CreditAssetAccountWhenPaymentMadeTest extends TestCase
     {
         $this->eventBus->shouldReceive('handle')
             ->once()
-            ->with(m::type(SourceAccountCredited::class));
+            ->with(m::type(AccountBalanceChanged::class));
 
         $this->eventSubscriber->__invoke($this->event);
     }

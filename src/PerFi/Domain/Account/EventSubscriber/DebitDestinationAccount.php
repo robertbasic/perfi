@@ -3,7 +3,7 @@ declare(strict_types=1);
 
 namespace PerFi\Domain\Account\EventSubscriber;
 
-use PerFi\Domain\Account\Event\DestinationAccountDebited;
+use PerFi\Domain\Account\Event\AccountBalanceChanged;
 use PerFi\Domain\Transaction\Transaction;
 use SimpleBus\Message\Bus\MessageBus;
 
@@ -35,7 +35,7 @@ abstract class DebitDestinationAccount
 
         $destinationAccount = $transaction->destinationAccount();
 
-        $event = new DestinationAccountDebited($destinationAccount);
+        $event = new AccountBalanceChanged($destinationAccount);
 
         $this->eventBus->handle($event);
     }

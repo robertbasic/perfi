@@ -272,13 +272,4 @@ class TransactionRepositoryTest extends TestCase
             ->with('transaction', 't')
             ->andReturnSelf();
     }
-
-    private function mockSetValue(string $field)
-    {
-        $this->queryBuilder->shouldReceive('set')
-            ->once()
-            ->with($field, '?')
-            ->andReturnSelf();
-    }
-
 }

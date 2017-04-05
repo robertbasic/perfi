@@ -20,4 +20,12 @@ trait QueryBuilderTrait
             ->with($parameterName, $value)
             ->andReturnSelf();
     }
+
+    private function mockSetValue(string $field)
+    {
+        $this->queryBuilder->shouldReceive('set')
+            ->once()
+            ->with($field, '?')
+            ->andReturnSelf();
+    }
 }
