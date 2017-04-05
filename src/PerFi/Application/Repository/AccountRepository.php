@@ -137,7 +137,7 @@ class AccountRepository extends Repository
         }
     }
 
-    private function balanceExists(AccountId $accountId, Money $amount)
+    private function balanceExists(AccountId $accountId, Money $amount) : bool
     {
         $qb = $this->getQueryBuilder();
 
@@ -198,7 +198,7 @@ class AccountRepository extends Repository
         $query->execute();
     }
 
-    private function mapToEntities($statement)
+    private function mapToEntities($statement) : array
     {
         $accounts = [];
 
