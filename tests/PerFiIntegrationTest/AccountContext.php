@@ -25,7 +25,9 @@ class AccountContext extends MinkContext
      */
     public function iWantToCreateANewAccount($type, $title)
     {
-        throw new PendingException();
+        $this->visitPath('/create-account');
+        $this->selectOption('create_account_type', $type);
+        $this->fillField('create_account_title', $title);
     }
 
     /**
@@ -33,7 +35,8 @@ class AccountContext extends MinkContext
      */
     public function iAddTheNewAccount()
     {
-        throw new PendingException();
+        $submit = $this->getSession()->getPage()->find("css", ".btn-primary");
+        $submit->click();
     }
 
     /**
@@ -41,6 +44,8 @@ class AccountContext extends MinkContext
      */
     public function iShouldHaveAnAccountCalled($type, $title)
     {
-        throw new PendingException();
+        $this->visitPath('/accounts');
+        $this->getSession()->wait(5000, "document.getElementById('accounts-table-".$type."').innerHTML != ''");
+        $this->assertPageContainsText('Cash');
     }
 }

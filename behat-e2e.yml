@@ -1,3 +1,5 @@
+# Run java -jar selenium-server-standalone-2.53.1.jar -Dwebdriver.gecko.driver=/usr/bin/firefox
+# in the background somewhere
 default:
     autoload:
         - %paths.base%/features
@@ -15,3 +17,12 @@ default:
         Behat\Symfony2Extension:
             kernel:
                 class: AppKernel
+        Behat\MinkExtension:
+            base_url: "http://perfi.local"
+            default_session: firefox
+            sessions:
+                firefox:
+                     selenium2:
+                         browser: firefox
+                         wd_host: 'http://127.0.0.1:4444/wd/hub'
+                         capabilities: { "browser": "firefox"}
