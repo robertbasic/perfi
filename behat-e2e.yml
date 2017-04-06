@@ -1,0 +1,17 @@
+default:
+    autoload:
+        - %paths.base%/features
+        - %paths.base%/tests
+
+    suites:
+        account:
+            paths:
+                - %paths.base%/features/account.feature
+            contexts:
+                - 'PerFiIntegrationTest\AccountContext':
+                    kernel: '@kernel'
+
+    extensions:
+        Behat\Symfony2Extension:
+            kernel:
+                class: AppKernel
