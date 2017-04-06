@@ -45,7 +45,7 @@ class AccountContext extends MinkContext
     public function iShouldHaveAnAccountCalled($type, $title)
     {
         $this->visitPath('/accounts');
-        $this->getSession()->wait(5000, "document.getElementById('accounts-table-".$type."').innerHTML != ''");
+        $this->getSession()->wait(10000, "document.getElementById('accounts-table-".$type."').innerHTML != ''");
         $this->assertPageContainsText('Cash');
     }
 }
