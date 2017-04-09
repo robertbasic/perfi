@@ -20,6 +20,13 @@ class AccountContext extends MinkContext
         $this->container = $kernel->getContainer();
     }
 
+    /** @AfterScenario */
+    public function teardown()
+    {
+        $connection = $this->container->get('database_connection');
+        $connection->query("TRUNCATE TABLE `account`");
+    }
+
     /**
      * @Given I want to add a new :type account ":title"
      */
@@ -46,6 +53,6 @@ class AccountContext extends MinkContext
     {
         $this->visitPath('/accounts');
         $this->getSession()->wait(10000, "document.getElementById('accounts-table-".$type."').innerHTML != ''");
-        $this->assertPageContainsText('Cash');
+        $this->assertPageContainsText($title);
     }
 }
