@@ -1,5 +1,8 @@
 # Run java -jar selenium-server-standalone-2.53.1.jar -Dwebdriver.gecko.driver=/usr/bin/firefox
 # in the background somewhere
+#
+# ./bin/console doctrine:database:create --env=test
+# ./bin/console doctrine:migrations:migrate --env=test
 default:
     autoload:
         - %paths.base%/features
@@ -18,7 +21,7 @@ default:
             kernel:
                 class: AppKernel
         Behat\MinkExtension:
-            base_url: "http://perfi.local"
+            base_url: "http://perfi.local/app_test.php"
             default_session: firefox
             sessions:
                 firefox:
