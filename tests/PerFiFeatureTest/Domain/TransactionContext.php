@@ -7,15 +7,15 @@ use Behat\Behat\Context\Context;
 use PerFi\Application\Repository\InMemoryTransactionRepository;
 use PerFi\Domain\Account\Account;
 use PerFi\Domain\Account\AccountType;
+use PerFi\Domain\Account\EventSubscriber\CreditAssetAccountWhenPaymentMade;
+use PerFi\Domain\Account\EventSubscriber\CreditExpenseAccountWhenTransactionRefunded;
+use PerFi\Domain\Account\EventSubscriber\DebitAssetAccountWhenTransactionRefunded;
+use PerFi\Domain\Account\EventSubscriber\DebitExpenseAccountWhenPaymentMade;
 use PerFi\Domain\MoneyFactory;
 use PerFi\Domain\Transaction\CommandHandler\ExecutePayment;
 use PerFi\Domain\Transaction\CommandHandler\ExecuteRefund;
 use PerFi\Domain\Transaction\Command\Pay;
 use PerFi\Domain\Transaction\Command\Refund;
-use PerFi\Domain\Account\EventSubscriber\CreditAssetAccountWhenPaymentMade;
-use PerFi\Domain\Account\EventSubscriber\CreditExpenseAccountWhenTransactionRefunded;
-use PerFi\Domain\Account\EventSubscriber\DebitAssetAccountWhenTransactionRefunded;
-use PerFi\Domain\Account\EventSubscriber\DebitExpenseAccountWhenPaymentMade;
 use PerFi\Domain\Transaction\EventSubscriber\MarkRefundedTransactionAsRefundedWhenTransactionRefunded;
 use PerFi\Domain\Transaction\Event\PaymentMade;
 use PerFi\Domain\Transaction\Event\TransactionRefunded;
@@ -141,60 +141,26 @@ class TransactionContext implements Context
     }
 
     /**
-     * @Then I should have :amount :currency funds less in :title :type account
+     * @Then there should be a ":transactionType" transaction that happened on ":date" for :amount :currency between ":sourceTitle" :sourceType account and ":destinationTitle" :destinationType account
      */
-    public function iShouldHaveLessFundsInSourceAccount($amount, $currency, $title, $type)
+    public function thereShouldBeATransactionOnDateForAmountInCurrencyBetweenAccounts($transactionType, $date, $amount, $currency, $sourceTitle, $sourceType, $destinationTitle, $destinationType)
     {
-        $expected = MoneyFactory::amountInCurrency('-' . $amount, $currency);
+        $transactions = $this->repository->getAll();
+        $transaction = array_shift($transactions);
 
-        $sourceAccount = $this->command->sourceAccount();
-
-        $balances = $sourceAccount->balances();
-
-        Assert::notEq(0, count($balances));
-
-        foreach ($balances as $result) {
-            if ((string) $result->getCurrency() === $currency) {
-                Assert::same($result->getAmount(), $expected->getAmount());
-                Assert::same((string) $result->getCurrency(), (string) $expected->getCurrency());
-            }
-        }
-    }
-
-    /**
-     * @Then I should have :amount :currency funds more in :title :type account
-     */
-    public function iShouldHaveMoreFundsInDestinationAccount($amount, $currency, $title, $type)
-    {
-        $expected = MoneyFactory::amountInCurrency($amount, $currency);
-
-        $destinationAccount = $this->command->destinationAccount();
-
-        $balances = $destinationAccount->balances();
-
-        Assert::notEq(0, count($balances));
-
-        foreach ($balances as $result) {
-            if ((string) $result->getCurrency() === $currency) {
-                Assert::same($result->getAmount(), $expected->getAmount());
-                Assert::same((string) $result->getCurrency(), (string) $expected->getCurrency());
-            }
-        }
-    }
-
-    /**
-     * @Then the transaction should have happened on :date
-     */
-    public function theTransactionShouldHaveHappenedOnDate($date)
-    {
         $expected = TransactionDate::fromString($date);
 
-        $transactions = $this->repository->getAll();
-        array_pop($transactions);
+        Assert::same((string) $transaction->date(), (string) $expected);
 
-        foreach ($transactions as $transaction) {
-            Assert::same((string) $transaction->date(), (string) $expected);
-        }
+        $expected = MoneyFactory::amountInCurrency($amount, $currency);
+
+        Assert::true($expected->equals($transaction->amount()));
+
+        $sourceAccount = $this->getAccountByTitle($sourceTitle);
+        $destinationAccount = $this->getAccountByTitle($destinationTitle);
+
+        Assert::same($sourceAccount, $transaction->sourceAccount());
+        Assert::same($destinationAccount, $transaction->destinationAccount());
     }
 
     private function getAccountByTitle($title)
