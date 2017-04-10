@@ -141,9 +141,9 @@ class TransactionContext implements Context
     }
 
     /**
-     * @Then there should be a transaction that happened on ":date" for :amount :currency between ":sourceTitle" :sourceType account and ":destinationTitle" :destinatinoType account
+     * @Then there should be a ":transactionType" transaction that happened on ":date" for :amount :currency between ":sourceTitle" :sourceType account and ":destinationTitle" :destinationType account
      */
-    public function thereShouldBeATransactionOnDateForAmountInCurrencyBetweenAccounts($date, $amount, $currency, $sourceTitle, $sourceType, $destinationTitle, $destinationType)
+    public function thereShouldBeATransactionOnDateForAmountInCurrencyBetweenAccounts($transactionType, $date, $amount, $currency, $sourceTitle, $sourceType, $destinationTitle, $destinationType)
     {
         $transactions = $this->repository->getAll();
         $transaction = array_shift($transactions);

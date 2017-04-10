@@ -3,7 +3,6 @@ declare(strict_types=1);
 
 namespace PerFiIntegrationTest;
 
-use Behat\Behat\Tester\Exception\PendingException;
 use Behat\MinkExtension\Context\MinkContext;
 use Symfony\Component\HttpKernel\KernelInterface;
 
@@ -24,6 +23,8 @@ class TransactionContext extends MinkContext
     public function teardown()
     {
         $connection = $this->container->get('database_connection');
+        $connection->query("TRUNCATE TABLE `account`");
+        $connection->query("TRUNCATE TABLE `balance`");
         $connection->query("TRUNCATE TABLE `transaction`");
     }
 
@@ -60,32 +61,29 @@ class TransactionContext extends MinkContext
      */
     public function iRefundAmountInCurrency($amount, $currency, $source, $destination, $date)
     {
-        throw new PendingException();
-    }
+        $this->visitPath('/pay');
+        $this->selectOption('pay_source', $destination);
+        $this->selectOption('pay_destination', $source);
+        $this->fillField('pay_amount', $amount);
+        $this->selectOption('pay_currency', $currency);
+        $this->fillField('pay_date', $date);
+        $this->fillField('pay_description', 'test');
+        $submit = $this->getSession()->getPage()->find("css", ".btn-primary");
+        $submit->click();
 
-    /**
-     * @Then I should have :amount :currency funds less in :title :type account
-     */
-    public function iShouldHaveLessFundsInSourceAccount($amount, $currency, $title, $type)
-    {
-        $this->visitPath('/transaction');
+        $this->visitPath('/transactions');
         $this->getSession()->wait(10000);
-        /* $this->assertPageContainsText($title); */
+        $submit = $this->getSession()->getPage()->find("css", ".btn-danger");
+        $submit->click();
     }
 
     /**
-     * @Then I should have :amount :currency funds more in :title :type account
+     * @Then there should be a ":transactionType" transaction that happened on ":date" for :amount :currency between ":sourceTitle" :sourceType account and ":destinationTitle" :destinationType account
      */
-    public function iShouldHaveMoreFundsInDestinationAccount($amount, $currency, $title, $type)
+    public function thereShouldBeATransactionOnDateForAmountInCurrencyBetweenAccounts($transactionType, $date, $amount, $currency, $sourceTitle, $sourceType, $destinationTitle, $destinationType)
     {
-        throw new PendingException();
-    }
-
-    /**
-     * @Then the transaction should have happened on :date
-     */
-    public function theTransactionShouldHaveHappenedOnDate($date)
-    {
-        throw new PendingException();
+        $this->visitPath('/transactions');
+        $this->getSession()->wait(10000);
+        $this->assertPageContainsText($transactionType);
     }
 }
